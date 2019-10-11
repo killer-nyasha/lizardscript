@@ -13,6 +13,8 @@
 #include "../LizardScript/Runtime.h"
 #include "../LizardScript/LizardScriptLibrary.h"
 
+#include "../LsLightspeed/LsLightspeed.h"
+
 using namespace LizardScript;
 
 struct B
@@ -73,6 +75,8 @@ void run(A& t, std::string& source)
 
 int main(int argc, char** argv)
 {
+	lightspeed();
+
 	if (global_lsl.printHello)
 	{
 		std::cout << COLOR_GREEN

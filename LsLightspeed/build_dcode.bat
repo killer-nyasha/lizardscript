@@ -1,0 +1,1 @@
+"C:\Program Files\NASM\nasm.exe" "C:\Users\Isstrebitel\git\lizardscript\LsLightspeed\dcode.asm"
