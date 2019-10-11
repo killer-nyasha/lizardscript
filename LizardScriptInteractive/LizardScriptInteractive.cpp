@@ -78,7 +78,7 @@ int main(int argc, char** argv)
 		std::cout << COLOR_GREEN
 			<< "**********************************************************************\n"
 			<< "** LizardScript v0.1 Interactive\n"
-			<< "** 9.10.2019, killer-nyasha\n"
+			<< "** 11.10.2019, killer-nyasha\n"
 			<< "**********************************************************************\n" << COLOR_NC;
 	}
 
