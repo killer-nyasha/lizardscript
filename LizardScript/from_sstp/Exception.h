@@ -1,4 +1,5 @@
 #pragma once
+#ifndef SSTP_INCLUDED
 #include <string>
 
 class Exception
@@ -11,3 +12,5 @@ public:
 	Exception(std::string&& text) : text(text) { }
 	Exception(const char* text) : text(text) { }
 };
+
+#endif

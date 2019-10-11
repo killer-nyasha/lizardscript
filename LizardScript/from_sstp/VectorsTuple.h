@@ -1,4 +1,5 @@
 ﻿#pragma once
+#ifndef SSTP_INCLUDED
 #include <vector>
 #include <map>
 
@@ -50,3 +51,5 @@ public:
 		std::get<std::map<K, G>>(maps).insert(std::make_pair(key, value));
 	}
 };
+
+#endif

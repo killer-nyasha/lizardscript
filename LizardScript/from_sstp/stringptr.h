@@ -1,4 +1,5 @@
 #pragma once
+#ifndef SSTP_INCLUDED
 #include <iostream>
 #include <string>
 
@@ -159,3 +160,5 @@ inline stringptr operator ""  _sp(const char* text, size_t size)
 {
 	return stringptr(std::string(text));
 }
+
+#endif

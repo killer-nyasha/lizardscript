@@ -1,4 +1,5 @@
 #pragma once
+#ifndef SSTP_INCLUDED
 #include <vector>
 
 
@@ -104,3 +105,4 @@ int BinarySearch(const std::vector<T>& a, const T& x)
 	//}
 }
 
+#endif
