@@ -21,23 +21,29 @@ void lightspeed()
 	//fs.read(dcode, length);
 
 	char* args[2];
-	args[0] = nullptr;
-	args[1] = (char*)"..\\LsLightspeed\\dcode.asm";
 	
 	char* i;
 
-	i = &std::string(" mov ecx, 2")[0];  
+	std::string path = std::string("..\\LsLightspeed\\dcode.asm");
+	std::string l1 = std::string("mov ecx, 2");
+	std::string l2 = std::string("mov eax, 1");
+
+	//std::string buf;
+	//buf = path;
+
+	args[0] = nullptr;
+	args[1] = &path[0];
+	i = &l1[0];
 	inputBuffer = inputBufferStart = i;
 	outputBuffer = outputBufferStart = dcode;
 	mainAsLib(2, args);
 
-	i = &std::string(" mov eax, 1")[0];
+	args[0] = nullptr;
+	args[1] = &path[0];
+	i = &l2[0];
 	inputBuffer = inputBufferStart = i;
 	outputBuffer = outputBufferStart = dcode;
 	mainAsLib(2, args);
-
-
-	//char* c = outputBufferStart;
 
 	DWORD oldP;
 	VirtualProtect(dcode, 4096, PAGE_EXECUTE_READWRITE, &oldP);
