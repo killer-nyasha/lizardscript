@@ -21,6 +21,9 @@
     <ClInclude Include="LsLightspeed.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="nasm_as_lib_import.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
