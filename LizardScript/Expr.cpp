@@ -136,7 +136,7 @@ void Expr::disasm()
 		}
 		else if ((opcode)code.data[i] == opcode::call_cpp)
 		{
-			i += sizeof(DummyCallStruct);
+			i += sizeof(FunctionInfo().callStruct);
 		}
 		else if ((opcode)code.data[i] == opcode::push_stringptr)
 		{

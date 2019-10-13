@@ -78,7 +78,7 @@ case opcode::call_cpp:
 {
 	DummyCallStruct* callStruct = reinterpret_cast<DummyCallStruct*>(&expr.code.data[i + 2]);
 	callStruct->call(registers, (int)rnfirst);
-	i += sizeof(DummyCallStruct);
+	i += sizeof(FunctionInfo().callStruct);
 	break;
 }
 

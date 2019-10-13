@@ -67,7 +67,7 @@ namespace LizardScript
 	struct FunctionInfo : public MemberInfo
 	{
 		//only for functions
-		char callStruct[sizeof(DummyCallStruct)];
+		char callStruct[sizeof(DummyCallStruct)*2];
 		//TypeInfo returnType;
 		std::vector<TypeInfo> args;
 	};
@@ -159,9 +159,22 @@ namespace LizardScript
 		FunctionInfo f;
 		f.type = makeTypeInfo<R>();
 
-		f.args = { (makeTypeInfo<A>())... };
+		//if (sizeof...(A) > 0)
+			f.args = { (makeTypeInfo<A>())... };
+		//else f.args = std::vector<TypeInfo>();
+		//f.args.reserve(1);
 
 		f.name = info.name;
+
+		////static_assert(, "wtf??");
+		//if (sizeof(f.callStruct) != sizeof(callStruct))
+		//{
+		//	int s1 = sizeof(f.callStruct);
+		//	int s2 = sizeof(callStruct);
+		//	//std::cout << s1 << s2;
+		//	int s3 = s1 - s2;
+		//}
+
 		memcpy(&f.callStruct, &callStruct, sizeof(callStruct));
 		return f;
 	}
