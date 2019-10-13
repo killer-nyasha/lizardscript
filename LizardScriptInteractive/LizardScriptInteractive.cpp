@@ -65,6 +65,7 @@ void run(A& t, std::string& source)
 			{
 				*lightSpeed << e;
 				lightSpeed->assemble();
+				lightSpeed->call();
 			}
 			else Runtime(e, t);
 		}
