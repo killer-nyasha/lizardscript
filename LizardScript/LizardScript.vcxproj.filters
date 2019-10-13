@@ -137,5 +137,8 @@
     <ClInclude Include="VectorsTuple.h">
       <Filter>Other headers</Filter>
     </ClInclude>
+    <ClInclude Include="metagen_def.h">
+      <Filter>ExternalHeaders</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

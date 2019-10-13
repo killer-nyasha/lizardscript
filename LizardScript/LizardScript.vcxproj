@@ -340,6 +340,7 @@
     <ClInclude Include="metagen.h" />
     <ClInclude Include="LizardScriptCompiler.h" />
     <ClInclude Include="interpreter_util.h" />
+    <ClInclude Include="metagen_def.h" />
     <ClInclude Include="opcodes.h" />
     <ClInclude Include="opcodes_template.h" />
     <ClInclude Include="Parser.h" />
