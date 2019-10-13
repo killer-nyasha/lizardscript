@@ -19,7 +19,7 @@ void Runtime::run()
 	//volatile int k = 0;
 	//try
 	{
-		if (global_lsl.printDump)
+		if (lsl.printDump)
 			expr.disasm();
 
 		//std::cin >> i;
@@ -62,7 +62,7 @@ void Runtime::run()
 
 		std::chrono::high_resolution_clock::time_point t2 =
 			std::chrono::high_resolution_clock::now();
-		if (global_lsl.printRunTime)
+		if (lsl.printRunTime)
 			std::cout << COLOR_YELLOW << "run time: " << (t2 - t1).count() / 1000000.0 << " ms" << COLOR_NC << std::endl;
 		//std::cout << k;
 		//std::cout << y;

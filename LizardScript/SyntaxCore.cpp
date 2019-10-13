@@ -1,6 +1,6 @@
 #include "SyntaxCore.h"
 #include "DefaultSyntaxCore.h"
-#include "from_sstp/algorithms.h"
+#include "algorithms.h"
 
 using namespace LizardScript;
 

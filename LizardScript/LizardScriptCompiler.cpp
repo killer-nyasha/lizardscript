@@ -57,7 +57,7 @@ Expr LizardScriptCompiler::create(TypeInfo type, const TCHAR* t)
 
 	std::chrono::high_resolution_clock::time_point t2 =
 		std::chrono::high_resolution_clock::now();
-	if (global_lsl.printCompilationTime)
+	if (lsl.printCompilationTime)
 		std::cout << COLOR_YELLOW << "compilation time: " << (t2 - t1).count() / 1000000.0 << " ms" << COLOR_NC << std::endl;
 
 	//expr.optimize();

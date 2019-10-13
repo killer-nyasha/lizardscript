@@ -1,6 +1,6 @@
 #pragma once
 #include "interpreter_util.h"
-#include "from_sstp/stringptr.h"
+#include "stringptr.h"
 #include "LizardScriptCompiler.h"
 
 namespace LizardScript
@@ -13,6 +13,11 @@ namespace LizardScript
 		void print(stringptr);
 
 		void eval(void* ths, stringptr type, stringptr source);
+
+		int random(int minValue, int maxValue)
+		{
+			return rand() % (maxValue - minValue + 1) + minValue;
+		}
 
 		static void init_ls_standart_meta();
 
@@ -28,5 +33,5 @@ namespace LizardScript
 #undef extern
 	};
 
-	extern LizardScriptLibrary global_lsl;
+	extern LizardScriptLibrary lsl;
 }

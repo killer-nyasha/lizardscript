@@ -7,7 +7,7 @@ using namespace LizardScript;
 #include "IdentifiersProcessor.h"
 #include "FindType.h"
 
-#include "from_sstp/stringptr.h"
+#include "stringptr.h"
 
 template <typename T>
 struct vector_rewrite

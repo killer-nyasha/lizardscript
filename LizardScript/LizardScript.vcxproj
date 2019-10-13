@@ -329,8 +329,10 @@
     <ClCompile Include="SyntaxCore.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="algorithms.h" />
     <ClInclude Include="ByteCodeGenerator.h" />
     <ClInclude Include="crossplatform_tchar.h" />
+    <ClInclude Include="Exception.h" />
     <ClInclude Include="Expr.h" />
     <ClInclude Include="FindType.h" />
     <ClInclude Include="IdentifiersProcessor.h" />
@@ -348,9 +350,11 @@
     <ClInclude Include="Registers.h" />
     <ClInclude Include="Runtime.h" />
     <ClInclude Include="Jumps.h" />
+    <ClInclude Include="stringptr.h" />
     <ClInclude Include="SyntaxCore.h" />
     <ClInclude Include="DefaultSyntaxCore.h" />
     <ClInclude Include="TypeInfo.h" />
+    <ClInclude Include="VectorsTuple.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

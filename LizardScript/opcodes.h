@@ -96,7 +96,7 @@ case opcode::push_stackptr://push this
 }
 case opcode::push_lsl://push this
 {
-	registers[rnfirst] = (void*)&global_lsl;
+	registers[rnfirst] = (void*)&lsl;
 	break;
 }
 case opcode::push_offset://push offset

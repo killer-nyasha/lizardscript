@@ -25,6 +25,9 @@
     <Filter Include="Compiler\Internal">
       <UniqueIdentifier>{46bea160-aad5-458e-82c8-5409fbad4048}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Other headers">
+      <UniqueIdentifier>{c3063933-c203-4cc4-9b13-9b25d45a0af7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Lexer.cpp">
@@ -121,6 +124,18 @@
     </ClInclude>
     <ClInclude Include="FindType.h">
       <Filter>Compiler\Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithms.h">
+      <Filter>Other headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Exception.h">
+      <Filter>Other headers</Filter>
+    </ClInclude>
+    <ClInclude Include="stringptr.h">
+      <Filter>Other headers</Filter>
+    </ClInclude>
+    <ClInclude Include="VectorsTuple.h">
+      <Filter>Other headers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

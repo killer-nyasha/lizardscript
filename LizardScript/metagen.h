@@ -1,6 +1,6 @@
 #pragma once
 #include "TypeInfo.h"
-#include "from_sstp/VectorsTuple.h"
+#include "VectorsTuple.h"
 
 #define FIELD(field) rawFieldInfo(&(sample->field), #field)
 #define FUNC(cl, field) rawFieldInfo(&cl::field, #field)

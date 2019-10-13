@@ -10,8 +10,8 @@
 #include <map>
 #include <iostream>
 
-#include "from_sstp/stringptr.h"
-#include "from_sstp/Exception.h"
+#include "stringptr.h"
+#include "Exception.h"
 
 #include "metagen.h"
 

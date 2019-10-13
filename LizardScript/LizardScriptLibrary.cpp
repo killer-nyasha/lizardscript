@@ -18,7 +18,8 @@ void LizardScriptLibrary::init_ls_standart_meta()
 		PARAMS(int)::FUNC(LizardScriptLibrary, print),
 		PARAMS(float)::FUNC(LizardScriptLibrary, print),
 		PARAMS(stringptr)::FUNC(LizardScriptLibrary, print),
-		FUNC(LizardScriptLibrary, eval)
+		FUNC(LizardScriptLibrary, eval),
+		PARAMS(int, int)::FUNC(LizardScriptLibrary, random)
 	);
 	METAGEN(stringptr, FUNC(stringptr, operator[]), FUNC(CtorProvider<stringptr>, ctor));
 
@@ -58,5 +59,5 @@ void LizardScriptLibrary::eval(void* ths, stringptr type, stringptr source)
 
 namespace LizardScript
 {
-	LizardScriptLibrary global_lsl; 
+	LizardScriptLibrary lsl; 
 }
