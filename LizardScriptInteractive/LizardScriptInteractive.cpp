@@ -73,7 +73,7 @@ void run(A& t, std::string& source)
 
 int main(int argc, char** argv)
 {
-	if (global_lsl.printHello)
+	if (lsl.printHello)
 	{
 		std::cout << COLOR_GREEN
 			<< "**********************************************************************\n"
@@ -99,17 +99,17 @@ int main(int argc, char** argv)
 		std::ifstream s(argv[1]);
 		std::string source((std::istreambuf_iterator<char>(s)), std::istreambuf_iterator<char>());		
 		
-		if (global_lsl.printState)
+		if (lsl.printState)
 			LizardScript::print(std::cout, t);
 
 		run(t, source);
 
-		if (global_lsl.printState)
+		if (lsl.printState)
 			LizardScript::print(std::cout, t);
 	}
 	else while (true)
 	{
-		if (global_lsl.printState)
+		if (lsl.printState)
 			LizardScript::print(std::cout, t);
 
 		std::cout << COLOR_GREEN << ">     ";
