@@ -51,6 +51,8 @@ struct A
 	}
 };
 
+Lightspeed* lightSpeed = new Lightspeed(4096, 4096);
+
 void run(A& t, std::string& source)
 {
 	TypedExpr<A> e;
@@ -59,7 +61,12 @@ void run(A& t, std::string& source)
 		e = script<A>(&source[0]);
 		try
 		{
-			Runtime(e, t);
+			if (lightSpeed != nullptr)
+			{
+				*lightSpeed << e;
+				lightSpeed->assemble();
+			}
+			else Runtime(e, t);
 		}
 		catch (Exception ex)
 		{
@@ -75,7 +82,6 @@ void run(A& t, std::string& source)
 
 int main(int argc, char** argv)
 {
-	Lightspeed lightSpeed(4096, 4096);
 
 	//lightspeed();
 

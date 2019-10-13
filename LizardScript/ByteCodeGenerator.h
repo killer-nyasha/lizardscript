@@ -127,8 +127,8 @@ namespace LizardScript
 		std::vector<FieldInfo>& localVar;
 		std::stack<PossibleFunctionCalls>& functionCalls;
 
-		int localVarOffset = 0;
-		int& localVarMaxOffset;
+		size_t localVarOffset = 0;
+		size_t& localVarMaxOffset;
 
 		const std::vector<Keyword2>& initKeywords();
 		void processJumps(int tIndex);

@@ -116,7 +116,7 @@ namespace LizardScript
 
 		void disasm();
 
-		int maxStackSize = 0;
+		size_t maxStackSize = 0;
 
 		//static std::vector<Keyword2>& initKeywords();
 	};

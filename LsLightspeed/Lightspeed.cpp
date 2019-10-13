@@ -19,7 +19,7 @@ void dummy() { }
 Lightspeed::Lightspeed(size_t dcodeSize, size_t asmBufferSize) : dcodeSize(dcodeSize), asmBufferSize(asmBufferSize)
 {
 	dcode = new char[dcodeSize];
-	asmBuffer = new char[asmBufferSize];
+	asmBufferPtr = asmBuffer = new char[asmBufferSize];
 	nasmDump = new char[0x13988];
 	pNasmDll = (char*)GetModuleHandleA("nasm.dll");
 }
@@ -32,9 +32,63 @@ Lightspeed::~Lightspeed()
 	delete[] dcode;
 }
 
-void Lightspeed::operator<<(Expr& e)
+const char* getRegName(regindex n, bool& isReg)
 {
+	const char* ret = nullptr;
+	isReg = true;
 
+	switch (n)
+	{
+		case 1: ret = "eax"; break;
+		case 2: ret = "ecx"; break;
+		case 3: ret = "edx"; break;
+		case 4: ret = "ebx"; break;
+		case 5: ret = "esi"; break;
+		case 6: ret = "edi"; break;
+		case 7: ret = "ebp"; break;
+		default:
+		{
+			isReg = false;
+			ret = "";//???
+			break;
+		}
+	}
+
+	return ret;
+}
+
+void Lightspeed::operator<<(Expr& expr)
+{
+	int stackAlignment = 16;
+	if (expr.maxStackSize % stackAlignment != 0)
+		expr.maxStackSize += stackAlignment - expr.maxStackSize % stackAlignment;
+
+	line("sub rsp, ", expr.maxStackSize);
+
+	for (size_t i = 0; i < expr.code.data.size(); i++)
+	{
+		regindex_pair rn = *reinterpret_cast<regindex_pair*>(&expr.code.data[i + 1]);
+		regindex rnfirst = rn.first;
+		regindex rnsecond = rn.second;
+		switch ((opcode)expr.code.data[i])
+		{
+//#include "opcodes.h"
+
+			case opcode::add_int_int:
+			{
+				line("add ", rn.first, ", ", rn.second);
+				break;
+			}
+
+			default:
+			{
+				throw Exception("Unknown opcode " + std::to_string(*(unsigned char*)&expr.code.data[i]) + " at " + std::to_string(i));
+			}
+		}
+
+	}
+
+	line("add rsp, ", expr.maxStackSize);
 }
 
 void Lightspeed::assemble()
