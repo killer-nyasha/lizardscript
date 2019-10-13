@@ -13,7 +13,7 @@
 #include "../LizardScript/Runtime.h"
 #include "../LizardScript/LizardScriptLibrary.h"
 
-#include "../LsLightspeed/LsLightspeed.h"
+#include "../LsLightspeed/Lightspeed.h"
 
 using namespace LizardScript;
 
@@ -75,7 +75,9 @@ void run(A& t, std::string& source)
 
 int main(int argc, char** argv)
 {
-	lightspeed();
+	Lightspeed lightSpeed(4096, 4096);
+
+	//lightspeed();
 
 	if (global_lsl.printHello)
 	{

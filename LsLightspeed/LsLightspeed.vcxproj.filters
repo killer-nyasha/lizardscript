@@ -18,10 +18,10 @@
     <ClInclude Include="pch.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="LsLightspeed.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="nasm_as_lib_import.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Lightspeed.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
@@ -29,7 +29,7 @@
     <ClCompile Include="pch.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="LsLightspeed.cpp">
+    <ClCompile Include="Lightspeed.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
