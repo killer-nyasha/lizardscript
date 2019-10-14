@@ -81,7 +81,7 @@ namespace LizardScript
 			*(TypeInfo*)(this) = from;
 		}
 
-		void(*printFunction)(void*);
+		//void(*printFunction)(void*);
 
 		VectorsTuple<FieldInfo, FunctionInfo> members;
 
@@ -187,7 +187,7 @@ namespace LizardScript
 
 		TypeInfo info = makeTypeInfo<O>();
 		TypeInfoEx einfo = TypeInfoEx(info);
-		einfo.printFunction = &print_r<O>;
+		//einfo.printFunction = &print_r<O>;
 
 		globalMetadataTable.insert(std::make_pair(info, einfo));
 	}
@@ -199,7 +199,7 @@ namespace LizardScript
 
 		TypeInfo info = makeTypeInfo<O>();
 		TypeInfoEx einfo = TypeInfoEx(info);
-		einfo.printFunction = &print_r<O>;
+		//einfo.printFunction = &print_r<O>;
 		//einfo.fields = metaTable;
 		char c[] = { (einfo.members.push_back(createMetadataEntry(infos)), '\0')... };
 

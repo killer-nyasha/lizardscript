@@ -324,6 +324,7 @@
     <ClCompile Include="Lexer.cpp" />
     <ClCompile Include="LizardScriptLibrary.cpp" />
     <ClCompile Include="Parser.cpp" />
+    <ClCompile Include="Print.cpp" />
     <ClCompile Include="Runtime.cpp" />
     <ClCompile Include="Semantic.cpp" />
     <ClCompile Include="SyntaxCore.cpp" />

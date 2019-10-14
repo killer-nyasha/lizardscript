@@ -42,9 +42,9 @@ int ByteCodeGenerator::findEndLine(std::vector<TCHAR*>::iterator ptoken)
 		auto nkwtoken = reinterpret_cast<Keyword*>(*nptoken);
 		int ntIndex = nptoken - tokens.begin();
 
-		if (nkwtoken->checkFlag(KeywordFlags::LeftBrace) > 1)
+		if (nkwtoken->checkSpecial(SpecialKeywords::LeftBrace))
 			k++;
-		if (nkwtoken->checkFlag(KeywordFlags::RightBrace) > 1)
+		if (nkwtoken->checkSpecial(SpecialKeywords::RightBrace))
 		{
 			k--;
 			if (k == 1)

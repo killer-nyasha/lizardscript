@@ -1,14 +1,20 @@
 #pragma once
 #include <typeindex>
 #include <type_traits>
+#include <string>
+//namespace std
+//{
+//	class string;
+//}
 
 struct TypeInfo
 {
 public:
 	std::type_index t;
 	int ptr;
+	std::string* lsOwnClassName;
 
-private:
+public:
 	int byValueSize;
 
 public:
@@ -17,6 +23,7 @@ public:
 	{
 		ptr = 0;
 		byValueSize = 0;
+		lsOwnClassName = nullptr;
 	}
 
 	int size()
@@ -106,24 +113,38 @@ public:
 
 	bool operator<(const TypeInfo& other) const
 	{
-		return t < other.t;
+		if (lsOwnClassName == nullptr)
+		{
+			if (other.lsOwnClassName == nullptr)
+				return t < other.t;
+			else return false;
+		}
+		else
+		{
+			if (other.lsOwnClassName == nullptr)
+				return true; 
+			else return lsOwnClassName < other.lsOwnClassName;
+		}
 	}
 
 	bool operator==(const TypeInfo& other) const
 	{
-		return t == other.t;
+		return t == other.t && lsOwnClassName == other.lsOwnClassName;
 	}
 
 	std::string text(bool addPtrSymbol = true) const
 	{
-		std::string s = t.name();
+		std::string s;
+
+		s = lsOwnClassName == nullptr ? t.name() : *lsOwnClassName;
+
 		if (addPtrSymbol)
 			for (size_t i = 0; i < ptr; i++)
 				s += '*';
 
 		size_t spacePos = s.find_first_of(' ', 0);
 		if (spacePos != std::string::npos)
-			s = s.substr(spacePos+1);
+			s = s.substr(spacePos + 1);
 
 		//сделать по-нормальному. а ещё тут может быть class и пространство имён.
 		//	а может лучше просто там написать полное имя?

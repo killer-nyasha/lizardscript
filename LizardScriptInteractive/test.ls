@@ -1,3 +1,16 @@
+class myClass
+{
+int i = 1;
+float f;
+stringptr s;
+}
+
+class myOtherClass
+{
+stringptr s1;
+stringptr s2;
+}
+
 /*int power = 0;
 while (power++ < 9000);
 lsl.print("over 9000!!");*/

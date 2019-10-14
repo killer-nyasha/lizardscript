@@ -41,6 +41,8 @@ std::stack<PossibleFunctionCalls> global_functionCalls;
 std::stack<size_t> global_localVarLevels;
 std::stack<size_t> global_functionCallsLevels;
 
+//std::stack<size_t> global_class;
+
 template <typename T>
 void clear(std::stack<T>& st)
 {
@@ -54,6 +56,9 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 	reg(global_stackEmul, global_otherReg), localVarMaxOffset(e.maxStackSize)
 {
 	e.type = type;
+
+	TCHAR* className = nullptr;
+	int classDecl = -111;
 
 	auto& localVarLevels = global_localVarLevels;
 	clear(localVarLevels);
@@ -89,27 +94,58 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 		{
 			auto kwtoken = reinterpret_cast<Keyword*>(token);
 
-			if (kwtoken->checkFlag(KeywordFlags::EndLine) || kwtoken->checkFlag(KeywordFlags::LeftBrace) || kwtoken->checkFlag(KeywordFlags::RightBrace) || kwtoken->checkFlag(KeywordFlags::Else))
+			if (kwtoken->checkFlag(KeywordFlags::EndLine) || 
+				kwtoken->checkSpecial(SpecialKeywords::LeftBrace) || 
+				kwtoken->checkSpecial(SpecialKeywords::RightBrace) ||
+				kwtoken->checkSpecial(SpecialKeywords::Else))
 			{
 				startLineIndex = code.data.size();// tIndex;
 				reg.clear();
 
-				if (kwtoken->checkFlag(KeywordFlags::LeftBrace) > 1)
+				if (kwtoken->checkSpecial(SpecialKeywords::LeftBrace))
 				{
 					localVarLevels.push(localVar.size());
 				}
-				else if (kwtoken->checkFlag(KeywordFlags::RightBrace) > 1)
+				else if (kwtoken->checkSpecial(SpecialKeywords::RightBrace))
 				{
+					if (classDecl == localVarLevels.size()-1)
+					{
+						size_t lastLvl = localVarLevels.top();
+
+						TypeInfo info = makeTypeInfo<void>();
+						info.lsOwnClassName = new std::string(className);
+
+						info.byValueSize = localVarOffset - localVar[lastLvl].offset;
+						info.ptr = 0;
+
+						TypeInfoEx ex = TypeInfoEx(info);
+						//ex.printFunction = &print<std::ostream>;
+
+						for (size_t i = lastLvl; i < localVar.size(); i++)
+						{
+							FieldInfo field = localVar[i];
+							field.offset -= localVar[lastLvl].offset;
+							ex.members.push_back(field);
+						}
+
+						globalMetadataTable.insert(std::make_pair(info, ex));
+
+						className = nullptr;
+						classDecl = -111;
+
+						print(std::cout, (char*)this, info);
+					}
+
+					//pop local variables
 					size_t localVarNewSize = localVarLevels.top();
 					localVarLevels.pop();
 					localVar.resize(localVarNewSize);
-
 					if (localVar.size() > 0)
 						localVarOffset = localVar[localVar.size() - 1].offset + localVar[localVar.size() - 1].type.size();
 					else localVarOffset = 0;
 				}
 			}
-			else if (kwtoken->checkFlag(KeywordFlags::If))
+			else if (kwtoken->checkSpecial(SpecialKeywords::If))
 			{
 				PossibleFunctionCalls call;
 				call.isIf = true;
@@ -118,14 +154,14 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 				int ntIndex = findEndLine(ptoken);
 				call.ntokenIndex = ntIndex;
 
-				if (ntIndex + 1 < tokens.size() && reinterpret_cast<Keyword*>(tokens[ntIndex + 1])->checkFlag(KeywordFlags::Else))
+				if (ntIndex + 1 < tokens.size() && reinterpret_cast<Keyword*>(tokens[ntIndex + 1])->checkSpecial(SpecialKeywords::Else))
 				{
 					call.elseNtokenIndex = findEndLine(tokens.begin() + ntIndex + 1);
 				}
 
 				functionCalls.push(call);
 			}
-			else if (kwtoken->checkFlag(KeywordFlags::While))
+			else if (kwtoken->checkSpecial(SpecialKeywords::While))
 			{
 				PossibleFunctionCalls call;
 				call.isWhile = true;
@@ -137,11 +173,16 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 
 				functionCalls.push(call);
 			}
-			else if (kwtoken->checkFlag(KeywordFlags::LeftBracket))
+			else if (kwtoken->checkSpecial(SpecialKeywords::Class))
+			{
+				className = *(ptoken++);
+				classDecl = (int)localVarLevels.size();
+			}
+			else if (kwtoken->checkSpecial(SpecialKeywords::LeftBracket))
 			{
 				functionCallsLevels.push(functionCalls.size());
 			}
-			else if (kwtoken->checkFlag(KeywordFlags::RightBracket))
+			else if (kwtoken->checkSpecial(SpecialKeywords::RightBracket))
 			{
 				functionCallsLevels.pop();
 
@@ -220,7 +261,7 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 				}
 
 			}
-			else if (kwtoken->checkFlag(KeywordFlags::New))
+			else if (kwtoken->checkSpecial(SpecialKeywords::New))
 			{
 				TypeInfo t = findType(*(ptoken+1));
 				typed_reg& r = reg.alloc(t);
@@ -246,11 +287,11 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 
 				ptoken++;
 			}
-			else if (kwtoken->checkFlag(KeywordFlags::This))
+			else if (kwtoken->checkSpecial(SpecialKeywords::This))
 			{
 				identifiersProcessor(ptoken);
 			}
-			else if (kwtoken->checkFlag(KeywordFlags::Null))
+			else if (kwtoken->checkSpecial(SpecialKeywords::Null))
 			{
 				typed_reg& rn = reg.alloc(makeTypeInfo<nullptr_t>());
 				code << (is_x64() ? opcode::push_64 : opcode::push_32) << rn << (void*)nullptr;

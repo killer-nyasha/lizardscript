@@ -57,6 +57,9 @@
     <ClCompile Include="Semantic.cpp">
       <Filter>Compiler</Filter>
     </ClCompile>
+    <ClCompile Include="Print.cpp">
+      <Filter>Runtime</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="interpreter_util.h">
