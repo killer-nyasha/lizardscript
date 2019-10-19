@@ -139,7 +139,7 @@ const std::vector<BinaryOperator>& ByteCodeGenerator::initBinary(SyntaxCore& cor
 		BinaryOperator(">", TYPEINFO(int), TYPEINFO(int), opcode::more_int_int, TYPEINFO(bool)),
 		BinaryOperator("<", TYPEINFO(int), TYPEINFO(int), opcode::less_int_int, TYPEINFO(bool)),
 
-		BinaryOperator("=", TYPEINFO(stringptr), TYPEINFO(stringptr), opcode::set_stringptr),
+		BinaryOperator("=", TYPEINFO(stringptr, 1), TYPEINFO(stringptr), opcode::set_stringptr),
 	};
 
 	return kw;

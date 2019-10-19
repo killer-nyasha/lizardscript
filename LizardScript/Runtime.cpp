@@ -17,7 +17,7 @@ void Runtime::run()
 	global_stack += expr.maxStackSize;
 		
 		//alloca(expr.maxStackSize+0x08);
-	memset(stackdata, 0, sizeof(stackdata));
+	memset(stackdata, 0, expr.maxStackSize);
 
 	memset(registers, 0, sizeof(registers));
 
