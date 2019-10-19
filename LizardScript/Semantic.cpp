@@ -12,7 +12,7 @@ SyntaxCore* IOperator::core;
 #define KEYWORD(text) if (_tcscmp(kwtoken->value, text) == 0)//временно так, потом постараюсь всё-таки вынести структуру
 #define WHEN { int csize = code.data.size(); if (
 #define OPCODE ) { code.push(
-#define RETURNS(T) ); r1.type = T; reg.push(r1); return; } else code.data.resize(csize); }
+#define RETURNS(T) ); r1.type = T; reg.push(r1); return true; } else code.data.resize(csize); }
 #define VOID ); } else code.data.resize(csize); }
 
 bool ByteCodeGenerator::cast(typed_reg reg, TypeInfo to)
@@ -52,103 +52,60 @@ bool ByteCodeGenerator::cast(typed_reg reg, TypeInfo to)
 	return false;
 }
 
-void ByteCodeGenerator::addKeywordUnary(Keyword* kwtoken, typed_reg r1)
+bool ByteCodeGenerator::addKeywordUnary(Keyword* kwtoken, typed_reg r1)
 {
-		KEYWORD("++") WHEN
-		cast(r1, TYPEINFO(int, 1))
-		OPCODE opcode::inc
-		RETURNS(TYPEINFO(int, 1))
+	auto& keywords = initUnary(core);
+	int csize = code.data.size();
+	auto pair = regindex_pair(r1, r1);
 
-		KEYWORD("--") WHEN
-		cast(r1, TYPEINFO(int, 1))
-		OPCODE opcode::dec
-		RETURNS(TYPEINFO(int, 1))
+	for (auto& kw : keywords)
+	{
+		if (kwtoken == kw.text && cast(r1, kw.type1))
+		{
+			code << kw.code;
+			code << pair;
+			reg.push(r1);
+			return true;
+		}
+		else code.data.resize(csize);
+	}
+
+	return false;
 }
 
-void ByteCodeGenerator::addKeywordBinary(Keyword* kwtoken, typed_reg r1, typed_reg r2)
+bool ByteCodeGenerator::addKeywordBinary(Keyword* kwtoken, typed_reg r1, typed_reg r2)
 {
-	//int arithmetics
+	auto& keywords = initBinary(core);
+	int csize = code.data.size();
+	auto pair = regindex_pair(r1, r2);
 
-		KEYWORD("+") WHEN
-		cast(r1, TYPEINFO(int, 0)) &&
-		cast(r2, TYPEINFO(int, 0))
-		OPCODE opcode::add_int_int
-		RETURNS(TYPEINFO(int))
+	for (auto& kw : keywords)
+	{
+		if (kwtoken == kw.text && cast(r1, kw.type1) && cast(r2, kw.type2))
+		{
+			code << kw.code;
+			code << pair;
+			r1.type = kw.rettype;
+			reg.push(r1);
+			return true;
+		}
+		else code.data.resize(csize);
+	}
 
-		KEYWORD("-") WHEN
-		cast(r1, TYPEINFO(int, 0)) &&
-		cast(r2, TYPEINFO(int, 0))
-		OPCODE opcode::sub_int_int
-		RETURNS(TYPEINFO(int))
+	KEYWORD("=") WHEN
+	cast(r1, TYPEINFO(int, 1)) &&
+	cast(r2, TYPEINFO(int, 0))
+	OPCODE opcode::set_32, pair
+	RETURNS(TYPEINFO(int, 1))
 
-		KEYWORD("*") WHEN
-		cast(r1, TYPEINFO(int, 0)) &&
-		cast(r2, TYPEINFO(int, 0))
-		OPCODE opcode::mul_int_int
-		RETURNS(TYPEINFO(int))
+	KEYWORD("=") WHEN
+	cast(r1, TYPEINFO(float, 1)) &&
+	cast(r2, TYPEINFO(float, 0))
+	OPCODE opcode::set_32, pair
+	RETURNS(TYPEINFO(float, 1))
 
-		KEYWORD("/") WHEN
-		cast(r1, TYPEINFO(int, 0)) &&
-		cast(r2, TYPEINFO(int, 0))
-		OPCODE opcode::div_int_int
-		RETURNS(TYPEINFO(int))
-
-	//float arithmetics
-
-		KEYWORD("+") WHEN
-		cast(r1, TYPEINFO(float, 0)) &&
-		cast(r2, TYPEINFO(float, 0))
-		OPCODE opcode::add_float_float
-		RETURNS(TYPEINFO(float))
-
-		KEYWORD("-") WHEN
-		cast(r1, TYPEINFO(float, 0)) &&
-		cast(r2, TYPEINFO(float, 0))
-		OPCODE opcode::sub_float_float
-		RETURNS(TYPEINFO(float))
-
-		KEYWORD("*") WHEN
-		cast(r1, TYPEINFO(float, 0)) &&
-		cast(r2, TYPEINFO(float, 0))
-		OPCODE opcode::mul_float_float
-		RETURNS(TYPEINFO(float))
-
-		KEYWORD("/") WHEN
-		cast(r1, TYPEINFO(float, 0)) &&
-		cast(r2, TYPEINFO(float, 0))
-		OPCODE opcode::div_float_float
-		RETURNS(TYPEINFO(float))
-
-	//int comparators
-
-		KEYWORD(">") WHEN
-		cast(r1, TYPEINFO(int, 0)) &&
-		cast(r2, TYPEINFO(int, 0))
-		OPCODE opcode::more_int_int
-		RETURNS(TYPEINFO(bool))
-
-		KEYWORD("<") WHEN
-		cast(r1, TYPEINFO(int, 0)) &&
-		cast(r2, TYPEINFO(int, 0))
-		OPCODE opcode::less_int_int
-		RETURNS(TYPEINFO(bool))
-
-	//=
-
-		KEYWORD("=") WHEN
-		cast(r1, TYPEINFO(int, 1)) &&
-		cast(r2, TYPEINFO(int, 0))
-		OPCODE opcode::set_32
-		RETURNS(TYPEINFO(int, 1))
-
-		KEYWORD("=") WHEN
-		cast(r1, TYPEINFO(float, 1)) &&
-		cast(r2, TYPEINFO(float, 0))
-		OPCODE opcode::set_32
-		RETURNS(TYPEINFO(float, 1))
-
-		//можно объединить в два оператора, зависящие только от размера?
-
+	//можно объединить в два оператора, зависящие только от размера?
+	//return false;
 	throw Exception(std::string("Unknown operator \"") + kwtoken->value + "\" for types " + r1.type.text() + " and " + r2.type.text() + ".");
 }
 
@@ -183,18 +140,6 @@ const std::vector<BinaryOperator>& ByteCodeGenerator::initBinary(SyntaxCore& cor
 		BinaryOperator("<", TYPEINFO(int), TYPEINFO(int), opcode::less_int_int, TYPEINFO(bool)),
 
 		BinaryOperator("=", TYPEINFO(stringptr), TYPEINFO(stringptr), opcode::set_stringptr),
-
-
-		//keyword2<int*, int, int>("=", 1, 0).setOpcode(opcode::set_32, 0, 1),
-		//keyword2<stringptr, stringptr>("=", 1, 0).setOpcode(opcode::set_stringptr, 0, 1),
-
-		//keyword2<void, void>("=", 2, 1).setOpcode((is_x64() ? opcode::set_64 : opcode::set_32), 0, 1),
-		//keyword2<void, void>("=", 1, 0).setOpcode((is_x64() ? opcode::set_64 : opcode::set_32), 0, 1),
-
-		//keyword2<float*, float, float>("=", 1, 0).setOpcode(opcode::set_32, 0, 1),
-
-		//keyword2<float*, float, int>("=", 1, 0).setOpcode(opcode::int_to_float, 1, 1).setOpcode(opcode::set_32, 0, 1),
-
 	};
 
 	return kw;

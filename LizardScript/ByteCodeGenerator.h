@@ -141,8 +141,8 @@ namespace LizardScript
 		bool/*?*/ open_reg(typed_reg& r, int ptrLevel);
 		void identifiersProcessor(std::vector<TCHAR*>::iterator& ptoken);
 
-		void addKeywordUnary(Keyword* kwtoken, typed_reg r1);
-		void addKeywordBinary(Keyword* kwtoken, typed_reg r1, typed_reg r2);
+		bool addKeywordUnary(Keyword* kwtoken, typed_reg r1);
+		bool addKeywordBinary(Keyword* kwtoken, typed_reg r1, typed_reg r2);
 		bool cast(typed_reg reg, TypeInfo to);
 	};
 }

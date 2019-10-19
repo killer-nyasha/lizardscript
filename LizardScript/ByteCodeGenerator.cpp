@@ -315,63 +315,13 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 			}
 			else
 			{
-				typed_reg r[2] = { typed_reg(), reg.free() };
-				//std::swap(r[0], r[1]);
-
-
-				//for (auto& kw : keywords)
-				//{
-				//	if (kw.arity == 1
-				//		&& kwtoken == kw.text
-				//		&& r[1].type.ptr >= kw.ptr[1]
-				//		&& (r[1].type == kw.type[1] || kw.type[1] == makeTypeInfo<void>())
-				//		)
-				//	{
-				//		open_reg(r[1], kw.ptr[1]);
-				//		//open_reg(r[0], kw.ptr[0]);
-				//		for (size_t i = 0; i < kw.opcodesCount; i++)
-				//		{
-				//			code << kw.opcodes[i];
-				//			code << regindex_pair(r[1], r[1]);
-				//		}
-				//		//r[1].type = kw.rettype;
-				//		reg.push(r[1]);
-				//		goto break_ok;
-				//	}
-				//}
-
-				r[0] = reg.free();
-
-				addKeyword(kwtoken, r[0], r[1]);
-				code << regindex_pair(r[0], r[1]);
-
-				//for (auto& kw : keywords)
-				//{
-				//	if (kwtoken == kw.text
-				//		&& r[0].type.ptr >= kw.ptr[0]
-				//		&& r[1].type.ptr >= kw.ptr[1]
-				//		&& (r[0].type == kw.type[0] || kw.type[0] == makeTypeInfo<void>() || 
-				//			kw.type[1] == makeTypeInfo<nullptr_t>()
-				//			)
-				//		&& (r[1].type == kw.type[1] || kw.type[0] == makeTypeInfo<void>() ||
-				//			kw.type[1] == makeTypeInfo<nullptr_t>()
-				//			))
-				//	{
-				//		open_reg(r[1], kw.ptr[1]);
-				//		open_reg(r[0], kw.ptr[0]);
-				//		for (size_t i = 0; i < kw.opcodesCount; i++)
-				//		{
-				//			code << kw.opcodes[i];
-				//			code << regindex_pair(kw.pairs[i].first == 0 ? r[0] : r[1], kw.pairs[i].second == 0 ? r[0] : r[1]);
-				//		}
-
-				//		r[0].type = kw.rettype;
-				//		reg.push(r[0]);
-				//		goto break_ok;
-				//	}
-				//}
-
-				//break_ok:;
+				typed_reg r1 = reg.free();
+				if (!addKeywordUnary(kwtoken, r1))
+				{
+					typed_reg r2 = reg.free();
+					std::swap(r1, r2);
+					addKeywordBinary(kwtoken, r1, r2);
+				}
 			}
 
 		}
