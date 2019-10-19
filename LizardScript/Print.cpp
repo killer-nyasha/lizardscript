@@ -41,7 +41,7 @@ namespace LizardScript
 					p = *((int**)p);
 				stream << " = " << *(float*)p << ";\n";
 			}
-			else
+			else if(metadata.type.ptr > 0)
 			{
 				char* objPtr = *(char**)(object + metadata.offset);
 
@@ -55,7 +55,12 @@ namespace LizardScript
 					//	objPtr = *((char**)objPtr);
 					print(stream, objPtr, metadata.type);
 				}
-
+			}
+			else
+			{
+				char* objPtr = (char*)(object + metadata.offset);
+				stream << " = ";
+				print(stream, objPtr, metadata.type);
 			}
 		}
 

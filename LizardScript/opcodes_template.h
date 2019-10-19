@@ -6,15 +6,16 @@
 //
 //}
 
+#define CODEGET(type) *(type*)(&expr.code.data[(i += sizeof(type)) - sizeof(type)])
+#define PCODEGET(type) (type*)(&expr.code.data[(i += sizeof(type)) - sizeof(type)])
+
+#define OPEN(type, r) (r == 0 ? *(type*)((char*)stackdata + CODEGET(short)) : *(type*)&(registers[r]))
+
 #define opcode_set(T1, T2)\
-T2 right = *reinterpret_cast<T2*>(&registers[rnsecond]);\
-T1* left = reinterpret_cast<T1*>(registers[rnfirst]);\
-*left = static_cast<T2>(right);
+*OPEN(T1*, rnfirst) = OPEN(T1, rnsecond);
 
 #define opcode_push_const(T)\
-T c = *reinterpret_cast<T*>(&expr.code.data[i+2]); \
-*reinterpret_cast<T*>(&registers[rnsecond]) = c; \
-i += sizeof(T)
+OPEN(T, rnsecond) = CODEGET(T);
 
 
 //*reinterpret_cast<T*>(&r.registers[rnsecond]) = std::get<std::vector<T>>(r.expr.constants)[std::get<int_from<T>>(r.constantsIndex).value++];

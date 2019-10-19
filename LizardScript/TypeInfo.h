@@ -31,6 +31,11 @@ public:
 		return ptr == 0 ? byValueSize : sizeof(void*);
 	}
 
+	bool full_eq(const TypeInfo& info)
+	{
+		return (*this == info) && (ptr == info.ptr);
+	}
+
 	//template <typename T>
 	//void create(T& object)
 	//{
@@ -163,6 +168,17 @@ TypeInfo makeTypeInfo()
 	TypeInfo::NoArgs<T>::create(info);
 	return info;
 }
+
+template <typename T>
+TypeInfo makeTypeInfo(int p)
+{
+	TypeInfo info;
+	TypeInfo::NoArgs<T>::create(info);
+	info.ptr = p;
+	return info;
+}
+
+#define TYPEINFO(T, ...) makeTypeInfo<T>(__VA_ARGS__)
 
 //template <typename T>
 //TypeInfo makeTypeInfo(T& object)

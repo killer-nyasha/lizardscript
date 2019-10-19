@@ -107,6 +107,12 @@ namespace LizardScript
 		int ntokenIndex, elseNtokenIndex = 0;
 	};
 
+	struct LocalVarAddr
+	{
+		int byteCodeOffset;
+		TCHAR* varName;
+	};
+
 	class ByteCodeGenerator
 	{
 	public:
@@ -126,6 +132,7 @@ namespace LizardScript
 		std::vector<futurejmp>& fjmps;
 		std::vector<FieldInfo>& localVar;
 		std::stack<PossibleFunctionCalls>& functionCalls;
+		std::vector<LocalVarAddr>& localVarAddr;
 
 		int localVarOffset = 0;
 		int& localVarMaxOffset;
@@ -133,7 +140,9 @@ namespace LizardScript
 		const std::vector<Keyword2>& initKeywords();
 		void processJumps(int tIndex);
 		int findEndLine(std::vector<TCHAR*>::iterator ptoken);
-		void open_reg(typed_reg& r, int ptrLevel);
+		bool/*?*/ open_reg(typed_reg& r, int ptrLevel);
 		void identifiersProcessor(std::vector<TCHAR*>::iterator& ptoken);
+		void addKeyword(Keyword* kwtoken, typed_reg r1, typed_reg r2);
+		bool cast(typed_reg reg, TypeInfo to);
 	};
 }

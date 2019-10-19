@@ -59,7 +59,7 @@ int ByteCodeGenerator::findEndLine(std::vector<TCHAR*>::iterator ptoken)
 //==========================================================================
 //offtopic))
 
-void ByteCodeGenerator::open_reg(typed_reg& r, int ptrLevel)
+bool ByteCodeGenerator::open_reg(typed_reg& r, int ptrLevel)
 {
 	
 	while (r.type.ptr > ptrLevel)
@@ -69,5 +69,13 @@ void ByteCodeGenerator::open_reg(typed_reg& r, int ptrLevel)
 		else if (r.type.size() <= 8)
 			code << opcode::get_64 << r;
 		r.type.ptr--;
+
+		if (r.type.size() > sizeof(void*))
+		{
+			r.type.ptr++;
+			throw Exception(std::string("Type ") + r.type.text() + " can't be placed in a register.");
+			return false;
+		}
 	}
+	return true;
 }

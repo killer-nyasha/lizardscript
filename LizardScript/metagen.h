@@ -23,20 +23,36 @@ namespace LizardScript
 
 	struct AbstractCallStruct
 	{
-		virtual void call(void* registers[16], int n) { }
+		virtual void call(void* registers[17], int n) { }
 	};
 
 	struct DummyCallStruct : public AbstractCallStruct
 	{
 		void*(Dummy::*funcptr)();
-		virtual void call(void* registers[16], int n) override { }
+		virtual void call(void* registers[17], int n) override { }
 	};
 
 	template <typename O, typename R, typename... A>
 	struct CallStruct : public AbstractCallStruct
 	{
 		R(O::*funcptr)(A...);
-		virtual void call(void* registers[16], int n) override
+		virtual void call(void* registers[17], int n) override
+		{
+			int oldN = n;
+			int i = sizeof...(A);
+			O* ths = (O*)(registers[n]);
+
+			if (sizeof(O) < sizeof(void*))
+			*(R*)(&registers[oldN]) = ((*ths).*funcptr)((*(A*)&(registers[n + i--]))...);
+			else *(R*)(registers[17]) = ((*ths).*funcptr)((*(A*)&(registers[n + i--]))...);
+		}
+	};
+
+	template <typename O, typename... A>
+	struct CallStruct<O, void, A...> : public AbstractCallStruct
+	{
+		void(O::*funcptr)(A...);
+		virtual void call(void* registers[17], int n) override
 		{
 			int i = sizeof...(A);
 			O* ths = (O*)(registers[n]);

@@ -33,9 +33,11 @@ struct A
 	A* a = nullptr;
 	B* b = nullptr;
 
-	void test()
+	B inlb;
+
+	int test()
 	{
-		f *= 2;
+		return f * 2;
 	}
 
 	void test2(int a, int b)
@@ -85,7 +87,7 @@ int main(int argc, char** argv)
 	standartCompiler = new LizardScriptCompiler(defaultSyntaxCore);
 	LizardScriptLibrary::init_ls_standart_meta();
 
-	METAGEN(A, FIELD(i), FIELD(f), FIELD(k), FIELD(a), FIELD(b), 
+	METAGEN(A, FIELD(i), FIELD(f), FIELD(k), FIELD(a), FIELD(b), FIELD(inlb),
 		PARAMS()::FUNC(CtorProvider<A>, ctor), 
 		PARAMS()::FUNC(A, test), 
 		PARAMS(int, int)::FUNC(A, test2));

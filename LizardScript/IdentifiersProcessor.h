@@ -45,7 +45,8 @@ void ByteCodeGenerator::identifiersProcessor(std::vector<TCHAR*>::iterator& ptok
 		{
 			if (_tcscmp(&localVar[i].name[0], token) == 0)
 			{
-				offset = localVar[i].offset;
+				localVarAddr.push_back({ (int)code.data.size()+2, token });
+				//offset = localVar[i].offset;
 				rn.type = localVar[i].type;
 				rn.type.ptr++;
 				code.data[pushThisOpcodeIndex] = (char)opcode::push_stackptr;

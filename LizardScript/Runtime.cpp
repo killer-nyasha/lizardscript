@@ -9,12 +9,21 @@
 
 using namespace LizardScript;
 
+char* global_stack = new char[1024];
+
 void Runtime::run()
 {
-	void* stackdata = alloca(expr.maxStackSize+0x08);
+	void* stackdata = global_stack;
+	global_stack += expr.maxStackSize;
+		
+		//alloca(expr.maxStackSize+0x08);
 	memset(stackdata, 0, sizeof(stackdata));
 
 	memset(registers, 0, sizeof(registers));
+
+	//размер регистра сейчас зависит от разрядности. не должен??
+	registers[17] = stackdata;
+
 	size_t i = 0;
 	//volatile int k = 0;
 	//try
@@ -41,14 +50,17 @@ void Runtime::run()
 
 		//}
 		//else
-		for (; i < expr.code.data.size(); i += 2)
+		for (; i < expr.code.data.size(); )
 		{
 			//std::cout << i << ": " << *(long long int*)stackdata << ";" << std::endl;
 
+			opcode op = (opcode)expr.code.data[i];
 			regindex_pair rn = *reinterpret_cast<regindex_pair*>(&expr.code.data[i + 1]);
 			regindex rnfirst = rn.first;
 			regindex rnsecond = rn.second;
-			switch ((opcode)expr.code.data[i])
+			i += 2;
+
+			switch (op)
 			{
 #include "opcodes.h"
 
@@ -72,4 +84,6 @@ void Runtime::run()
 		//	std::cout << "i = " << i << std::endl;
 		//	throw Exception("Ошибка во время выполнения скрипта. В консоль выведен лог с необходимой информацией.");
 	}
+
+	global_stack -= expr.maxStackSize;
 }

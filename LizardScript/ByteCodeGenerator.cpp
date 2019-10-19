@@ -41,6 +41,8 @@ std::stack<PossibleFunctionCalls> global_functionCalls;
 std::stack<size_t> global_localVarLevels;
 std::stack<size_t> global_functionCallsLevels;
 
+std::vector<LocalVarAddr> global_localVarAddr;
+
 //std::stack<size_t> global_class;
 
 template <typename T>
@@ -53,7 +55,7 @@ void clear(std::stack<T>& st)
 ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type, SyntaxCore& core)
 	: jmps(global_jmps), fjmps(global_fjmps), localVar(global_localVar), functionCalls(global_functionCalls),
 	code(e.code), core(core), tokens(tokens), type(type),
-	reg(global_stackEmul, global_otherReg), localVarMaxOffset(e.maxStackSize)
+	reg(global_stackEmul, global_otherReg), localVarMaxOffset(e.maxStackSize), localVarAddr(global_localVarAddr)
 {
 	e.type = type;
 
@@ -71,6 +73,7 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 	jmps.clear();
 	fjmps.clear();
 	localVar.clear();
+	localVarAddr.clear();
 	clear(functionCalls);
 
 	Keyword2::core = &core;
@@ -225,6 +228,8 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 						for (size_t i = 0; i < args.size() / 2; i++)
 							std::swap(args[i], args[args.size() - i - 1]);
 
+						typed_reg __ths = reg.free();
+
 						//правильно обработать ситуцию с разным количеством аргументов
 						for (auto& f : call.functions)
 						{
@@ -252,6 +257,17 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 							code << opcode::call_cpp << call.index;
 							for (size_t i = 0; i < sizeof(f->callStruct); i++)
 								code << f->callStruct[i];
+
+							//а что если аргументы в неправильном порядке????!!!
+
+							if (!(f->type == makeTypeInfo<void>()))
+							{
+								typed_reg returnValue = reg.alloc(f->type);
+
+								//reg.stackEmul
+							}
+
+
 							isOk = true;
 						}
 			
@@ -325,6 +341,8 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 
 				r[0] = reg.free();
 
+				//addKeyword();
+
 				for (auto& kw : keywords)
 				{
 					if (kwtoken == kw.text
@@ -394,6 +412,21 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 			else
 			{
 				identifiersProcessor(ptoken);
+			}
+		}
+	}
+
+	for (auto& a : localVarAddr)
+	{
+		for (size_t i = localVar.size() - 1; i + 1 >= 1; i--)
+		{
+			if (localVar[i].offset == 0)
+				break;
+
+			if (_tcscmp(&localVar[i].name[0], a.varName) == 0)
+			{
+				*(short*)&(code.data[a.byteCodeOffset]) = localVar[i].offset;
+				break;
 			}
 		}
 	}

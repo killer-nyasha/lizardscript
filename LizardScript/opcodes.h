@@ -5,78 +5,82 @@
 case opcode::set_32: DO(opcode_set(int, int))//int = int
 case opcode::set_64: DO(opcode_set(long long int, long long int))//int = int
 
+case opcode::set_big: 
+{
+	memcpy(OPEN(void*, rnfirst), OPEN(void*, rnsecond), CODEGET(short));
+	break;
+}
+
 //case opcode::set_float_float: DO(opcode_set(float, float))//float = float
 
 case opcode::push_stringptr:
 {
-	i += 2;
-	int allocSize = *reinterpret_cast<int*>(&expr.code.data[i]);
-	i += sizeof(int);
+	int allocSize = CODEGET(int);
 
 	std::string str = std::string(allocSize, ' ');
 
 	for (size_t j = 0; j < allocSize; j++)
 	{
-		str[j] = *reinterpret_cast<char*>(&expr.code.data[i + j]);
+		str[j] = CODEGET(char);
 	}
 
 	stringptr p = stringptr(std::move(str));
 	registers[rnfirst] = *reinterpret_cast<void**>(&p);
 	p.pointer = nullptr;
 
-	i += allocSize;
-	i -= 2;
+	//i += allocSize;
+	//i -= 2;
 	break;
 }
 
 case opcode::set_stringptr:
 {
-	*reinterpret_cast<stringptr*>(registers[rnfirst])
-		= *reinterpret_cast<stringptr*>(&registers[rnsecond]);
+	opcode_set(stringptr, stringptr);
+
+	//*reinterpret_cast<stringptr*>(registers[rnfirst])
+	//	= *reinterpret_cast<stringptr*>(&registers[rnsecond]);
 	break;
 }
 
 case opcode::alloc:
 {
-	int allocSize = *reinterpret_cast<short int*>(&expr.code.data[i + 2]);
+	int allocSize = CODEGET(short);
 	registers[rnfirst] = (void*)(new char[allocSize]);
-	i += sizeof(short int);
 	break;
 }
 
 case opcode::more_int_int:
 {
-	*(int*)&registers[rnfirst] = 
-		*(int*)&registers[rnfirst] > *(int*)&registers[rnsecond] ? 1 : 0;
+	OPEN(int, rnfirst) = 
+		OPEN(int, rnfirst) > OPEN(int, rnsecond) ? 1 : 0;
 	break;
 }
 case opcode::less_int_int:
 {
-	*(int*)&registers[rnfirst] =
-		*(int*)&registers[rnfirst] < *(int*)&registers[rnsecond] ? 1 : 0;
+	OPEN(int, rnfirst) =
+		OPEN(int, rnfirst) < OPEN(int, rnsecond) ? 1 : 0;
 	break;
 }
 
 case opcode::jz://учитывает все 8 байт
 {
-	if ((int)registers[rnfirst] == 0)
+	int toIndex = CODEGET(int);
+	if (OPEN(int, rnfirst) == 0)
 	{
-		int toIndex = *reinterpret_cast<int*>(&expr.code.data[i + 2]);
 		i = toIndex - 2;
 	}
-	else i += sizeof(int);
 	break;
 }
 case opcode::jmp:
 {
-	int toIndex = *reinterpret_cast<int*>(&expr.code.data[i + 2]);
+	int toIndex = CODEGET(int);
 	i = toIndex - 2;
 	break;
 }
 
 case opcode::call_cpp:
 {
-	DummyCallStruct* callStruct = reinterpret_cast<DummyCallStruct*>(&expr.code.data[i + 2]);
+	DummyCallStruct* callStruct = reinterpret_cast<DummyCallStruct*>(&expr.code.data[i]);
 	callStruct->call(registers, (int)rnfirst);
 	i += sizeof(FunctionInfo().callStruct);
 	break;
@@ -101,8 +105,7 @@ case opcode::push_lsl://push this
 }
 case opcode::push_offset://push offset
 {
-	registers[rnsecond] = (void*)((char*)registers[rnfirst] + *reinterpret_cast<short int*>(&expr.code.data[i + 2]));
-	i += sizeof(short int);
+	registers[rnsecond] = (void*)(OPEN(char*, rnfirst) + CODEGET(short));
 	break;
 }
 case opcode::set_this://goto ptr
@@ -130,22 +133,22 @@ case opcode::get_64://get float
 
 case opcode::add_int_int://int + int
 {
-	*(int*)&registers[rnfirst] += *(int*)&registers[rnsecond];
+	OPEN(int, rnfirst) += OPEN(int, rnsecond);
 	break;
 }
 case opcode::sub_int_int://int - int
 {
-	*(int*)&registers[rnfirst] -= *(int*)&registers[rnsecond];
+	OPEN(int, rnfirst) -= OPEN(int, rnsecond);
 	break;
 }
 case opcode::mul_int_int://int * int
 {
-	*(int*)&registers[rnfirst] *= *(int*)&registers[rnsecond];
+	OPEN(int, rnfirst) *= OPEN(int, rnsecond);
 	break;
 }
 case opcode::div_int_int://int / int
 {
-	*(int*)&registers[rnfirst] /= *(int*)&registers[rnsecond];
+	OPEN(int, rnfirst) /= OPEN(int, rnsecond);
 	break;
 }
 
@@ -157,32 +160,32 @@ case opcode::int_to_float://int / int
 
 case opcode::add_float_float://float + float
 {
-	*(float*)&registers[rnfirst] += *(float*)&registers[rnsecond];
+	OPEN(float, rnfirst) += OPEN(float, rnsecond);
 	break;
 }
 case opcode::sub_float_float://float - float
 {
-	*(float*)&registers[rnfirst] -= *(float*)&registers[rnsecond];
+	OPEN(float, rnfirst) -= OPEN(float, rnsecond);
 	break;
 }
 case opcode::mul_float_float://float * float
 {
-	*(float*)&registers[rnfirst] *= *(float*)&registers[rnsecond];
+	OPEN(float, rnfirst) *= OPEN(float, rnsecond);
 	break;
 }
 case opcode::div_float_float://float / float
 {
-	*(float*)&registers[rnfirst] /= *(float*)&registers[rnsecond];
+	OPEN(float, rnfirst) /= OPEN(float, rnsecond);
 	break;
 }
 
 case opcode::inc:
 {
-	(*(int*)registers[rnsecond])++;
+	(*OPEN(int*, rnsecond))++;
 	break;
 }
 case opcode::dec:
 {
-	(*(int*)registers[rnsecond])--;
+	(*OPEN(int*, rnsecond))--;
 	break;
 }

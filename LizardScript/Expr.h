@@ -13,6 +13,7 @@ namespace LizardScript
 		nop = 0,
 		set_32,
 		set_64,
+		set_big,
 
 		push_32,
 		push_64,
@@ -38,6 +39,7 @@ namespace LizardScript
 		div_float_float,
 
 		int_to_float,
+		float_to_int,
 
 		inc,
 		dec,
@@ -99,6 +101,12 @@ namespace LizardScript
 			//*ptr = value;
 
 			return *this;
+		}
+
+		template <typename... P>
+		void push(P... values)
+		{
+			int dummy[] = (*this << values, 0)...;
 		}
 	};
 
