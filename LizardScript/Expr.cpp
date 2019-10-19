@@ -129,7 +129,11 @@ void Expr::disasm()
 			std::cout << " value: " << *reinterpret_cast<int*>(&code.data[i + 2]);
 			i += 4;
 		}
-		else if ((opcode)code.data[i] == opcode::alloc || (opcode)code.data[i] == opcode::push_offset /*|| (opcode)code.data[i] == opcode::_opt_push_this_and_offset || (opcode)code.data[i] == opcode::_opt_set_this_and_offset*/)
+		else if ((opcode)code.data[i] == opcode::alloc || (opcode)code.data[i] == opcode::push_offset 
+			|| (opcode)code.data[i] == opcode::set_big
+			/*|| (opcode)code.data[i] == opcode::_opt_push_this_and_offset |
+			| (opcode)code.data[i] == opcode::_opt_set_this_and_offset*/
+			)
 		{
 			std::cout << " offset: " << *reinterpret_cast<short int*>(&code.data[i + 2]);
 			i += 2;

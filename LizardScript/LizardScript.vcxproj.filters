@@ -54,11 +54,17 @@
     <ClCompile Include="LizardScriptLibrary.cpp">
       <Filter>Library</Filter>
     </ClCompile>
-    <ClCompile Include="Semantic.cpp">
-      <Filter>Compiler</Filter>
-    </ClCompile>
     <ClCompile Include="Print.cpp">
       <Filter>Runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="NewLocalVariable.cpp">
+      <Filter>Compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="FindFunctionToCall.cpp">
+      <Filter>Compiler\Internal</Filter>
+    </ClCompile>
+    <ClCompile Include="Semantic.cpp">
+      <Filter>Compiler</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

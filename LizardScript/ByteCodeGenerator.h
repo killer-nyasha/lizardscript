@@ -60,26 +60,6 @@ namespace LizardScript
 		}
 	};
 
-	//template <typename T1>
-	//UnaryOperator unary(const TCHAR* text, int ind1)
-	//{
-	//	return Keyword2(text, ind1, ind1, makeTypeInfo<T1>(), makeTypeInfo<T1>()).setArity(1);
-	//}
-
-	//template <typename T1, typename T2>
-	//BinaryOperator binary(const TCHAR* text, int ind1, int ind2)
-	//{
-	//	return Keyword2(text, ind1, ind2, makeTypeInfo<T1>(), makeTypeInfo<T2>());
-	//}
-
-	//template <typename R, typename T1, typename T2>
-	//BinaryOperator binary(const TCHAR* text, int ind1, int ind2)
-	//{
-	//	auto kw = Keyword2(text, ind1, ind2, makeTypeInfo<T1>(), makeTypeInfo<T2>());
-	//	kw.rettype = makeTypeInfo<R>();
-	//	return kw;
-	//}
-
 	struct jmp
 	{
 		int codeIndex;
@@ -130,6 +110,9 @@ namespace LizardScript
 		std::stack<PossibleFunctionCalls>& functionCalls;
 		std::vector<LocalVarAddr>& localVarAddr;
 
+		FieldInfo& newLocalVariable(TCHAR* type, const TCHAR* name);
+		FieldInfo& newLocalVariable(TypeInfo info, const TCHAR* name);
+
 		int localVarOffset = 0;
 		int& localVarMaxOffset;
 
@@ -141,8 +124,12 @@ namespace LizardScript
 		bool/*?*/ open_reg(typed_reg& r, int ptrLevel);
 		void identifiersProcessor(std::vector<TCHAR*>::iterator& ptoken);
 
-		bool addKeywordUnary(Keyword* kwtoken, typed_reg r1);
-		bool addKeywordBinary(Keyword* kwtoken, typed_reg r1, typed_reg r2);
+		bool addUnary(Keyword* kwtoken, typed_reg r1);
+		bool addBinary(Keyword* kwtoken, typed_reg r1, typed_reg r2);
 		bool cast(typed_reg reg, TypeInfo to);
+
+		bool experimental_paramsForwarding = false;
+
+		void findFunctionToCall(PossibleFunctionCalls& call);
 	};
 }

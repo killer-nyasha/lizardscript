@@ -1,4 +1,5 @@
 #pragma once
+#include "metagen.h"
 
 inline const TypeInfo findType(TCHAR* name)
 {
@@ -11,7 +12,7 @@ inline const TypeInfo findType(TCHAR* name)
 		*(ch++) = 0; ptr++;
 	}
 
-	for (auto& m : globalMetadataTable)
+	for (auto& m : LizardScript::globalMetadataTable)
 	{
 		std::string t = m.first.text(false);
 		if (t == name)

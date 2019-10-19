@@ -320,9 +320,11 @@
   <ItemGroup>
     <ClCompile Include="ByteCodeGenerator.cpp" />
     <ClCompile Include="Expr.cpp" />
+    <ClCompile Include="FindFunctionToCall.cpp" />
     <ClCompile Include="LizardScriptCompiler.cpp" />
     <ClCompile Include="Lexer.cpp" />
     <ClCompile Include="LizardScriptLibrary.cpp" />
+    <ClCompile Include="NewLocalVariable.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="Print.cpp" />
     <ClCompile Include="Runtime.cpp" />

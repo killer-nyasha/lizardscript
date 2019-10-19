@@ -115,31 +115,10 @@ void ByteCodeGenerator::identifiersProcessor(std::vector<TCHAR*>::iterator& ptok
 				if (tIndex + 1 >= tokens.size())
 					throw Exception("Missing local variable name.");
 
-				FieldInfo v;
-				v.name = std::string(*(ptoken + 1));
-
-				TypeInfo info = findType(*(ptoken));
-
-				v.type = info;
-				v.offset = localVarOffset;
-				localVarOffset += v.type.size();
-
-				if (localVarOffset > localVarMaxOffset)
-					localVarMaxOffset = localVarOffset;
-
 				//undo push_this
 				reg.free(); code.data.resize(code.data.size() - 2);
-
-				auto& r = reg.alloc(v.type);
-				r.type.ptr++;
-				code << opcode::push_stackptr << r;
-
-				if (v.offset != 0)
-					code << opcode::push_offset << r << (short int)v.offset;
-
-				localVar.push_back(v);
+				newLocalVariable(*(ptoken), *(ptoken + 1));
 				ptoken += 1;
-
 			}
 
 			//else throw Exception(std::string("Unknown identifier \"") + currentType.text() + "::" + token + "\".");

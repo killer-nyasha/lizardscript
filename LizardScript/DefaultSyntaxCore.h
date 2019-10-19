@@ -41,6 +41,7 @@ namespace LizardScript
 			//Keyword(_T("let"), 0, 0, KeywordFlags::Var),
 
 			Keyword(_T("new"), 0, 0, SpecialKeywords::New, KeywordFlags::ParserAsNonOp),
+			Keyword(_T("local"), 0, 0, SpecialKeywords::NewLocal, KeywordFlags::ParserAsNonOp),
 
 			Keyword(_T("class"), 0, 0, SpecialKeywords::Class, KeywordFlags::ParserAsNonOp),
 		};

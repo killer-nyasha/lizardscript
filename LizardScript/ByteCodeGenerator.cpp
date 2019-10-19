@@ -220,71 +220,29 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 					}
 					else
 					{
-						bool isOk = false;
-
-						std::vector<typed_reg> args;
-						int argsCount = reg.stackEmul.top().index;
-						for (size_t i = 0; i < argsCount-call.index; i++)
-							args.push_back(reg.free());
-						for (size_t i = 0; i < args.size() / 2; i++)
-							std::swap(args[i], args[args.size() - i - 1]);
-
-						typed_reg __ths = reg.free();
-
-						//правильно обработать ситуцию с разным количеством аргументов
-						for (auto& f : call.functions)
-						{
-							for (size_t i = 0; i < args.size(); i++)
-							{
-								if (args[i].type.t != f->args[i].t &&
-									f->args[i].t != makeTypeInfo<void>().t &&
-									args[i].type.t != makeTypeInfo<nullptr_t>().t
-									)
-								{
-									//WARNING(std::string("argument ") + std::to_string(i + 1) + ": "
-									//	+ args[i].type.text() + " instead of " + f->args[i].text() + ".");
-									goto cont;
-								}
-							}
-							goto success;
-
-						cont:
-							continue;
-
-						success:
-
-							for (size_t i = 0; i < args.size(); i++)
-								open_reg(args[i], f->args[i].ptr);
-							code << opcode::call_cpp << call.index;
-							for (size_t i = 0; i < sizeof(f->callStruct); i++)
-								code << f->callStruct[i];
-
-							//а что если аргументы в неправильном порядке????!!!
-
-							if (!(f->type == makeTypeInfo<void>()))
-							{
-								typed_reg returnValue = reg.alloc(f->type);
-
-								//reg.stackEmul
-							}
-
-
-							isOk = true;
-						}
-			
-						if (!isOk)
-							throw Exception(std::string("All \"") + call.functions[0]->name + "\" overloads were insuitable.");
+						findFunctionToCall(call);
 					}
 				}
 
 			}
-			else if (kwtoken->checkSpecial(SpecialKeywords::New))
+			else if (kwtoken->checkSpecial(SpecialKeywords::New) || kwtoken->checkSpecial(SpecialKeywords::NewLocal))
 			{
 				TypeInfo t = findType(*(ptoken+1));
-				typed_reg& r = reg.alloc(t);
-				code << opcode::alloc << r;
-				code << (short)t.size();
-				r.type.ptr++;
+				
+				if (kwtoken->checkSpecial(SpecialKeywords::New))
+				{
+					typed_reg& r = reg.alloc(t);
+					code << opcode::alloc << r;
+					code << (short)t.size();
+					r.type.ptr++;
+				}
+				else
+				{
+					FieldInfo& f = newLocalVariable(t, "_temp_");
+					//auto r = reg.free();
+					//r.type.ptr++;
+					//reg.push(r);
+				}
 
 				bool isOk;
 				PossibleFunctionCalls calls;
@@ -316,11 +274,11 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 			else
 			{
 				typed_reg r1 = reg.free();
-				if (!addKeywordUnary(kwtoken, r1))
+				if (!addUnary(kwtoken, r1))
 				{
 					typed_reg r2 = reg.free();
 					std::swap(r1, r2);
-					addKeywordBinary(kwtoken, r1, r2);
+					addBinary(kwtoken, r1, r2);
 				}
 			}
 

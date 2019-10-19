@@ -36,6 +36,13 @@ public:
 		return (*this == info) && (ptr == info.ptr);
 	}
 
+	TypeInfo withPtr(int ptr)
+	{
+		TypeInfo t = *this;
+		t.ptr = ptr;
+		return t;
+	}
+
 	//template <typename T>
 	//void create(T& object)
 	//{

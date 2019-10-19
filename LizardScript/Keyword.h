@@ -11,7 +11,7 @@ namespace LizardScript
 		EndLine,
 	};
 
-	enum class SpecialKeywords//нужно ли??
+	enum class SpecialKeywords
 	{
 		None = 0,
 		Comma,
@@ -28,6 +28,7 @@ namespace LizardScript
 		This,
 		Null,
 		Class,
+		NewLocal,
 	};
 
 	namespace KeywordFlags

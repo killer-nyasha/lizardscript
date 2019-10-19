@@ -52,7 +52,7 @@ bool ByteCodeGenerator::cast(typed_reg reg, TypeInfo to)
 	return false;
 }
 
-bool ByteCodeGenerator::addKeywordUnary(Keyword* kwtoken, typed_reg r1)
+bool ByteCodeGenerator::addUnary(Keyword* kwtoken, typed_reg r1)
 {
 	auto& keywords = initUnary(core);
 	int csize = code.data.size();
@@ -73,7 +73,7 @@ bool ByteCodeGenerator::addKeywordUnary(Keyword* kwtoken, typed_reg r1)
 	return false;
 }
 
-bool ByteCodeGenerator::addKeywordBinary(Keyword* kwtoken, typed_reg r1, typed_reg r2)
+bool ByteCodeGenerator::addBinary(Keyword* kwtoken, typed_reg r1, typed_reg r2)
 {
 	auto& keywords = initBinary(core);
 	int csize = code.data.size();
@@ -93,16 +93,17 @@ bool ByteCodeGenerator::addKeywordBinary(Keyword* kwtoken, typed_reg r1, typed_r
 	}
 
 	KEYWORD("=") WHEN
-	cast(r1, TYPEINFO(int, 1)) &&
-	cast(r2, TYPEINFO(int, 0))
+	(r1.type.size() <= 4) && (r2.type.size() <= 4) &&
+	cast(r1, r1.type.withPtr(1)) &&
+	cast(r2, r1.type.withPtr(0))
 	OPCODE opcode::set_32, pair
-	RETURNS(TYPEINFO(int, 1))
+	RETURNS(r1.type.withPtr(1))
 
 	KEYWORD("=") WHEN
-	cast(r1, TYPEINFO(float, 1)) &&
-	cast(r2, TYPEINFO(float, 0))
-	OPCODE opcode::set_32, pair
-	RETURNS(TYPEINFO(float, 1))
+	cast(r1, r1.type.withPtr(1)) &&
+	cast(r2, r1.type.withPtr(1))
+	OPCODE opcode::set_big, pair, (short)r1.type.byValueSize
+	RETURNS(r1.type.withPtr(1))
 
 	//можно объединить в два оператора, зависящие только от размера?
 	//return false;
