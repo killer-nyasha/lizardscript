@@ -154,7 +154,12 @@ case opcode::div_int_int://int / int
 
 case opcode::int_to_float://int / int
 {
-	*(float*)&registers[rnfirst] = *(int*)&registers[rnsecond];
+	OPEN(float, rnfirst) = OPEN(int, rnsecond);
+	break;
+}
+case opcode::float_to_int://int / int
+{
+	OPEN(int, rnfirst) = OPEN(float, rnsecond);
 	break;
 }
 

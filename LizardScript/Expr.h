@@ -106,7 +106,7 @@ namespace LizardScript
 		template <typename... P>
 		void push(P... values)
 		{
-			int dummy[] = (*this << values, 0)...;
+			int dummy[] = { (*this << values, 0)... };
 		}
 	};
 

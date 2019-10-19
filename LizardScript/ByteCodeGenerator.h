@@ -11,78 +11,74 @@ namespace LizardScript
 		return sizeof(void*) == 8;
 	}
 
-	class Keyword2
+	class IOperator
 	{
 	public:
-
 		static SyntaxCore* core;
 
-		int arity = 2;
 		Keyword* text;
-		opcode opcodes[4];
-		regindex_pair pairs[4];
-		int opcodesCount;
-		int ptr[2];
-		TypeInfo type[2];
-		TypeInfo rettype;
+		opcode code;
 
-		Keyword2(const TCHAR* text, int ind1, int ind2, TypeInfo type1, TypeInfo type2)
+		TypeInfo type1;
+		TypeInfo rettype;
+	};
+
+	class UnaryOperator : public IOperator
+	{
+	public:
+		UnaryOperator(const TCHAR* text, TypeInfo type1, opcode code)
 		{
 			Keyword kw(text);
 			this->text = &core->keywords[vectorBinarySearch(core->keywords, kw)];
-
-			ptr[0] = ind1;
-			ptr[1] = ind2;
-
-			type[0] = type1;
-			type[1] = type2;
-
+			this->code = code;
+			this->type1 = type1;
 			rettype = type1;
-
-			opcodesCount = 0;
 		}
 
-		Keyword2& setOpcode(opcode opcode, regindex_pair pair)
+		UnaryOperator(const TCHAR* text, TypeInfo type1, opcode code, TypeInfo rettype)
+			: UnaryOperator(text, type1, code)
 		{
-			opcodes[opcodesCount] = opcode;
-			pairs[opcodesCount] = pair;
-			return *this;
-		}
-
-		Keyword2& setOpcode(opcode opcode, regindex p1, regindex p2)
-		{
-			opcodes[opcodesCount] = opcode;
-			pairs[opcodesCount] = regindex_pair(p1, p2);
-			opcodesCount++;
-			return *this;
-		}
-
-		Keyword2& setArity(int a)
-		{
-			arity = a;
-			return *this;
+			this->rettype = rettype;
 		}
 	};
 
-	template <typename T1>
-	Keyword2 keyword1(const TCHAR* text, int ind1)
+	class BinaryOperator : public UnaryOperator
 	{
-		return Keyword2(text, ind1, ind1, makeTypeInfo<T1>(), makeTypeInfo<T1>()).setArity(1);
-	}
+	public:
+		TypeInfo type2;
 
-	template <typename T1, typename T2>
-	Keyword2 keyword2(const TCHAR* text, int ind1, int ind2)
-	{
-		return Keyword2(text, ind1, ind2, makeTypeInfo<T1>(), makeTypeInfo<T2>());
-	}
+		BinaryOperator(const TCHAR* text, TypeInfo type1, TypeInfo type2, opcode code)
+			: UnaryOperator(text, type1, code)
+		{
+			this->type2 = type2;
+		}
 
-	template <typename R, typename T1, typename T2>
-	Keyword2 keyword2(const TCHAR* text, int ind1, int ind2)
-	{
-		auto kw = Keyword2(text, ind1, ind2, makeTypeInfo<T1>(), makeTypeInfo<T2>());
-		kw.rettype = makeTypeInfo<R>();
-		return kw;
-	}
+		BinaryOperator(const TCHAR* text, TypeInfo type1, TypeInfo type2, opcode code, TypeInfo rettype)
+			: UnaryOperator(text, type1, code, rettype)
+		{
+			this->type2 = type2;
+		}
+	};
+
+	//template <typename T1>
+	//UnaryOperator unary(const TCHAR* text, int ind1)
+	//{
+	//	return Keyword2(text, ind1, ind1, makeTypeInfo<T1>(), makeTypeInfo<T1>()).setArity(1);
+	//}
+
+	//template <typename T1, typename T2>
+	//BinaryOperator binary(const TCHAR* text, int ind1, int ind2)
+	//{
+	//	return Keyword2(text, ind1, ind2, makeTypeInfo<T1>(), makeTypeInfo<T2>());
+	//}
+
+	//template <typename R, typename T1, typename T2>
+	//BinaryOperator binary(const TCHAR* text, int ind1, int ind2)
+	//{
+	//	auto kw = Keyword2(text, ind1, ind2, makeTypeInfo<T1>(), makeTypeInfo<T2>());
+	//	kw.rettype = makeTypeInfo<R>();
+	//	return kw;
+	//}
 
 	struct jmp
 	{
@@ -137,12 +133,16 @@ namespace LizardScript
 		int localVarOffset = 0;
 		int& localVarMaxOffset;
 
-		const std::vector<Keyword2>& initKeywords();
+		const std::vector<UnaryOperator>& initUnary(SyntaxCore& core);
+		const std::vector<BinaryOperator>& initBinary(SyntaxCore& core);
+
 		void processJumps(int tIndex);
 		int findEndLine(std::vector<TCHAR*>::iterator ptoken);
 		bool/*?*/ open_reg(typed_reg& r, int ptrLevel);
 		void identifiersProcessor(std::vector<TCHAR*>::iterator& ptoken);
-		void addKeyword(Keyword* kwtoken, typed_reg r1, typed_reg r2);
+
+		void addKeywordUnary(Keyword* kwtoken, typed_reg r1);
+		void addKeywordBinary(Keyword* kwtoken, typed_reg r1, typed_reg r2);
 		bool cast(typed_reg reg, TypeInfo to);
 	};
 }

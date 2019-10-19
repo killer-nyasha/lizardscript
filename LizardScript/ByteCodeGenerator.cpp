@@ -76,8 +76,9 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 	localVarAddr.clear();
 	clear(functionCalls);
 
-	Keyword2::core = &core;
-	auto& keywords = initKeywords();
+	//Keyword2::core = &core;
+	auto& unary = initUnary(core);
+	auto& binary = initBinary(core);
 
 	//int& localVarMaxOffset = e.maxStackSize;
 	//localVarMaxOffset = 0;
@@ -318,59 +319,59 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 				//std::swap(r[0], r[1]);
 
 
-				for (auto& kw : keywords)
-				{
-					if (kw.arity == 1
-						&& kwtoken == kw.text
-						&& r[1].type.ptr >= kw.ptr[1]
-						&& (r[1].type == kw.type[1] || kw.type[1] == makeTypeInfo<void>())
-						)
-					{
-						open_reg(r[1], kw.ptr[1]);
-						//open_reg(r[0], kw.ptr[0]);
-						for (size_t i = 0; i < kw.opcodesCount; i++)
-						{
-							code << kw.opcodes[i];
-							code << regindex_pair(r[1], r[1]);
-						}
-						//r[1].type = kw.rettype;
-						reg.push(r[1]);
-						goto break_ok;
-					}
-				}
+				//for (auto& kw : keywords)
+				//{
+				//	if (kw.arity == 1
+				//		&& kwtoken == kw.text
+				//		&& r[1].type.ptr >= kw.ptr[1]
+				//		&& (r[1].type == kw.type[1] || kw.type[1] == makeTypeInfo<void>())
+				//		)
+				//	{
+				//		open_reg(r[1], kw.ptr[1]);
+				//		//open_reg(r[0], kw.ptr[0]);
+				//		for (size_t i = 0; i < kw.opcodesCount; i++)
+				//		{
+				//			code << kw.opcodes[i];
+				//			code << regindex_pair(r[1], r[1]);
+				//		}
+				//		//r[1].type = kw.rettype;
+				//		reg.push(r[1]);
+				//		goto break_ok;
+				//	}
+				//}
 
 				r[0] = reg.free();
 
-				//addKeyword();
+				addKeyword(kwtoken, r[0], r[1]);
+				code << regindex_pair(r[0], r[1]);
 
-				for (auto& kw : keywords)
-				{
-					if (kwtoken == kw.text
-						&& r[0].type.ptr >= kw.ptr[0]
-						&& r[1].type.ptr >= kw.ptr[1]
-						&& (r[0].type == kw.type[0] || kw.type[0] == makeTypeInfo<void>() || 
-							kw.type[1] == makeTypeInfo<nullptr_t>()
-							)
-						&& (r[1].type == kw.type[1] || kw.type[0] == makeTypeInfo<void>() ||
-							kw.type[1] == makeTypeInfo<nullptr_t>()
-							))
-					{
-						open_reg(r[1], kw.ptr[1]);
-						open_reg(r[0], kw.ptr[0]);
-						for (size_t i = 0; i < kw.opcodesCount; i++)
-						{
-							code << kw.opcodes[i];
-							code << regindex_pair(kw.pairs[i].first == 0 ? r[0] : r[1], kw.pairs[i].second == 0 ? r[0] : r[1]);
-						}
+				//for (auto& kw : keywords)
+				//{
+				//	if (kwtoken == kw.text
+				//		&& r[0].type.ptr >= kw.ptr[0]
+				//		&& r[1].type.ptr >= kw.ptr[1]
+				//		&& (r[0].type == kw.type[0] || kw.type[0] == makeTypeInfo<void>() || 
+				//			kw.type[1] == makeTypeInfo<nullptr_t>()
+				//			)
+				//		&& (r[1].type == kw.type[1] || kw.type[0] == makeTypeInfo<void>() ||
+				//			kw.type[1] == makeTypeInfo<nullptr_t>()
+				//			))
+				//	{
+				//		open_reg(r[1], kw.ptr[1]);
+				//		open_reg(r[0], kw.ptr[0]);
+				//		for (size_t i = 0; i < kw.opcodesCount; i++)
+				//		{
+				//			code << kw.opcodes[i];
+				//			code << regindex_pair(kw.pairs[i].first == 0 ? r[0] : r[1], kw.pairs[i].second == 0 ? r[0] : r[1]);
+				//		}
 
-						r[0].type = kw.rettype;
-						reg.push(r[0]);
-						goto break_ok;
-					}
-				}
+				//		r[0].type = kw.rettype;
+				//		reg.push(r[0]);
+				//		goto break_ok;
+				//	}
+				//}
 
-				throw Exception(std::string("Unknown operator \"") + kwtoken->value + "\" for types " + r[0].type.text() + " and " + r[1].type.text() + ".");
-				break_ok:;
+				//break_ok:;
 			}
 
 		}
