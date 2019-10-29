@@ -4,7 +4,8 @@
 #include "metagen_def.h"
 
 #define FIELD(field) rawFieldInfo(&(sample->field), #field)
-#define FUNC(cl, field) rawFieldInfo(&cl::field, #field)
+#define FUNC(...) rawFieldInfo(&__VA_ARGS__::
+#define WITHNAME(fname) fname, #fname)
 #define PARAMS(...) WithParams<__VA_ARGS__>
 
 #define METAGEN(className, ...) ([](className* sample) { createMetadata((className*)nullptr, __VA_ARGS__); })(nullptr)

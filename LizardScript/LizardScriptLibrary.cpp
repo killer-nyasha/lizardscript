@@ -15,13 +15,13 @@ void LizardScriptLibrary::init_ls_standart_meta()
 	METAGEN(int);
 	METAGEN(float);
 	METAGEN(LizardScriptLibrary,
-		PARAMS(int)::FUNC(LizardScriptLibrary, print),
-		PARAMS(float)::FUNC(LizardScriptLibrary, print),
-		PARAMS(stringptr)::FUNC(LizardScriptLibrary, print),
-		FUNC(LizardScriptLibrary, eval),
-		PARAMS(int, int)::FUNC(LizardScriptLibrary, random)
+		PARAMS(int)::FUNC(LizardScriptLibrary) WITHNAME(print),
+		PARAMS(float)::FUNC(LizardScriptLibrary) WITHNAME(print),
+		PARAMS(stringptr)::FUNC(LizardScriptLibrary) WITHNAME(print),
+		FUNC(LizardScriptLibrary) WITHNAME(eval),
+		PARAMS(int, int)::FUNC(LizardScriptLibrary) WITHNAME(random)
 	);
-	METAGEN(stringptr, /*FUNC(stringptr, operator[]),*/ FUNC(CtorProvider<stringptr>, ctor));
+	METAGEN(stringptr, /*FUNC(stringptr, operator[]),*/ FUNC(CtorProvider<stringptr>) WITHNAME(ctor));
 
 }
 

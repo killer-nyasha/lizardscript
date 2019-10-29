@@ -22,6 +22,12 @@ struct B
 	B* b = nullptr;
 
 	B() { }
+
+	void operator+(B* b)
+	{
+		x += b->x;
+		f += b->f;
+	}
 };
 
 struct A
@@ -88,11 +94,14 @@ int main(int argc, char** argv)
 	LizardScriptLibrary::init_ls_standart_meta();
 
 	METAGEN(A, FIELD(i), FIELD(f), FIELD(k), FIELD(a), FIELD(b), FIELD(inlb),
-		PARAMS()::FUNC(CtorProvider<A>, ctor), 
-		PARAMS()::FUNC(A, test), 
-		PARAMS(int, int)::FUNC(A, test2));
+		PARAMS()::FUNC(CtorProvider<A>) WITHNAME(ctor),
+		PARAMS()::FUNC(A) WITHNAME(test),
+		PARAMS(int, int)::FUNC(A) WITHNAME(test2)
+	);
 	METAGEN(B, FIELD(x), FIELD(f), FIELD(b),
-		PARAMS()::FUNC(CtorProvider<B>, ctor));
+		PARAMS()::FUNC(CtorProvider<B>) WITHNAME(ctor),
+		PARAMS(B*)::FUNC(B) WITHNAME(operator+)
+	);
 
 	A t;
 

@@ -105,6 +105,19 @@ bool ByteCodeGenerator::addBinary(Keyword* kwtoken, typed_reg r1, typed_reg r2)
 	OPCODE opcode::set_big, pair, (short)r1.type.byValueSize
 	RETURNS(r1.type.withPtr(1))
 
+	std::string opname = std::string("operator") + kwtoken->value;
+	for (auto f : globalMetadataTable[r1.type].members.get<FunctionInfo>())
+	{
+		if (f.name == opname)
+		{
+			PossibleFunctionCalls call;
+			call.functions.push_back(&f);
+			call.index = r1.index;
+			findFunctionToCall(call);
+			return true;
+		}
+	}
+
 	//можно объединить в два оператора, зависящие только от размера?
 	//return false;
 	throw Exception(std::string("Unknown operator \"") + kwtoken->value + "\" for types " + r1.type.text() + " and " + r2.type.text() + ".");
