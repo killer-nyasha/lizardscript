@@ -1,5 +1,4 @@
 #pragma once
 
 #define lsclass
-#define lsfield
-#define lsfunc
+#define NOT_METADATA
