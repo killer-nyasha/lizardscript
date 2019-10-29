@@ -161,6 +161,24 @@ namespace LizardScript
 
 			return RawFieldInfo<R(O::*)(A...)> { (void*)-1, *reinterpret_cast<void*(Dummy::**)()>(&buffer), name };
 		}
+
+		template <typename O>
+		static inline RawFieldInfo<void(O::*)(A...)> rawFieldInfo(void(O::*ptr)(A...), std::string name)
+		{
+			buf buffer;
+			*reinterpret_cast<void(O::**)(A...)>(&buffer) = ptr;
+
+			return RawFieldInfo<void(O::*)(A...)> { (void*)-1, *reinterpret_cast<void*(Dummy::**)()>(&buffer), name };
+		}
+
+		template <typename O>
+		static inline RawFieldInfo<void(O::*)(A...)> rawFieldInfo(void(O::*ptr)(A...) const, std::string name)
+		{
+			buf buffer;
+			*reinterpret_cast<void(O::**)(A...) const>(&buffer) = ptr;
+
+			return RawFieldInfo<void(O::*)(A...)> { (void*)-1, *reinterpret_cast<void*(Dummy::**)()>(&buffer), name };
+		}
 	};
 
 	template <typename T>
