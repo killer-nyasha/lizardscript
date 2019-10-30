@@ -38,7 +38,7 @@ namespace LizardScript
 	{
 		static CA _impl(void* arg)
 		{
-			return  *(CA*)&(arg);
+			return  *(CA*)(arg);
 		}
 	};
 
@@ -47,7 +47,7 @@ namespace LizardScript
 	{
 		static CA& _impl(void* arg)
 		{
-			return  *(CA*)&(arg);
+			return  *(CA*)(arg);
 		}
 	};
 
@@ -56,7 +56,7 @@ namespace LizardScript
 	{
 		static CA&& _impl(void* arg)
 		{
-			return  std::move(*(CA*)&(arg));
+			return  std::move(*(CA*)(arg));
 		}
 	};
 
@@ -71,8 +71,8 @@ namespace LizardScript
 			O* ths = (O*)(registers[n]);
 
 			if (sizeof(O) < sizeof(void*))
-				*(R*)(&registers[oldN]) = ((*ths).*funcptr)(ArgImpl<A>::_impl(registers[n + i--])...);
-			else *(R*)(registers[17]) = ((*ths).*funcptr)(ArgImpl<A>::_impl(registers[n + i--])...);
+				*(R*)(&registers[oldN]) = ((*ths).*funcptr)(ArgImpl<A>::_impl((void*)&registers[n + i--])...);
+			else *(R*)(registers[17]) = ((*ths).*funcptr)(ArgImpl<A>::_impl((void*)&registers[n + i--])...);
 		}
 	};
 
@@ -84,7 +84,7 @@ namespace LizardScript
 		{
 			int i = sizeof...(A);
 			O* ths = (O*)(registers[n]);
-			((*ths).*funcptr)(ArgImpl<A>::_impl(registers[n + i--])...);
+			((*ths).*funcptr)(ArgImpl<A>::_impl((void*)&registers[n + i--])...);
 		}
 	};
 
