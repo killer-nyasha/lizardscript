@@ -88,6 +88,8 @@ namespace LizardScript
 
 		DISASM(set_32),
 		DISASM(set_64),
+		DISASM(set_big),
+
 		DISASM(push_32),
 		DISASM(push_this),
 		DISASM(push_offset),
@@ -105,7 +107,9 @@ namespace LizardScript
 		DISASM(jz),
 
 		DISASM(push_lsl),
+		DISASM(push_stackbase),
 		DISASM(push_stackptr),
+		DISASM(set_stackptr),
 
 		DISASM(call_cpp),
 		DISASM(set_stringptr),
@@ -130,7 +134,7 @@ void Expr::disasm()
 			i += 4;
 		}
 		else if ((opcode)code.data[i] == opcode::alloc || (opcode)code.data[i] == opcode::push_offset 
-			|| (opcode)code.data[i] == opcode::set_big
+			|| (opcode)code.data[i] == opcode::set_big || (opcode)code.data[i] == opcode::set_stackptr
 			/*|| (opcode)code.data[i] == opcode::_opt_push_this_and_offset |
 			| (opcode)code.data[i] == opcode::_opt_set_this_and_offset*/
 			)

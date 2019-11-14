@@ -31,6 +31,11 @@ public:
 		return ptr == 0 ? byValueSize : sizeof(void*);
 	}
 
+	int openedSize()
+	{
+		return (ptr-1) == 0 ? byValueSize : sizeof(void*);
+	}
+
 	bool full_eq(const TypeInfo& info)
 	{
 		return (*this == info) && (ptr == info.ptr);
@@ -118,6 +123,26 @@ public:
 	};
 
 	template <typename T>
+	struct NoArgs<T&>
+	{
+		static void create(TypeInfo& t)
+		{
+			t.ptr++;
+			NoArgs<T>::create(t);
+		}
+	};
+
+	template <typename T>
+	struct NoArgs<T&&>
+	{
+		static void create(TypeInfo& t)
+		{
+			t.ptr++;
+			NoArgs<T>::create(t);
+		}
+	};
+
+	template <typename T>
 	bool is() const
 	{
 		return t == typeid(T);
@@ -167,6 +192,7 @@ public:
 		return s;
 	}
 };
+
 
 template <typename T>
 TypeInfo makeTypeInfo()

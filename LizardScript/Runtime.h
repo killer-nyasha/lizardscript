@@ -11,7 +11,7 @@ namespace LizardScript
 		TypeInfo type;
 		//size_t offsetsIndex;
 
-		void* registers[17];
+		void* registers[18];
 
 		//std::tuple<int_from<int>, int_from<float>> constantsIndex;
 

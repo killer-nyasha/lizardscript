@@ -80,7 +80,7 @@ case opcode::jmp:
 
 case opcode::call_cpp:
 {
-	DummyCallStruct* callStruct = reinterpret_cast<DummyCallStruct*>(&expr.code.data[i]);
+	AbstractCallStruct* callStruct = reinterpret_cast<AbstractCallStruct*>(&expr.code.data[i]);
 	callStruct->call(registers, (int)rnfirst);
 	i += sizeof(FunctionInfo().callStruct);
 	break;
@@ -93,9 +93,19 @@ case opcode::push_this://push this
 	registers[rnfirst] = ths; 
 	break;
 }
-case opcode::push_stackptr://push this
+//case opcode::push_stackptr://push this
+//{
+//	registers[rnfirst] = stackptr;
+//	break;
+//}
+case opcode::set_stackptr://push this
 {
-	registers[rnfirst] = stackdata;
+	stackptr = (char*)stackbase + CODEGET(short);
+	break;
+}
+case opcode::push_stackbase://push this
+{
+	registers[rnfirst] = stackbase;
 	break;
 }
 case opcode::push_lsl://push this

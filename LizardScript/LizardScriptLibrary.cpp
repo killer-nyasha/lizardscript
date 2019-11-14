@@ -18,10 +18,10 @@ void LizardScriptLibrary::init_ls_standart_meta()
 		PARAMS(int)::FUNC(LizardScriptLibrary) WITHNAME(print),
 		PARAMS(float)::FUNC(LizardScriptLibrary) WITHNAME(print),
 		PARAMS(stringptr)::FUNC(LizardScriptLibrary) WITHNAME(print),
-		FUNC(LizardScriptLibrary) WITHNAME(eval),
+		PARAMS(void*, stringptr, stringptr)::FUNC(LizardScriptLibrary) WITHNAME(eval),
 		PARAMS(int, int)::FUNC(LizardScriptLibrary) WITHNAME(random)
 	);
-	METAGEN(stringptr, /*FUNC(stringptr, operator[]),*/ FUNC(CtorProvider<stringptr>) WITHNAME(ctor));
+	METAGEN(stringptr, /*FUNC(stringptr, operator[]),*/ PARAMS()::FUNC(CtorProvider<stringptr>) WITHNAME(ctor));
 
 }
 

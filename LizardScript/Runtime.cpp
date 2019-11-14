@@ -13,16 +13,21 @@ char* global_stack = new char[1024];
 
 void Runtime::run()
 {
-	void* stackdata = global_stack;
-	global_stack += expr.maxStackSize;
-		
-		//alloca(expr.maxStackSize+0x08);
-	memset(stackdata, 0, expr.maxStackSize);
-
 	memset(registers, 0, sizeof(registers));
+	void*& stackptr = registers[16];
+	void*& stackbase = registers[17];
+	stackbase = stackptr = global_stack;
+	memset(stackbase, 0, expr.maxStackSize);
+	stackptr = (char*)stackptr + expr.maxStackSize;
+
+	//global_stack += expr.maxStackSize;
+	//alloca(expr.maxStackSize+0x08);
+
+
+	//void* stackbase = stackptr;
 
 	//размер регистра сейчас зависит от разрядности. не должен??
-	registers[17] = stackdata;
+	//registers[16] = stackdata;
 
 	size_t i = 0;
 	//volatile int k = 0;

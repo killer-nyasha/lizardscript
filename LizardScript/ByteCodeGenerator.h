@@ -111,7 +111,7 @@ namespace LizardScript
 		std::vector<LocalVarAddr>& localVarAddr;
 
 		FieldInfo& newLocalVariable(TCHAR* type, const TCHAR* name);
-		FieldInfo& newLocalVariable(TypeInfo info, const TCHAR* name);
+		FieldInfo& newLocalVariable(TypeInfo info, const TCHAR* name, bool getAddressImmediately = true);
 
 		int localVarOffset = 0;
 		int& localVarMaxOffset;

@@ -28,10 +28,10 @@ FieldInfo& ByteCodeGenerator::newLocalVariable(TCHAR* type, const TCHAR* name)
 	return newLocalVariable(findType(type), name);
 }
 
-FieldInfo& ByteCodeGenerator::newLocalVariable(TypeInfo info, const TCHAR* name)
+FieldInfo& ByteCodeGenerator::newLocalVariable(TypeInfo info, const TCHAR* name, bool getAddressImmediately)
 {
 	FieldInfo v;
-	v.name = std::string();
+	v.name = std::string(name);
 
 	v.type = info;
 	v.offset = localVarOffset;
@@ -40,12 +40,15 @@ FieldInfo& ByteCodeGenerator::newLocalVariable(TypeInfo info, const TCHAR* name)
 	if (localVarOffset > localVarMaxOffset)
 		localVarMaxOffset = localVarOffset;
 
-	auto& r = reg.alloc(v.type);
-	r.type.ptr++;
-	code << opcode::push_stackptr << r;
+	if (getAddressImmediately)
+	{
+		auto& r = reg.alloc(v.type);
+		r.type.ptr++;
+		code << opcode::push_stackbase << r;
 
-	//if (v.offset != 0)
-	code << opcode::push_offset << r << (short int)v.offset;
+		//if (v.offset != 0)
+		code << opcode::push_offset << r << (short int)v.offset;
+	}
 
 	localVar.push_back(v);
 	return localVar[localVar.size() - 1];

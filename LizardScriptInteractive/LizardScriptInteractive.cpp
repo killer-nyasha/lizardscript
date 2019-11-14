@@ -23,14 +23,26 @@ struct B
 
 	B() { }
 
-	void operator+(B* b)
+	B operator+(B& b)
 	{
-		x += b->x;
-		f += b->f;
+		B ret;
+		ret.x = x + b.x;
+		ret.f = f + b.f;
+		return ret;
 	}
 };
 
-struct A
+struct AParent1
+{
+	virtual int test() { return 0; }
+};
+
+struct AParent2
+{
+	virtual int a() { return 0; }
+};
+
+struct A : public AParent1, AParent2
 {
 	int i = 10;
 	float f = 20.0f;
@@ -41,7 +53,7 @@ struct A
 
 	B inlb;
 
-	int test()
+	virtual int test()
 	{
 		return f * 2;
 	}
@@ -100,7 +112,7 @@ int main(int argc, char** argv)
 	);
 	METAGEN(B, FIELD(x), FIELD(f), FIELD(b),
 		PARAMS()::FUNC(CtorProvider<B>) WITHNAME(ctor),
-		PARAMS(B*)::FUNC(B) WITHNAME(operator+)
+		PARAMS(B&)::FUNC(B) WITHNAME(operator+)
 	);
 
 	A t;

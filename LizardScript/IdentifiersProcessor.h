@@ -49,7 +49,7 @@ void ByteCodeGenerator::identifiersProcessor(std::vector<TCHAR*>::iterator& ptok
 				//offset = localVar[i].offset;
 				rn.type = localVar[i].type;
 				rn.type.ptr++;
-				code.data[pushThisOpcodeIndex] = (char)opcode::push_stackptr;
+				code.data[pushThisOpcodeIndex] = (char)opcode::push_stackbase;
 				isOk = true; break;
 			}
 		}
@@ -133,12 +133,16 @@ void ByteCodeGenerator::identifiersProcessor(std::vector<TCHAR*>::iterator& ptok
 
 		if (  core.isKeyword(*(ptoken + 1)) &&
 			((Keyword*)*(ptoken + 1))->checkSpecial(SpecialKeywords::Dot)
-			&& ((ptoken += 2) >= tokens.begin()) && ((token = *ptoken)))
+			&& ((ptoken += 2) >= tokens.begin()) && ((token = *ptoken))
+			)
 		{
-			setThisPushed = true;
-			//если функция, то вот это вот откатываем?? или нет??
-			code << opcode::set_this;
-			code << rn;
+			if (rn.type.ptr > 1)
+			{
+				setThisPushed = true;
+				//если функция, то вот это вот откатываем?? или нет??
+				code << opcode::set_this;
+				code << rn;
+			}
 			currentType = rn.type;
 		}
 		else break;

@@ -27,6 +27,8 @@ namespace LizardScript
 		set_stringptr,
 
 		push_stackptr,
+		push_stackbase,
+		set_stackptr,
 
 		add_int_int,
 		sub_int_int,

@@ -59,6 +59,8 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 {
 	e.type = type;
 
+	short int stackofs = 0;
+
 	TCHAR* className = nullptr;
 	int classDecl = -111;
 
@@ -238,10 +240,21 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 				}
 				else
 				{
+					//typed_reg& r = reg.alloc(t);
 					FieldInfo& f = newLocalVariable(t, "_temp_");
+
+					//code << opcode::push_stackbase << r;
+					//code << opcode::push_offset << r << (short)f.offset;
+
 					//auto r = reg.free();
 					//r.type.ptr++;
 					//reg.push(r);
+
+					//typed_reg& r = reg.alloc(TYPEINFO(int));
+					//code.push(opcode::push_stackptr, r);
+					//code.push(opcode::push_offset, r, stackofs);
+					//r.type = t.withPtr(t.ptr+1);
+					//stackofs += r.type.openedSize();
 				}
 
 				bool isOk;
@@ -274,12 +287,18 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 			else
 			{
 				typed_reg r1 = reg.free();
+				//reg.stackEmul.pop();
+
 				if (!addUnary(kwtoken, r1))
 				{
 					typed_reg r2 = reg.free();
-					std::swap(r1, r2);
-					addBinary(kwtoken, r1, r2);
+					addBinary(kwtoken, r2, r1);
+					//reg.alloc(r2.type);
 				}
+				//else
+					//reg.alloc(r1.type);
+
+				//reg.stackEmul.push(r1);
 			}
 
 		}

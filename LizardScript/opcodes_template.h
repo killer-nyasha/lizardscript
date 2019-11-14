@@ -9,7 +9,7 @@
 #define CODEGET(type) *(type*)(&expr.code.data[(i += sizeof(type)) - sizeof(type)])
 #define PCODEGET(type) (type*)(&expr.code.data[(i += sizeof(type)) - sizeof(type)])
 
-#define OPEN(type, r) (r == 0 ? *(type*)((char*)stackdata + CODEGET(short)) : *(type*)&(registers[r]))
+#define OPEN(type, r) (r == 0 ? *(type*)((char*)stackbase + CODEGET(short)) : *(type*)&(registers[r]))
 
 #define opcode_set(T1, T2)\
 *OPEN(T1*, rnfirst) = OPEN(T1, rnsecond);
