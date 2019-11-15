@@ -41,7 +41,7 @@ void Lexer::run()
 			}
 			i++;
 		}
-		else if (text[i] == '//')
+		else if (i + 1 < textLength && text[i] == '/' && text[i + 1] == '/')
 			while (text[i] != '\r' && text[i] != '\n')
 				i++;
 		else if (text[i] == '[')
