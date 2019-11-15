@@ -8,7 +8,8 @@
 #define WITHNAME(fname) fname, #fname)
 #define PARAMS(...) WithParams<__VA_ARGS__>
 
-#define METAGEN(className, ...) ([](className* sample) { createMetadata((className*)nullptr, __VA_ARGS__); })(nullptr)
+#define METAGEN_CLASS(className,...) ([](className* sample) { FromParents<__VA_ARGS__>::createMetadata((className*)nullptr
+#define WITH_MEMBERS(...) __VA_ARGS__); })(nullptr)
 
 #define REGISTERS_COUNT 18
 
@@ -124,6 +125,14 @@ namespace LizardScript
 			*(TypeInfo*)(this) = from;
 		}
 
+		void operator+=(TypeInfoEx& e)
+		{
+			for (auto& a : e.members.get<FieldInfo>())
+				members.get<FieldInfo>().push_back(a);
+			for (auto& a : e.members.get<FunctionInfo>())
+				members.get<FunctionInfo>().push_back(a);
+		}
+
 		VectorsTuple<FieldInfo, FunctionInfo> members;
 	};
 
@@ -218,31 +227,54 @@ namespace LizardScript
 		return f;
 	}
 
-	//вынести общую логику
-	template <typename O, typename... T>
-	inline void createMetadata(O* object)
+	template <typename... P>
+	class FromParents
 	{
-		std::vector<FieldInfo> metaTable;
+	public:
+		//вынести общую логику
+		template <typename O, typename... T>
+		static inline void createMetadata(O* object)
+		{
+			std::vector<FieldInfo> metaTable;
+			TypeInfo info = makeTypeInfo<O>();
+			TypeInfoEx einfo = TypeInfoEx(info);
+			globalMetadataTable.insert(std::make_pair(info, einfo));
+		}
 
-		TypeInfo info = makeTypeInfo<O>();
-		TypeInfoEx einfo = TypeInfoEx(info);
-		//einfo.printFunction = &print_r<O>;
+		template <typename O, typename... T>
+		static inline void createMetadata(O* object, T... infos)
+		{
+			TypeInfo info = makeTypeInfo<O>();
+			TypeInfoEx einfo = TypeInfoEx(info);
+			int i[] = { (einfo += globalMetadataTable[TYPEINFO(P)], 0)... };
+			char c[] = { (einfo.members.push_back(createMetadataEntry(infos)), '\0')... };
+			globalMetadataTable.insert(std::make_pair(info, einfo));
+		}
+	};
 
-		globalMetadataTable.insert(std::make_pair(info, einfo));
-	}
-
-	template <typename O, typename... T>
-	inline void createMetadata(O* object, T... infos)
+	template <>
+	class FromParents<>
 	{
-		//std::vector<FieldInfo> metaTable;
+	public:
+		template <typename O, typename... T>
+		static inline void createMetadata(O* object)
+		{
+			std::vector<FieldInfo> metaTable;
+			TypeInfo info = makeTypeInfo<O>();
+			TypeInfoEx einfo = TypeInfoEx(info);
+			globalMetadataTable.insert(std::make_pair(info, einfo));
+		}
 
-		TypeInfo info = makeTypeInfo<O>();
-		TypeInfoEx einfo = TypeInfoEx(info);
-		//einfo.printFunction = &print_r<O>;
-		//einfo.fields = metaTable;
-		char c[] = { (einfo.members.push_back(createMetadataEntry(infos)), '\0')... };
+		template <typename O, typename... T>
+		static inline void createMetadata(O* object, T... infos)
+		{
+			TypeInfo info = makeTypeInfo<O>();
+			TypeInfoEx einfo = TypeInfoEx(info);
+			//int i[] = { (einfo += globalMetadataTable[TYPEINFO(P)], 0)... };
+			char c[] = { (einfo.members.push_back(createMetadataEntry(infos)), '\0')... };
+			globalMetadataTable.insert(std::make_pair(info, einfo));
+		}
+	};
 
-		globalMetadataTable.insert(std::make_pair(info, einfo));
-	}
 }
 

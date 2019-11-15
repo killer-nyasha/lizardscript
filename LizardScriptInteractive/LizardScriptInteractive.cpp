@@ -105,12 +105,12 @@ int main(int argc, char** argv)
 	standartCompiler = new LizardScriptCompiler(defaultSyntaxCore);
 	LizardScriptLibrary::init_ls_standart_meta();
 
-	METAGEN(A, FIELD(i), FIELD(f), FIELD(k), FIELD(a), FIELD(b), FIELD(inlb),
+	METAGEN_CLASS(A) WITH_MEMBERS(, FIELD(i), FIELD(f), FIELD(k), FIELD(a), FIELD(b), FIELD(inlb),
 		PARAMS()::FUNC(CtorProvider<A>) WITHNAME(ctor),
 		PARAMS()::FUNC(A) WITHNAME(test),
 		PARAMS(int, int)::FUNC(A) WITHNAME(test2)
 	);
-	METAGEN(B, FIELD(x), FIELD(f), FIELD(b),
+	METAGEN_CLASS(B) WITH_MEMBERS(, FIELD(x), FIELD(f), FIELD(b),
 		PARAMS()::FUNC(CtorProvider<B>) WITHNAME(ctor),
 		PARAMS(B&)::FUNC(B) WITHNAME(operator+)
 	);

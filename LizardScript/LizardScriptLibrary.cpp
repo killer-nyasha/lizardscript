@@ -12,17 +12,18 @@ using namespace LizardScript;
 
 void LizardScriptLibrary::init_ls_standart_meta()
 {
-	METAGEN(int);
-	METAGEN(float);
-	METAGEN(LizardScriptLibrary,
+	METAGEN_CLASS(int) WITH_MEMBERS();
+	METAGEN_CLASS(float) WITH_MEMBERS();
+	METAGEN_CLASS(LizardScriptLibrary) WITH_MEMBERS(,
 		PARAMS(int)::FUNC(LizardScriptLibrary) WITHNAME(print),
 		PARAMS(float)::FUNC(LizardScriptLibrary) WITHNAME(print),
 		PARAMS(stringptr)::FUNC(LizardScriptLibrary) WITHNAME(print),
 		PARAMS(void*, stringptr, stringptr)::FUNC(LizardScriptLibrary) WITHNAME(eval),
 		PARAMS(int, int)::FUNC(LizardScriptLibrary) WITHNAME(random)
 	);
-	METAGEN(stringptr, /*FUNC(stringptr, operator[]),*/ PARAMS()::FUNC(CtorProvider<stringptr>) WITHNAME(ctor));
-
+	METAGEN_CLASS(stringptr) WITH_MEMBERS(,
+		PARAMS()::FUNC(CtorProvider<stringptr>) WITHNAME(ctor)
+	);
 }
 
 void LizardScriptLibrary::print(int i)

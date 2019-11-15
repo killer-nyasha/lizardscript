@@ -25,7 +25,7 @@ namespace InterpreterTests
 		UnitTest1()
 		{
 			standartCompiler = new LizardScriptCompiler(defaultSyntaxCore);
-			METAGEN(Test01, FIELD(i), FIELD(j), FIELD(k));
+			METAGEN_CLASS(Test01) WITH_MEMBERS(, FIELD(i), FIELD(j), FIELD(k));
 		}
 
 		TEST_METHOD(TestMethod1)
