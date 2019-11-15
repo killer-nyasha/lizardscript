@@ -1,6 +1,32 @@
 #pragma once
 #include "FindType.h"
 
+template <typename C>
+class reverse_wrapper
+{
+	C& container;
+
+public:
+	reverse_wrapper(C& container) : container(container)
+	{ }
+
+	auto begin()
+	{
+		return container.rbegin();
+	}
+
+	auto end()
+	{
+		return container.rend();
+	}
+};
+
+template <typename C>
+auto make_reverse_wrapper(C& container)
+{
+	return reverse_wrapper<C>(container);
+}
+
 void ByteCodeGenerator::identifiersProcessor(std::vector<TCHAR*>::iterator& ptoken)
 {
 	TCHAR* token = *ptoken;
@@ -58,7 +84,7 @@ void ByteCodeGenerator::identifiersProcessor(std::vector<TCHAR*>::iterator& ptok
 		{
 			auto& metatable = globalMetadataTable[currentType];
 
-			for (auto& metadata : metatable.members.get<FieldInfo>())
+			for (auto& metadata : make_reverse_wrapper(metatable.members.get<FieldInfo>()))
 			{
 				if (_tcscmp(&metadata.name[0], token) == 0)
 				{
@@ -82,7 +108,7 @@ void ByteCodeGenerator::identifiersProcessor(std::vector<TCHAR*>::iterator& ptok
 			PossibleFunctionCalls calls;
 			calls.index = reg.stackEmul.top().index;
 
-			for (auto& metadata : metatable.members.get<FunctionInfo>())
+			for (auto& metadata : make_reverse_wrapper(metatable.members.get<FunctionInfo>()))
 			{
 				if (_tcscmp(&metadata.name[0], token) == 0)
 				{
