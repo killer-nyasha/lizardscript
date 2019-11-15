@@ -44,7 +44,7 @@ bool ByteCodeGenerator::cast(typed_reg reg, TypeInfo to)
 		from.ptr > 0
 		&& to.ptr > 0
 		&& std::find(globalMetadataTable[from].parents.begin(),
-			globalMetadataTable[from].parents.end(), to)
+			globalMetadataTable[from].parents.end(), ParentInfo { 0, to })
 		!= globalMetadataTable[from].parents.begin()
 		THEN from = to;//open_reg(reg, to.ptr);
 	ENDCAST;

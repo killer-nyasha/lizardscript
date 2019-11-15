@@ -119,6 +119,22 @@ namespace LizardScript
 		std::vector<TypeInfo> args;
 	};
 
+	struct ParentInfo
+	{
+		size_t offset;
+		TypeInfo type;
+
+		bool operator==(const ParentInfo& info) const
+		{
+			return type == info.type;
+		}
+
+		bool operator<(const ParentInfo& info) const
+		{
+			return type < info.type;
+		}
+	};
+
 	struct TypeInfoEx : public TypeInfo
 	{
 		TypeInfoEx() { }
@@ -128,17 +144,20 @@ namespace LizardScript
 			*(TypeInfo*)(this) = from;
 		}
 
-		void operator+=(TypeInfoEx& e)
+		void addParentMembers(TypeInfoEx& e, size_t offset)
 		{
 			//for (auto& a : e.members.get<FieldInfo>())
-				members.get<FieldInfo>().insert(members.get<FieldInfo>().begin(),
-					e.members.get<FieldInfo>().begin(),
-					e.members.get<FieldInfo>().end());
+			members.get<FieldInfo>().insert(members.get<FieldInfo>().begin(),
+				e.members.get<FieldInfo>().begin(),
+				e.members.get<FieldInfo>().end());
+
+			for (size_t i = 0; i < e.members.get<FieldInfo>().size(); i++)
+				members.get<FieldInfo>()[i].offset += offset;
 
 			//for (auto& a : e.members.get<FunctionInfo>())
-				members.get<FunctionInfo>().insert(members.get<FunctionInfo>().begin(),
-					e.members.get<FunctionInfo>().begin(),
-					e.members.get<FunctionInfo>().end());
+			members.get<FunctionInfo>().insert(members.get<FunctionInfo>().begin(),
+				e.members.get<FunctionInfo>().begin(),
+				e.members.get<FunctionInfo>().end());
 
 			//for (auto& a : e.members.get<FunctionInfo>())
 			//	members.get<FunctionInfo>().push_back(a);
@@ -146,7 +165,8 @@ namespace LizardScript
 		}
 
 		VectorsTuple<FieldInfo, FunctionInfo> members;
-		std::vector<TypeInfo> parents;
+
+		std::vector<ParentInfo> parents;
 		bool parentsProcessed = false;
 	};
 
@@ -258,7 +278,7 @@ namespace LizardScript
 			std::vector<FieldInfo> metaTable;
 			TypeInfo info = makeTypeInfo<O>();
 			TypeInfoEx einfo = TypeInfoEx(info);
-			int i[] = { (einfo.parents.push_back(TYPEINFO(P)), 0)... };
+			int i[] = { (einfo.parents.push_back({ (size_t)this - (size_t)static_cast<P>(this), TYPEINFO(P) }), 0)... };
 			globalMetadataTable.insert(std::make_pair(info, einfo));
 		}
 
@@ -267,7 +287,7 @@ namespace LizardScript
 		{
 			TypeInfo info = makeTypeInfo<O>();
 			TypeInfoEx einfo = TypeInfoEx(info);
-			int i[] = { (einfo.parents.push_back(TYPEINFO(P)), 0)... };
+			int i[] = { (einfo.parents.push_back({ (size_t)this - (size_t)static_cast<P>(this), TYPEINFO(P) }), 0)... };
 			char c[] = { (einfo.members.push_back(createMetadataEntry(infos)), '\0')... };
 			globalMetadataTable.insert(std::make_pair(info, einfo));
 		}
@@ -278,10 +298,10 @@ namespace LizardScript
 		if (!typeex.parentsProcessed)
 		{
 			for (auto& parent : typeex.parents)
-				if (type != parent && globalMetadataTable.count(parent) > 0)
+				if (type != parent.type && globalMetadataTable.count(parent.type) > 0)
 				{
-					processParents(parent, globalMetadataTable[parent]);
-					typeex += globalMetadataTable[parent];
+					processParents(parent.type, globalMetadataTable[parent.type]);
+					typeex.addParentMembers(globalMetadataTable[parent.type], parent.offset);
 				}
 			typeex.parentsProcessed = true;
 		}
@@ -291,7 +311,6 @@ namespace LizardScript
 	{
 		for (auto& type : globalMetadataTable)
 			processParents(type.first, type.second);
-
 	}
 
 	template <>
