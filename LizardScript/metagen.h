@@ -35,7 +35,10 @@ namespace LizardScript
 	{
 		static CA _impl(void* arg)
 		{
-			return  *(CA*)(arg);
+			if (sizeof(CA) <= sizeof(void*))
+				return  *(CA*)(arg);
+			else
+				return  (CA)(arg);
 		}
 	};
 
@@ -233,6 +236,12 @@ namespace LizardScript
 		FunctionInfo f;
 		f.type = makeTypeInfo<R>();
 		f.args = { (makeTypeInfo<A>())... };
+
+		//для передачи больших объектов по значению
+		for (auto& a : f.args)
+			if (a.byValueSize > sizeof(void*) && a.ptr == 0)
+				a.ptr = 1;
+
 		f.name = info.name;
 		memcpy(&f.callStruct, &callStruct, sizeof(callStruct));
 		return f;
