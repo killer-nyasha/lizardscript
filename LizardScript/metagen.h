@@ -27,7 +27,7 @@ namespace LizardScript
 
 	struct AbstractCallStruct
 	{
-		virtual void call(void* registers[17], int n) { }
+		virtual void call(void* registers[REGISTERS_COUNT], int n) { }
 	};
 
 	template <typename CA>
@@ -134,6 +134,7 @@ namespace LizardScript
 		}
 
 		VectorsTuple<FieldInfo, FunctionInfo> members;
+		std::vector<TypeInfo> parents;
 	};
 
 	extern std::map<TypeInfo, TypeInfoEx> globalMetadataTable;
@@ -238,6 +239,7 @@ namespace LizardScript
 			std::vector<FieldInfo> metaTable;
 			TypeInfo info = makeTypeInfo<O>();
 			TypeInfoEx einfo = TypeInfoEx(info);
+			int i[] = { (einfo.parents.push_back(TYPEINFO(P)), 0)... };
 			globalMetadataTable.insert(std::make_pair(info, einfo));
 		}
 
@@ -246,11 +248,18 @@ namespace LizardScript
 		{
 			TypeInfo info = makeTypeInfo<O>();
 			TypeInfoEx einfo = TypeInfoEx(info);
-			int i[] = { (einfo += globalMetadataTable[TYPEINFO(P)], 0)... };
+			int i[] = { (einfo.parents.push_back(TYPEINFO(P)), 0)... };
 			char c[] = { (einfo.members.push_back(createMetadataEntry(infos)), '\0')... };
 			globalMetadataTable.insert(std::make_pair(info, einfo));
 		}
 	};
+
+	inline void endMetadata()
+	{
+		for (auto& type : globalMetadataTable)
+			for (auto& parent : type.second.parents)
+				type.second += globalMetadataTable[parent];
+	}
 
 	template <>
 	class FromParents<>

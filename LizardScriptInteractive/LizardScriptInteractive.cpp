@@ -115,6 +115,8 @@ int main(int argc, char** argv)
 		PARAMS(B&)::FUNC(B) WITHNAME(operator+)
 	);
 
+	endMetadata();
+
 	A t;
 
 	if (argc > 1)
