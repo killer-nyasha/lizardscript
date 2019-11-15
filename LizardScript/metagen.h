@@ -135,6 +135,7 @@ namespace LizardScript
 
 		VectorsTuple<FieldInfo, FunctionInfo> members;
 		std::vector<TypeInfo> parents;
+		bool parentsProcessed = false;
 	};
 
 	extern std::map<TypeInfo, TypeInfoEx> globalMetadataTable;
@@ -254,12 +255,26 @@ namespace LizardScript
 		}
 	};
 
+	inline void processParents(std::pair<const TypeInfo, TypeInfoEx>& type)
+	{
+		if (!type.second.parentsProcessed)
+		{
+			for (auto& parent : type.second.parents)
+				if (type.first != parent && globalMetadataTable.count(parent) > 0)
+				{
+					auto pair = std::pair<const TypeInfo, TypeInfoEx>(parent, globalMetadataTable[parent]);
+					processParents(pair);
+					type.second += globalMetadataTable[parent];
+				}
+			type.second.parentsProcessed = true;
+		}
+	}
+
 	inline void endMetadata()
 	{
 		for (auto& type : globalMetadataTable)
-			for (auto& parent : type.second.parents)
-				if (type.first != parent)
-					type.second += globalMetadataTable[parent];
+			processParents(type);
+
 	}
 
 	template <>
