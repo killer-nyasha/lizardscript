@@ -128,7 +128,8 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 								break;
 							}
 						}
-						throw Exception(std::string("local variable ") + a.varName + " was lost :(");
+						//вынести в отдельную функцию всё это?
+						//throw Exception(std::string("local variable ") + a.varName + " was lost :(");
 					}
 
 					if (classDecl == localVarLevels.size()-1)
