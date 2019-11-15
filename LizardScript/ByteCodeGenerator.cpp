@@ -260,7 +260,7 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 				bool isOk;
 				PossibleFunctionCalls calls;
 				calls.index = reg.stackEmul.top().index;
-				for (auto& metadata : globalMetadataTable[t].members.get<FunctionInfo>())
+				for (auto& metadata : make_reverse_wrapper(globalMetadataTable[t].members.get<FunctionInfo>()))
 				{
 					if (_tcscmp(&metadata.name[0], "ctor") == 0)
 					{
