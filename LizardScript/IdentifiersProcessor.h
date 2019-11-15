@@ -27,7 +27,7 @@ auto make_reverse_wrapper(C& container)
 	return reverse_wrapper<C>(container);
 }
 
-#define make_reverse_wrapper
+//#define make_reverse_wrapper
 
 void ByteCodeGenerator::identifiersProcessor(std::vector<TCHAR*>::iterator& ptoken)
 {
