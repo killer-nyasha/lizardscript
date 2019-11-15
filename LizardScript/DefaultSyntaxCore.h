@@ -7,7 +7,7 @@ namespace LizardScript
 	SyntaxCore createDefaultSyntaxCore()
 	{
 		SyntaxCore core;
-		core.textChars = { ':', '_', '@' };
+		core.textChars = { ':', '_', '@', '&' };
 		core.breakChars = { '{', '}', '(', ')', '.', ';' };
 		core.keywords = 
 		{

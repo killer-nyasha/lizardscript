@@ -5,7 +5,7 @@ inline const TypeInfo findType(TCHAR* name)
 {
 	int ptr = 0;
 	TCHAR* ch = name;
-	while (*ch != 0 && *ch != '*')
+	while (*ch != 0 && *ch != '&')
 		ch++;
 	while (*ch != 0)
 	{

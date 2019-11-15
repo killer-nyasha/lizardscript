@@ -182,7 +182,7 @@ public:
 
 		if (addPtrSymbol)
 			for (size_t i = 0; i < ptr; i++)
-				s += '*';
+				s += '&';
 
 		size_t spacePos = s.find_first_of(' ', 0);
 		if (spacePos != std::string::npos)
