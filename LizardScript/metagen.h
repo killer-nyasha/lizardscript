@@ -264,25 +264,24 @@ namespace LizardScript
 		}
 	};
 
-	inline void processParents(std::pair<const TypeInfo, TypeInfoEx>& type)
+	inline void processParents(const TypeInfo& type, TypeInfoEx& typeex)
 	{
-		if (!type.second.parentsProcessed)
+		if (!typeex.parentsProcessed)
 		{
-			for (auto& parent : type.second.parents)
-				if (type.first != parent && globalMetadataTable.count(parent) > 0)
+			for (auto& parent : typeex.parents)
+				if (type != parent && globalMetadataTable.count(parent) > 0)
 				{
-					auto pair = std::pair<const TypeInfo, TypeInfoEx>(parent, globalMetadataTable[parent]);
-					processParents(pair);
-					type.second += globalMetadataTable[parent];
+					processParents(parent, globalMetadataTable[parent]);
+					typeex += globalMetadataTable[parent];
 				}
-			type.second.parentsProcessed = true;
+			typeex.parentsProcessed = true;
 		}
 	}
 
 	inline void endMetadata()
 	{
 		for (auto& type : globalMetadataTable)
-			processParents(type);
+			processParents(type.first, type.second);
 
 	}
 
