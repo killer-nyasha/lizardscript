@@ -278,7 +278,7 @@ namespace LizardScript
 			std::vector<FieldInfo> metaTable;
 			TypeInfo info = makeTypeInfo<O>();
 			TypeInfoEx einfo = TypeInfoEx(info);
-			int i[] = { (einfo.parents.push_back({ (size_t)object - (size_t)static_cast<P>(object), TYPEINFO(P) }), 0)... };
+			int i[] = { (einfo.parents.push_back({ (size_t)object - (size_t)static_cast<P*>(object), TYPEINFO(P) }), 0)... };
 			globalMetadataTable.insert(std::make_pair(info, einfo));
 		}
 
@@ -287,7 +287,7 @@ namespace LizardScript
 		{
 			TypeInfo info = makeTypeInfo<O>();
 			TypeInfoEx einfo = TypeInfoEx(info);
-			int i[] = { (einfo.parents.push_back({ (size_t)object - (size_t)static_cast<P>(object), TYPEINFO(P) }), 0)... };
+			int i[] = { (einfo.parents.push_back({ (size_t)object - (size_t)static_cast<P*>(object), TYPEINFO(P) }), 0)... };
 			char c[] = { (einfo.members.push_back(createMetadataEntry(infos)), '\0')... };
 			globalMetadataTable.insert(std::make_pair(info, einfo));
 		}
