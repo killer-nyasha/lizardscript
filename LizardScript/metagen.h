@@ -127,12 +127,12 @@ namespace LizardScript
 
 		void operator+=(TypeInfoEx& e)
 		{
-			for (auto& a : e.members.get<FieldInfo>())
+			//for (auto& a : e.members.get<FieldInfo>())
 				members.get<FieldInfo>().insert(members.get<FieldInfo>().begin(),
 					e.members.get<FieldInfo>().begin(),
 					e.members.get<FieldInfo>().end());
 
-			for (auto& a : e.members.get<FunctionInfo>())
+			//for (auto& a : e.members.get<FunctionInfo>())
 				members.get<FunctionInfo>().insert(members.get<FunctionInfo>().begin(),
 					e.members.get<FunctionInfo>().begin(),
 					e.members.get<FunctionInfo>().end());
