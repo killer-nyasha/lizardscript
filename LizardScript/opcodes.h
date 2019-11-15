@@ -67,14 +67,14 @@ case opcode::jz://учитывает все 8 байт
 	int toIndex = CODEGET(int);
 	if (OPEN(int, rnfirst) == 0)
 	{
-		i = toIndex - 2;
+		i = toIndex/* - 2*/;
 	}
 	break;
 }
 case opcode::jmp:
 {
 	int toIndex = CODEGET(int);
-	i = toIndex - 2;
+	i = toIndex/* - 2*/;
 	break;
 }
 
