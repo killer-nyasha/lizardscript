@@ -38,7 +38,7 @@ namespace LizardScript
 			if (sizeof(CA) <= sizeof(void*))
 				return  *(CA*)(arg);
 			else
-				return  (CA)(arg);
+				return  **(CA**)(arg);
 		}
 	};
 
