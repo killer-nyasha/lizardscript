@@ -114,6 +114,23 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 				}
 				else if (kwtoken->checkSpecial(SpecialKeywords::RightBrace))
 				{
+					//set local var offsets
+					for (auto& a : localVarAddr)
+					{
+						for (size_t i = localVar.size() - 1; i + 1 >= 1; i--)
+						{
+							if (localVar[i].offset == 0)
+								break;
+
+							if (_tcscmp(&localVar[i].name[0], a.varName) == 0)
+							{
+								*(short*)&(code.data[a.byteCodeOffset]) = localVar[i].offset;
+								break;
+							}
+						}
+						throw Exception(std::string("local variable ") + a.varName + " was lost :(");
+					}
+
 					if (classDecl == localVarLevels.size()-1)
 					{
 						size_t lastLvl = localVarLevels.top();
@@ -340,21 +357,6 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 			else
 			{
 				identifiersProcessor(ptoken);
-			}
-		}
-	}
-
-	for (auto& a : localVarAddr)
-	{
-		for (size_t i = localVar.size() - 1; i + 1 >= 1; i--)
-		{
-			if (localVar[i].offset == 0)
-				break;
-
-			if (_tcscmp(&localVar[i].name[0], a.varName) == 0)
-			{
-				*(short*)&(code.data[a.byteCodeOffset]) = localVar[i].offset;
-				break;
 			}
 		}
 	}
