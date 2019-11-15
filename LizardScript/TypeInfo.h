@@ -169,6 +169,11 @@ public:
 		return t == other.t && lsOwnClassName == other.lsOwnClassName;
 	}
 
+	bool operator!=(const TypeInfo& other) const
+	{
+		return !operator==(other);
+	}
+
 	std::string text(bool addPtrSymbol = true) const
 	{
 		std::string s;

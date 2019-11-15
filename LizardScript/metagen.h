@@ -258,7 +258,8 @@ namespace LizardScript
 	{
 		for (auto& type : globalMetadataTable)
 			for (auto& parent : type.second.parents)
-				type.second += globalMetadataTable[parent];
+				if (type.first != parent)
+					type.second += globalMetadataTable[parent];
 	}
 
 	template <>
