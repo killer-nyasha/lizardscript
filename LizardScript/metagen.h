@@ -8,7 +8,7 @@
 #define WITHNAME(fname) fname, #fname)
 #define PARAMS(...) WithParams<__VA_ARGS__>
 
-#define METAGEN_CLASS(className,...) ([](className* sample) { FromParents<__VA_ARGS__>::createMetadata((className*)nullptr
+#define METAGEN_CLASS(className,...) ([](className* sample) { FromParents<__VA_ARGS__>::createMetadata(sample
 #define WITH_MEMBERS(...) __VA_ARGS__); })(nullptr)
 
 #define REGISTERS_COUNT 18
@@ -278,7 +278,7 @@ namespace LizardScript
 			std::vector<FieldInfo> metaTable;
 			TypeInfo info = makeTypeInfo<O>();
 			TypeInfoEx einfo = TypeInfoEx(info);
-			int i[] = { (einfo.parents.push_back({ (size_t)object - (size_t)static_cast<P*>(object), TYPEINFO(P) }), 0)... };
+			int i[] = { (einfo.parents.push_back(ParentInfo { (size_t)static_cast<P*>(object + 10000000) - (size_t)(object + 10000000), TYPEINFO(P) }), 0)... };
 			globalMetadataTable.insert(std::make_pair(info, einfo));
 		}
 
@@ -287,7 +287,7 @@ namespace LizardScript
 		{
 			TypeInfo info = makeTypeInfo<O>();
 			TypeInfoEx einfo = TypeInfoEx(info);
-			int i[] = { (einfo.parents.push_back({ (size_t)object - (size_t)static_cast<P*>(object), TYPEINFO(P) }), 0)... };
+			int i[] = { (einfo.parents.push_back(ParentInfo { (size_t)static_cast<P*>(object + 10000000) - (size_t)(object + 10000000), TYPEINFO(P) }), 0)... };
 			char c[] = { (einfo.members.push_back(createMetadataEntry(infos)), '\0')... };
 			globalMetadataTable.insert(std::make_pair(info, einfo));
 		}
