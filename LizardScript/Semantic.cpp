@@ -18,6 +18,18 @@ SyntaxCore* IOperator::core;
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
+bool findParent(TypeInfoEx t, TypeInfo parent, int& offset)
+{
+	if (t == parent)
+		return true;
+	for (auto& p : t.parents)
+		if (findParent(globalMetadataTable[p.type], parent, offset))
+		{
+			offset += p.offset; break;
+		}
+	return false;
+}
+
 bool ByteCodeGenerator::cast(typed_reg reg, TypeInfo to)
 {
 	TypeInfo& from = reg.type;
@@ -25,12 +37,12 @@ bool ByteCodeGenerator::cast(typed_reg reg, TypeInfo to)
 	if (from.full_eq(to))
 		return true;
 
+	int parentOffset = 0;
 	CAST
 		from.ptr > 0 && to.ptr == from.ptr
-		&& std::find(globalMetadataTable[from].parents.begin(),
-			globalMetadataTable[from].parents.end(), ParentInfo{ 0, to })
-		!= globalMetadataTable[from].parents.end()
+		&& findParent(globalMetadataTable[from], to, parentOffset)
 		THEN from = to;
+	code << opcode::push_offset << parentOffset;
 	ENDCAST;
 
 	CAST
