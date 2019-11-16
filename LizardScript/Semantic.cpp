@@ -16,6 +16,7 @@ SyntaxCore* IOperator::core;
 #define VOID ); } else code.data.resize(csize); }
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 bool ByteCodeGenerator::cast(typed_reg reg, TypeInfo to)
 {
@@ -34,7 +35,7 @@ bool ByteCodeGenerator::cast(typed_reg reg, TypeInfo to)
 
 	CAST
 		from.ptr > to.ptr
-		THEN open_reg(reg, from.byValueSize < sizeof(void*) ? to.ptr : MIN(to.ptr, 1));
+		THEN open_reg(reg, from.byValueSize < sizeof(void*) ? to.ptr : MAX(to.ptr, 1));
 	ENDCAST;
 
 	//CAST
