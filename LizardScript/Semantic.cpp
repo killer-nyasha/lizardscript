@@ -29,7 +29,7 @@ bool ByteCodeGenerator::cast(typed_reg reg, TypeInfo to)
 		from.ptr > 0 && to.ptr == from.ptr
 		&& std::find(globalMetadataTable[from].parents.begin(),
 			globalMetadataTable[from].parents.end(), ParentInfo{ 0, to })
-		!= globalMetadataTable[from].parents.begin()
+		!= globalMetadataTable[from].parents.end()
 		THEN from = to;
 	ENDCAST;
 
