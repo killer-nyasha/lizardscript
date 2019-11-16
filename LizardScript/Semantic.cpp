@@ -23,21 +23,16 @@ bool ByteCodeGenerator::cast(typed_reg reg, TypeInfo to)
 		return true;
 
 	CAST
-		from.ptr > 0
-		&& to.ptr > 0
+		from.ptr > 0 && to.ptr == from.ptr
 		&& std::find(globalMetadataTable[from].parents.begin(),
 			globalMetadataTable[from].parents.end(), ParentInfo{ 0, to })
 		!= globalMetadataTable[from].parents.begin()
-		THEN from = to;//open_reg(reg, to.ptr);
+		THEN from = to;
 	ENDCAST;
 
 	CAST
-		from.ptr > 0
-		&& from.openedSize() <= sizeof(void*)
-		&& to.size() <= sizeof(void*)
-		//&& from.withPtr(to.ptr).size() <= sizeof(void*)
-		&& from.ptr > to.ptr
-		THEN open_reg(reg, from.ptr-1);
+		from.ptr > to.ptr
+		THEN open_reg(reg, to.ptr);
 	ENDCAST;
 
 	//CAST
@@ -49,23 +44,15 @@ bool ByteCodeGenerator::cast(typed_reg reg, TypeInfo to)
 	//	code << opcode::push_offset << reg << (short int)f.offset;
 	//ENDCAST;
 
-	//CAST 
-	//	from.ptr > to.ptr
-	//	&& to.ptr >= 1
-	//	THEN open_reg(reg, to.ptr);
-	//ENDCAST;
-
 	CAST
-		from == TYPEINFO(int)
-		&& to == TYPEINFO(float)
-		&& from.ptr == 0 && to.ptr == 0
+		from.full_eq(TYPEINFO(int))
+		&& to.full_eq(TYPEINFO(float))
 		THEN code << opcode::int_to_float << reg; from.t = to.t;
 	ENDCAST;
 
 	CAST
-		from == TYPEINFO(float)
-		&& to == TYPEINFO(int)
-		&& from.ptr == 0 && to.ptr == 0
+		from.full_eq(TYPEINFO(float))
+		&& to.full_eq(TYPEINFO(int))
 		THEN code << opcode::float_to_int << reg; from.t = to.t;
 	ENDCAST;
 
