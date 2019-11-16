@@ -120,17 +120,20 @@ using namespace LizardScript;
 
 #include <iostream>
 
+#define _out_ logger
+
 void Expr::disasm()
 {
 	for (size_t i = 0; i < code.data.size(); i += 2)
 	{
 		auto command = disasmMap.count((opcode)code.data[i]) > 0 ? disasmMap[(opcode)code.data[i]] : "unknown";
 
-		std::cout << COLOR_YELLOW << i << ": " << "\t" << command << COLOR_NC << " " << *reinterpret_cast<regindex_pair*>(&code.data[i + 1]);
+		_out_ << COLOR_YELLOW << i << ": " << "\t" << command << COLOR_NC << " ";
+		operator<<(_out_, *reinterpret_cast<regindex_pair*>(&code.data[i + 1]));
 
 		if ((opcode)code.data[i] == opcode::push_32 || (opcode)code.data[i] == opcode::jz || (opcode)code.data[i] == opcode::jmp)
 		{
-			std::cout << " value: " << *reinterpret_cast<int*>(&code.data[i + 2]);
+			_out_ << " value: " << *reinterpret_cast<int*>(&code.data[i + 2]);
 			i += 4;
 		}
 		else if ((opcode)code.data[i] == opcode::alloc || (opcode)code.data[i] == opcode::push_offset 
@@ -139,7 +142,7 @@ void Expr::disasm()
 			| (opcode)code.data[i] == opcode::_opt_set_this_and_offset*/
 			)
 		{
-			std::cout << " offset: " << *reinterpret_cast<short int*>(&code.data[i + 2]);
+			_out_ << " offset: " << *reinterpret_cast<short int*>(&code.data[i + 2]);
 			i += 2;
 		}
 		else if ((opcode)code.data[i] == opcode::call_cpp)
@@ -151,10 +154,8 @@ void Expr::disasm()
 			i += *reinterpret_cast<int*>(&code.data[i + 2]) + 4;
 		}
 
-		std::cout << std::endl;
+		_out_ << ENDL;
 
 	}
-	std::cout << COLOR_YELLOW << code.data.size() << ":\tend\n";
-	std::cout << std::endl;
-
+	_out_ << COLOR_YELLOW << code.data.size() << ":\tend..." << ENDL;
 }

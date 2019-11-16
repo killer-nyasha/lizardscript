@@ -7,7 +7,7 @@ SyntaxCore* IOperator::core;
 
 #define CAST/*(predicate, ...)*/ if (
 #define THEN ) { 
-#define ENDCAST if (from.full_eq(to)) return true; else return cast(reg, to); }
+#define ENDCAST logger.add("  -> ", from); /*if (from.full_eq(to))*/ breakFlag = true; /*else breakFlag = false;*/ }
 
 #define KEYWORD(text) if (_tcscmp(kwtoken->value, text) == 0)//временно так, потом постараюсь всё-таки вынести структуру
 #define WHEN { int csize = code.data.size(); if (
@@ -35,9 +35,15 @@ bool ByteCodeGenerator::cast(typed_reg reg, TypeInfo to)
 	TypeInfo& from = reg.type;
 
 	if (from.full_eq(to))
+	{
 		return true;
+	}
+
+	logger.add("Trying to cast ", from, " to ", to);
 
 	int parentOffset = 0;
+	bool breakFlag = false;
+
 	CAST
 		from.ptr > 0 && to.ptr == from.ptr
 		&& findParent(globalMetadataTable[from], to, parentOffset)
@@ -45,15 +51,32 @@ bool ByteCodeGenerator::cast(typed_reg reg, TypeInfo to)
 	code << opcode::push_offset << parentOffset;
 	ENDCAST;
 
-	CAST
-		from.ptr > to.ptr && from.byValueSize <= sizeof(void*)
-		THEN open_reg(reg, to.ptr);
-	ENDCAST;
+	while (!breakFlag)
+	{
+		breakFlag = true;
 
-	CAST
-		from.ptr > to.ptr && to.ptr >= 1
-		THEN open_reg(reg, to.ptr);
-	ENDCAST;
+		CAST
+			from.ptr > to.ptr && from.byValueSize <= sizeof(void*)
+			THEN open_reg(reg, to.ptr);
+		ENDCAST;
+
+		CAST
+			from.ptr > to.ptr && to.ptr >= 1
+			THEN open_reg(reg, to.ptr);
+		ENDCAST;
+
+		CAST
+			from.full_eq(TYPEINFO(int))
+			&& to.full_eq(TYPEINFO(float))
+			THEN code << opcode::int_to_float << reg; from.t = to.t;
+		ENDCAST;
+
+		CAST
+			from.full_eq(TYPEINFO(float))
+			&& to.full_eq(TYPEINFO(int))
+			THEN code << opcode::float_to_int << reg; from.t = to.t;
+		ENDCAST;
+	}
 
 	//CAST
 	//	from.ptr > 0
@@ -64,23 +87,22 @@ bool ByteCodeGenerator::cast(typed_reg reg, TypeInfo to)
 	//	code << opcode::push_offset << reg << (short int)f.offset;
 	//ENDCAST;
 
-	CAST
-		from.full_eq(TYPEINFO(int))
-		&& to.full_eq(TYPEINFO(float))
-		THEN code << opcode::int_to_float << reg; from.t = to.t;
-	ENDCAST;
-
-	CAST
-		from.full_eq(TYPEINFO(float))
-		&& to.full_eq(TYPEINFO(int))
-		THEN code << opcode::float_to_int << reg; from.t = to.t;
-	ENDCAST;
-
-	return false;
+	if (from.full_eq(to))
+	{
+		logger.add("---> success");
+		return true;
+	}
+	else
+	{
+		logger.add("---> failure");
+		return false;
+	}
 }
 
 bool ByteCodeGenerator::addUnary(Keyword* kwtoken, typed_reg r1)
 {
+	logger.add("Searching for unary operator ", kwtoken->value, " for ", r1.type);
+
 	auto& keywords = initUnary(core);
 	int csize = code.data.size();
 	auto pair = regindex_pair(r1, r1);
@@ -102,6 +124,8 @@ bool ByteCodeGenerator::addUnary(Keyword* kwtoken, typed_reg r1)
 
 bool ByteCodeGenerator::addBinary(Keyword* kwtoken, typed_reg r1, typed_reg r2)
 {
+	logger.add("Searching for binary operator ", kwtoken->value, " for ", r1.type, " and ", r2.type);
+
 	auto& keywords = initBinary(core);
 	int csize = code.data.size();
 	auto pair = regindex_pair(r1, r2);

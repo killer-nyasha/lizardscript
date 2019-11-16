@@ -167,6 +167,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>BRGE_ENABLE_SERVER; BRGE_ENABLE_CLIENT;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -189,6 +190,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>BRGE_ENABLE_CLIENT; NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -209,6 +211,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>BRGE_ENABLE_SERVER; BRGE_ENABLE_CLIENT;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -227,6 +230,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>BRGE_ENABLE_CLIENT; WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -245,6 +249,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>BRGE_ENABLE_SERVER; BRGE_ENABLE_CLIENT;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -263,6 +268,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>BRGE_ENABLE_CLIENT; _DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -283,6 +289,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>BRGE_ENABLE_SERVER; BRGE_ENABLE_CLIENT;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -305,6 +312,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>BRGE_ENABLE_CLIENT; WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -324,6 +332,7 @@
     <ClCompile Include="LizardScriptCompiler.cpp" />
     <ClCompile Include="Lexer.cpp" />
     <ClCompile Include="LizardScriptLibrary.cpp" />
+    <ClCompile Include="Logger.cpp" />
     <ClCompile Include="NewLocalVariable.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="Print.cpp" />
@@ -340,6 +349,7 @@
     <ClInclude Include="FindType.h" />
     <ClInclude Include="IdentifiersProcessor.h" />
     <ClInclude Include="LizardScriptLibrary.h" />
+    <ClInclude Include="Logger.h" />
     <ClInclude Include="metagen.h" />
     <ClInclude Include="LizardScriptCompiler.h" />
     <ClInclude Include="interpreter_util.h" />

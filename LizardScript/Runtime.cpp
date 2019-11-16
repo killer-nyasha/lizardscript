@@ -11,7 +11,31 @@ using namespace LizardScript;
 
 char* global_stack = new char[1024];
 
-void Runtime::run()
+
+void Runtime::run(bool catchEx)
+{
+	if (catchEx)
+	try
+	{
+		run_impl();
+	}
+	catch (Exception& ex)
+	{
+		//logger.add("Runtime error: \"", ex.text, "\"");
+		std::cout << COLOR_RED << "Runtime error: \"" << ex.text << "\"" << COLOR_NC << std::endl;
+	}
+	catch (...)
+	{
+		//logger.add("Unknown runtime C++ error");
+		std::cout << "Unknown runtime C++ error" << std::endl;
+	}
+	else
+	{
+		run_impl();
+	}
+}
+
+void Runtime::run_impl()
 {
 	memset(registers, 0, sizeof(registers));
 	void*& stackptr = registers[16];
@@ -33,8 +57,8 @@ void Runtime::run()
 	//volatile int k = 0;
 	//try
 	{
-		if (lsl.printDump)
-			expr.disasm();
+		//if (lsl.printDump)
+		//	expr.disasm();
 
 		//std::cin >> i;
 		//int y = 1;

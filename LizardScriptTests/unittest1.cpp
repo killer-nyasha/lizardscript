@@ -1,13 +1,12 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 
-using namespace Microsoft::VisualStudio::CppUnitTestFramework;
-
 #include "../LizardScript/LizardScriptCompiler.h"
 #include "../LizardScript/Print.h"
 #include "../LizardScript/Runtime.h"
 
 using namespace LizardScript;
+using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 struct Test01
 {

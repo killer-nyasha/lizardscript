@@ -26,12 +26,17 @@ namespace LizardScript
 		//!compile expression to byte code
 		//!\returns expression in byte code, ready to run or save
 		//!\param[in] text expression source text
-		Expr create(TypeInfo type, const TCHAR* text);
+		Expr create(TypeInfo type, const TCHAR* text, bool catchEx = true);
+
+		//void create_excpt(TypeInfo type, const TCHAR* text);
+		void create_impl(TypeInfo type, const TCHAR* text);
 
 		template <typename T>
 		TypedExpr<T> create(const TCHAR* text) { auto expr = create(makeTypeInfo<T>(), text);  return *reinterpret_cast<TypedExpr<T>*>(&expr); }
 
 	protected:
+
+		Expr expr;
 
 		//!lexical analysis
 		//!split text to tokens (such as operators, names and values)

@@ -71,24 +71,8 @@ struct A : public AParent1, AParent2
 
 void run(A& t, std::string& source)
 {
-	TypedExpr<A> e;
-	try
-	{
-		e = script<A>(&source[0]);
-		try
-		{
-			Runtime(e, t);
-		}
-		catch (Exception ex)
-		{
-			std::cout << COLOR_RED << "Runtime error: \"" << ex.text << "\"" << COLOR_NC << std::endl;
-		}
-	}
-	catch (Exception ex)
-	{
-		std::cout << COLOR_RED << "Syntax error: \"" << ex.text << "\"" << COLOR_NC << std::endl;
-		//e.disasm();
-	}
+	TypedExpr<A> e = script<A>(&source[0]);
+	Runtime(e, t);
 }
 
 int main(int argc, char** argv)

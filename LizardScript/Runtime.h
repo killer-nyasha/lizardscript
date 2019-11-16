@@ -28,7 +28,9 @@ namespace LizardScript
 
 		Runtime(Expr& e, TypeInfo t, void* ths) : expr(e), ths(ths), type(t) { run(); }
 
-		void run();
+		void run(bool catchEx = true);
+		//void run_excpt();
+		void run_impl();
 	};
 
 	template <typename T>

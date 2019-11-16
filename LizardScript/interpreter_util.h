@@ -13,6 +13,7 @@
 #include "stringptr.h"
 #include "Exception.h"
 
+#include "Logger.h"
 #include "metagen.h"
 
 namespace LizardScript

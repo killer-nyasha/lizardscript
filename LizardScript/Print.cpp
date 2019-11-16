@@ -8,7 +8,7 @@ namespace LizardScript
 	{
 		auto& metatable = globalMetadataTable[currentType];
 
-		stream << COLOR_BLUE << currentType.t.name() << COLOR_NC << " {\n";
+		stream << COLOR_BLUE << currentType.t.name() << COLOR_NC << " {\r\n";
 
 		for (auto& metadata : metatable.members.get<FunctionInfo>())
 		{
@@ -21,7 +21,7 @@ namespace LizardScript
 				else stream << ", ";
 				stream << COLOR_BLUE << t.text() << COLOR_NC;
 			}
-			stream << ");\n";
+			stream << ");" << ENDL;
 		}
 		for (auto& metadata : metatable.members.get<FieldInfo>())
 		{
@@ -32,14 +32,14 @@ namespace LizardScript
 				int* p = (int*)(object + metadata.offset);
 				for (size_t i = 0; i < metadata.type.ptr; i++)
 					p = *((int**)p);
-				stream << " = " << *p << ";\n";
+				stream << " = " << *p << ";" << ENDL;
 			}
 			else if (metadata.type == makeTypeInfo<float>())
 			{
 				int* p = (int*)(object + metadata.offset);
 				for (size_t i = 0; i < metadata.type.ptr; i++)
 					p = *((int**)p);
-				stream << " = " << *(float*)p << ";\n";
+				stream << " = " << *(float*)p << ";" << ENDL;
 			}
 			else if(metadata.type.ptr > 0)
 			{
@@ -47,7 +47,7 @@ namespace LizardScript
 
 				stream << " = ";
 				if (objPtr == nullptr)
-					stream << COLOR_BLUE << "null;\n" << COLOR_NC;
+					stream << COLOR_BLUE << "null;" << ENDL << COLOR_NC;
 				else
 				{
 					//точно не нужно??
@@ -64,7 +64,7 @@ namespace LizardScript
 			}
 		}
 
-		stream << "}\n";
+		stream << "}" << ENDL;
 	}
 
 }

@@ -1,5 +1,5 @@
 #pragma once
-//#include "interpreter_util.h"
+#include "interpreter_util.h"
 #include "metagen.h"
 
 #ifdef COLOR_TEXT

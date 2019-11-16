@@ -28,6 +28,9 @@
     <Filter Include="Other headers">
       <UniqueIdentifier>{c3063933-c203-4cc4-9b13-9b25d45a0af7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Logger">
+      <UniqueIdentifier>{f0d14edf-0605-452d-abfb-306cc8ae1c49}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Lexer.cpp">
@@ -66,6 +69,7 @@
     <ClCompile Include="Semantic.cpp">
       <Filter>Compiler</Filter>
     </ClCompile>
+    <ClCompile Include="Logger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="interpreter_util.h">
@@ -149,5 +153,6 @@
     <ClInclude Include="metagen_def.h">
       <Filter>ExternalHeaders</Filter>
     </ClInclude>
+    <ClInclude Include="Logger.h" />
   </ItemGroup>
 </Project>

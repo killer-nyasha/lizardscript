@@ -198,6 +198,10 @@ public:
 	}
 };
 
+inline std::string to_string(const TypeInfo& info)
+{
+	return info.text();
+}
 
 template <typename T>
 TypeInfo makeTypeInfo()
