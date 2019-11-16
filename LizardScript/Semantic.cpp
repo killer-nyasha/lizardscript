@@ -34,8 +34,13 @@ bool ByteCodeGenerator::cast(typed_reg reg, TypeInfo to)
 	ENDCAST;
 
 	CAST
-		from.ptr > to.ptr
-		THEN open_reg(reg, from.byValueSize < sizeof(void*) ? to.ptr : MAX(to.ptr, 1));
+		from.ptr > to.ptr && from.byValueSize <= sizeof(void*)
+		THEN open_reg(reg, to.ptr);
+	ENDCAST;
+
+	CAST
+		from.ptr > to.ptr && to.ptr >= 1
+		THEN open_reg(reg, to.ptr);
 	ENDCAST;
 
 	//CAST
