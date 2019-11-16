@@ -15,6 +15,8 @@ SyntaxCore* IOperator::core;
 #define RETURNS(T) ); r1.type = T; reg.alloc(r1.type); return true; } else code.data.resize(csize); }
 #define VOID ); } else code.data.resize(csize); }
 
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
+
 bool ByteCodeGenerator::cast(typed_reg reg, TypeInfo to)
 {
 	TypeInfo& from = reg.type;
@@ -32,7 +34,7 @@ bool ByteCodeGenerator::cast(typed_reg reg, TypeInfo to)
 
 	CAST
 		from.ptr > to.ptr
-		THEN open_reg(reg, to.ptr);
+		THEN open_reg(reg, from.byValueSize < sizeof(void*) ? to.ptr : MIN(to.ptr, 1));
 	ENDCAST;
 
 	//CAST
