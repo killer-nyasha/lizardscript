@@ -269,7 +269,7 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 					FieldInfo& f = newLocalVariable(t, "_temp_");
 				}
 
-				bool isOk;
+				bool isOk = false;
 				PossibleFunctionCalls calls;
 				calls.index = reg.stackEmul.top().index;
 				for (auto& metadata : make_reverse_wrapper(globalMetadataTable[t].members.get<FunctionInfo>()))

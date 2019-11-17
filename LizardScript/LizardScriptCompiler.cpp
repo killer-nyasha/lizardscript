@@ -74,12 +74,6 @@ void LizardScriptCompiler::create_impl(TypeInfo type, const TCHAR* t)
 
 	expr = runByteCodeCompiler(type, global_parserTokens);
 
-	logger.addSeparator();
-	logger.add("disasm:");
-	logger.addSeparator();
-	expr.disasm();
-	logger.addSeparator();
-
 	std::chrono::high_resolution_clock::time_point t2 =
 		std::chrono::high_resolution_clock::now();
 	if (lsl.printCompilationTime)
@@ -109,6 +103,12 @@ Expr LizardScriptCompiler::create(TypeInfo type, const TCHAR* t, bool catchEx/*,
 		create_impl(type, t);
 		//logger.toFile();
 	}
+
+	logger.addSeparator();
+	logger.add("disasm:");
+	logger.addSeparator();
+	expr.disasm();
+	logger.addSeparator();
 	logger.toFile();
 
 	//expr.optimize();
