@@ -58,10 +58,30 @@ using namespace LizardScript;
 
 #define _out_ logger
 
+#define CODEGET(type) *(type*)(&code.data[(i += sizeof(type)) - sizeof(type)])
+
 void Expr::disasm()
 {
 	for (size_t i = 0; i < code.data.size(); i += 2)
 	{
+		if ((opcode)code.data[i] == opcode::comment)
+		{
+			i += 2;
+			int allocSize = CODEGET(int);
+
+			std::string str = std::string(allocSize, ' ');
+
+			for (size_t j = 0; j < allocSize; j++)
+			{
+				str[j] = CODEGET(char);
+			}
+
+			_out_ << "\t\t//" << str;
+			i -= 2;
+			_out_ << ENDL;
+			continue;
+		}
+
 		auto command = disasmMap.count((opcode)code.data[i]) > 0 ? disasmMap[(opcode)code.data[i]] : "unknown";
 
 		_out_ << COLOR_YELLOW << i << ": " << "\t" << command << COLOR_NC << " ";
@@ -85,9 +105,24 @@ void Expr::disasm()
 		{
 			i += sizeof(FunctionInfo().callStruct);
 		}
-		else if ((opcode)code.data[i] == opcode::push_stringptr)
+		else if ((opcode)code.data[i] == opcode::push_stringptr /*|| (opcode)code.data[i] == opcode::comment*/)
 		{
-			i += *reinterpret_cast<int*>(&code.data[i + 2]) + 4;
+			//_out_ << " offset: " << *reinterpret_cast<short int*>(&code.data[i + 2]);
+
+			i += 2;
+			int allocSize = CODEGET(int);
+
+			std::string str = std::string(allocSize, ' ');
+
+			for (size_t j = 0; j < allocSize; j++)
+			{
+				str[j] = CODEGET(char);
+			}
+
+			_out_ << " text: \"" << str << "\"";
+			i -= 2;
+
+			//i += *reinterpret_cast<int*>(&code.data[i + 2]) + 4;
 		}
 
 		_out_ << ENDL;

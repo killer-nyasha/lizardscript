@@ -97,19 +97,19 @@ Expr LizardScriptCompiler::create(TypeInfo type, const TCHAR* t, bool catchEx/*,
 	{
 		logger.add("Compilation error: \"", ex.text, "\"");
 		std::cout << logger.data;
-		logger.toFile();
 	}
 	catch (...)
 	{
 		logger.add("Unknown compilation error");
 		std::cout << logger.data;
-		logger.toFile();
+		//logger.toFile();
 	}
 	else
 	{
 		create_impl(type, t);
-		logger.toFile();
+		//logger.toFile();
 	}
+	logger.toFile();
 
 	//expr.optimize();
 	return std::move(expr);

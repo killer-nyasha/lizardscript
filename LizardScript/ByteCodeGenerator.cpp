@@ -96,6 +96,14 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 
 		processJumps(tIndex);
 
+		//comments
+		code << opcode::comment;
+		code << regindex(0);
+		int len = _tcslen(*ptoken);
+		code << len;
+		for (size_t i = 0; i < len; i++)
+			code << (*ptoken)[i];
+
 		if (core.isKeyword(token))
 		{
 			auto kwtoken = reinterpret_cast<Keyword*>(token);

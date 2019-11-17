@@ -59,6 +59,8 @@ namespace LizardScript
 		alloc, 
 		free,
 
+		comment,
+
 		push_lsl = 0xff
 	};
 

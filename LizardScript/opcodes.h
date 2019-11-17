@@ -33,6 +33,28 @@ case opcode::push_stringptr:
 	break;
 }
 
+case opcode::comment:
+{
+	int allocSize = CODEGET(int);
+
+	i += allocSize;
+
+	//std::string str = std::string(allocSize, ' ');
+
+	//for (size_t j = 0; j < allocSize; j++)
+	//{
+	//	str[j] = CODEGET(char);
+	//}
+
+	//stringptr p = stringptr(std::move(str));
+	//registers[rnfirst] = *reinterpret_cast<void**>(&p);
+	//p.pointer = nullptr;
+
+	//i += allocSize;
+	//i -= 2;
+	break;
+}
+
 case opcode::set_stringptr:
 {
 	opcode_set(stringptr, stringptr);
