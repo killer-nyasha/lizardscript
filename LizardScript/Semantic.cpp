@@ -147,17 +147,24 @@ bool ByteCodeGenerator::addBinary(Keyword* kwtoken, typed_reg r1, typed_reg r2)
 	}
 
 	KEYWORD("=") WHEN
-	(r1.type.size() <= 4) && (r2.type.size() <= 4) &&
+	//(r1.type.size() <= 4) && (r2.type.size() <= 4) &&
 	cast(r1, r1.type.withPtr(2)) &&
 	cast(r2, r1.type.withPtr(1))
-	OPCODE opcode::set_32, pair
+	OPCODE is_x64() ? opcode::set_64 : opcode::set_32, pair
 	RETURNS(r1.type.withPtr(2))
 
 	KEYWORD("=") WHEN
-	(r1.type.size() <= 4) && (r2.type.size() <= 4) &&
+	(r1.type.openedSize() <= 4) && (r2.type.size() <= 4) &&
 	cast(r1, r1.type.withPtr(1)) &&
 	cast(r2, r1.type.withPtr(0))
 	OPCODE opcode::set_32, pair
+	RETURNS(r1.type.withPtr(1))
+
+	KEYWORD("=") WHEN
+	(r1.type.openedSize() <= 8) && (r2.type.size() <= 8) &&
+	cast(r1, r1.type.withPtr(1)) &&
+	cast(r2, r1.type.withPtr(0))
+	OPCODE opcode::set_64, pair
 	RETURNS(r1.type.withPtr(1))
 
 	KEYWORD("=") WHEN

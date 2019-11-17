@@ -7,13 +7,16 @@ bool ByteCodeGenerator::open_reg(typed_reg& r, int ptrLevel)
 {
 	while (r.type.ptr > ptrLevel)
 	{
-		if (r.type.size() <= 4)
-			code << opcode::get_32 << r;
-		else if (r.type.size() <= 8)
-			code << opcode::get_64 << r;
-		r.type.ptr--;
-
-		if (r.type.size() > sizeof(void*))
+		if (r.type.openedSize() <= 4)
+		{
+			code << opcode::get_32 << r; r.type.ptr--;
+		}
+		else if (r.type.openedSize() <= 8)
+		{
+			code << opcode::get_64 << r; r.type.ptr--;
+		}
+		else
+		//if (r.type.size() > sizeof(void*))
 		{
 			r.type.ptr++;
 			throw Exception(std::string("Type ") + r.type.text() + " can't be placed in a register.");
