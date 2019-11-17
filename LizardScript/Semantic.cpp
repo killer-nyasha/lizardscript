@@ -46,7 +46,7 @@ bool ByteCodeGenerator::cast(typed_reg reg, TypeInfo to)
 	bool breakFlag = false;
 
 	CAST
-		from.ptr > 0 && to.ptr == from.ptr
+		from.ptr > 0 /*&& to.ptr == from.ptr*/
 		&& findParent(globalMetadataTable[from], to, parentOffset)
 		THEN from = to;
 	code << opcode::push_offset << parentOffset;
