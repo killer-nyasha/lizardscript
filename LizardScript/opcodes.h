@@ -11,6 +11,11 @@ case opcode::set_big:
 	break;
 }
 
+case opcode::nop:
+{
+	break;
+}
+
 //case opcode::set_float_float: DO(opcode_set(float, float))//float = float
 
 case opcode::push_stringptr:
