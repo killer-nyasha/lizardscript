@@ -60,8 +60,9 @@ namespace LizardScript
 		free,
 
 		comment,
+		ret,
 
-		push_lsl = 0xff
+		push_lsl,
 	};
 
 	extern std::map<opcode, const char*> disasmMap;

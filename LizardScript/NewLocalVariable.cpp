@@ -49,7 +49,7 @@ FieldInfo& ByteCodeGenerator::newLocalVariable(TypeInfo info, const TCHAR* name,
 		r.type.ptr++;
 		code << opcode::push_stackbase << r;
 
-		//if (v.offset != 0)
+		if (v.offset != 0)
 		code << opcode::push_offset << r << (short int)v.offset;
 	}
 

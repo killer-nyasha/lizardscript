@@ -94,8 +94,8 @@ void ByteCodeGenerator::findFunctionToCall(PossibleFunctionCalls& call)
 			{
 				//*****************
 				code << opcode::push_stackbase << *rret;
-				//if (v.offset != 0)
-				code << opcode::push_offset << *rret << (short int)fld.offset;
+				if (fld.offset != 0)
+					code << opcode::push_offset << *rret << (short int)fld.offset;
 				//*****************
 			}
 		}

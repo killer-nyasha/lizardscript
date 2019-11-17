@@ -231,3 +231,8 @@ case opcode::dec:
 	(*OPEN(int*, rnsecond))--;
 	break;
 }
+
+case opcode::ret:
+{
+	goto end;
+}

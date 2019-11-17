@@ -153,7 +153,7 @@ void ByteCodeGenerator::identifiersProcessor(std::vector<TCHAR*>::iterator& ptok
 			//else throw Exception(std::string("Unknown identifier \"") + currentType.text() + "::" + token + "\".");
 
 		//ok1:
-		//if (offset != 0)
+		if (offset != 0)
 		{
 			code << opcode::push_offset;
 			code << rn;

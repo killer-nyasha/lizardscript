@@ -351,4 +351,6 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 			}
 		}
 	}
+
+	code << opcode::ret << regindex(0);
 }

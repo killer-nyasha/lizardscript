@@ -79,7 +79,7 @@ void Runtime::run_impl()
 
 		//}
 		//else
-		for (; i < expr.code.data.size(); )
+		for (; /*i < expr.code.data.size()*/; )
 		{
 			//std::cout << i << ": " << *(long long int*)stackdata << ";" << std::endl;
 
@@ -100,6 +100,8 @@ void Runtime::run_impl()
 			}
 
 		}
+
+		end:
 
 		std::chrono::high_resolution_clock::time_point t2 =
 			std::chrono::high_resolution_clock::now();
