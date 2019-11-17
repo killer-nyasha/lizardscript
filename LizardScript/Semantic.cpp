@@ -25,7 +25,8 @@ bool findParent(TypeInfoEx t, TypeInfo parent, int& offset)
 	for (auto& p : t.parents)
 		if (p.type != t && findParent(globalMetadataTable[p.type], parent, offset))
 		{
-			offset += p.offset; break;
+			offset += p.offset; 
+			return true;
 		}
 	return false;
 }

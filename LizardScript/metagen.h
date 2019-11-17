@@ -100,7 +100,7 @@ namespace LizardScript
 		memcpy(&f.callStruct, &callStruct, sizeof(callStruct));
 
 		addSimpleTypeInfo<R>();
-		addSimpleTypeInfo<O>();
+		//addSimpleTypeInfo<O>();
 		FORVARIADIC(addSimpleTypeInfo<A>());
 		return f;
 	}
