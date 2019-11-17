@@ -32,7 +32,8 @@ auto make_reverse_wrapper(C& container)
 void ByteCodeGenerator::identifiersProcessor(std::vector<TCHAR*>::iterator& ptoken)
 {
 	TCHAR* token = *ptoken;
-	typed_reg& rn = reg.alloc(makeTypeInfo<void>());
+	typed_reg& rn = reg.alloc(type.withPtr(1));
+	//rn.type.ptr++;
 	int tIndex = ptoken - tokens.begin();
 
 	bool thisPushed = false;
@@ -73,8 +74,8 @@ void ByteCodeGenerator::identifiersProcessor(std::vector<TCHAR*>::iterator& ptok
 		{
 			if (_tcscmp(&localVar[i].name[0], token) == 0)
 			{
-				localVarAddr.push_back({ (int)code.data.size()+2, token });
-				//offset = localVar[i].offset;
+				//localVarAddr.push_back({ (int)code.data.size()+2, token });
+				offset = localVar[i].offset;
 				rn.type = localVar[i].type;
 				rn.type.ptr++;
 				code.data[pushThisOpcodeIndex] = (char)opcode::push_stackbase;

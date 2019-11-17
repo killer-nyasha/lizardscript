@@ -16,63 +16,80 @@
 
 using namespace LizardScript;
 
-struct B
+//struct B
+//{
+//	int x = 1;
+//	float f = 1;
+//	B* b = nullptr;
+//
+//	B() { }
+//
+//	B operator+(B& b)
+//	{
+//		B ret;
+//		ret.x = x + b.x;
+//		ret.f = f + b.f;
+//		return ret;
+//	}
+//};
+//
+//struct AParent1
+//{
+//	virtual int test() { return 0; }
+//};
+//
+//struct AParent2
+//{
+//	virtual int a() { return 0; }
+//};
+//
+//struct A : public AParent1, AParent2
+//{
+//	int i = 10;
+//	float f = 20.0f;
+//	int k = 30;
+//
+//	A* a = nullptr;
+//	B* b = nullptr;
+//
+//	B inlb;
+//
+//	virtual int test()
+//	{
+//		return f * 2;
+//	}
+//
+//	void test2(int a, int b)
+//	{
+//		f = a + b;
+//	}
+//
+//	A()
+//	{
+//		i = 100;
+//	}
+//};
+
+struct Benchmarks
 {
-	int x = 1;
-	float f = 1;
-	B* b = nullptr;
+	int input;
+	int output;
 
-	B() { }
-
-	B operator+(B& b)
+	int mul(int a, int b)
 	{
-		B ret;
-		ret.x = x + b.x;
-		ret.f = f + b.f;
-		return ret;
+		return a * b;
 	}
+
+	/*
+	int N = input+1; int n = 1; int r = 1; while (n < N) { r = r * n; n++; } output = r;
+	*/
 };
 
-struct AParent1
+#define THIS_CLASS Benchmarks
+
+void run(THIS_CLASS& t, std::string& source)
 {
-	virtual int test() { return 0; }
-};
-
-struct AParent2
-{
-	virtual int a() { return 0; }
-};
-
-struct A : public AParent1, AParent2
-{
-	int i = 10;
-	float f = 20.0f;
-	int k = 30;
-
-	A* a = nullptr;
-	B* b = nullptr;
-
-	B inlb;
-
-	virtual int test()
-	{
-		return f * 2;
-	}
-
-	void test2(int a, int b)
-	{
-		f = a + b;
-	}
-
-	A()
-	{
-		i = 100;
-	}
-};
-
-void run(A& t, std::string& source)
-{
-	TypedExpr<A> e = script<A>(&source[0]);
+	TypedExpr<THIS_CLASS> e = script<THIS_CLASS>(&source[0]);
 	Runtime(e, t);
 }
 
@@ -87,22 +104,27 @@ int main(int argc, char** argv)
 			<< "**********************************************************************\n" << COLOR_NC;
 	}
 
-	standartCompiler = new LizardScriptCompiler(defaultSyntaxCore);
+	standartCompiler = new LizardScriptCompiler(defaultSyntaxCore, true);
 	LizardScriptLibrary::init_ls_standart_meta();
 
-	METAGEN_CLASS(A) WITH_MEMBERS(, FIELD(i), FIELD(f), FIELD(k), FIELD(a), FIELD(b), FIELD(inlb),
-		PARAMS()::FUNC(CtorProvider<A>) WITHNAME(ctor),
-		PARAMS()::FUNC(A) WITHNAME(test),
-		PARAMS(int, int)::FUNC(A) WITHNAME(test2)
-	);
-	METAGEN_CLASS(B) WITH_MEMBERS(, FIELD(x), FIELD(f), FIELD(b),
-		PARAMS()::FUNC(CtorProvider<B>) WITHNAME(ctor),
-		PARAMS(B&)::FUNC(B) WITHNAME(operator+)
+	//METAGEN_CLASS(A) WITH_MEMBERS(, FIELD(i), FIELD(f), FIELD(k), FIELD(a), FIELD(b), FIELD(inlb),
+	//	PARAMS()::FUNC(CtorProvider<A>) WITHNAME(ctor),
+	//	PARAMS()::FUNC(A) WITHNAME(test),
+	//	PARAMS(int, int)::FUNC(A) WITHNAME(test2)
+	//);
+	//METAGEN_CLASS(B) WITH_MEMBERS(, FIELD(x), FIELD(f), FIELD(b),
+	//	PARAMS()::FUNC(CtorProvider<B>) WITHNAME(ctor),
+	//	PARAMS(B&)::FUNC(B) WITHNAME(operator+)
+	//);
+
+	METAGEN_CLASS(Benchmarks) WITH_MEMBERS(, FIELD(input), FIELD(output)
+		//PARAMS()::FUNC(CtorProvider<B>) WITHNAME(ctor),
+		,PARAMS(int, int)::FUNC(Benchmarks) WITHNAME(mul)
 	);
 
 	endMetadata();
 
-	A t;
+	THIS_CLASS t;
 
 	if (argc > 1)
 	{

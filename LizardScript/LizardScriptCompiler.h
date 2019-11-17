@@ -21,7 +21,9 @@ namespace LizardScript
 		SyntaxCore& core;
 
 		//!create with default syntax
-		LizardScriptCompiler(SyntaxCore& c) : core(c) { }
+		LizardScriptCompiler(SyntaxCore& c, bool optimized = false) : core(c), optimized(optimized){ }
+
+		bool optimized;
 
 		//!compile expression to byte code
 		//!\returns expression in byte code, ready to run or save

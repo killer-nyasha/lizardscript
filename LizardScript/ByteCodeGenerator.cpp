@@ -52,10 +52,10 @@ void clear(std::stack<T>& st)
 		st.pop();
 }
 
-ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type, SyntaxCore& core)
+ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type, SyntaxCore& core, bool optimized)
 	: jmps(global_jmps), fjmps(global_fjmps), localVar(global_localVar), functionCalls(global_functionCalls),
 	code(e.code), core(core), tokens(tokens), type(type),
-	reg(global_stackEmul, global_otherReg), localVarMaxOffset(e.maxStackSize), localVarAddr(global_localVarAddr)
+	reg(global_stackEmul, global_otherReg), localVarMaxOffset(e.maxStackSize), localVarAddr(global_localVarAddr), optimized(optimized)
 {
 	e.type = type;
 
@@ -97,12 +97,15 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 		processJumps(tIndex);
 
 		//comments
-		code << opcode::comment;
-		code << regindex(0);
-		int len = _tcslen(*ptoken);
-		code << len;
-		for (size_t i = 0; i < len; i++)
-			code << (*ptoken)[i];
+		if (!optimized)
+		{
+			code << opcode::comment;
+			code << regindex(0);
+			int len = _tcslen(*ptoken);
+			code << len;
+			for (size_t i = 0; i < len; i++)
+				code << (*ptoken)[i];
+		}
 
 		if (core.isKeyword(token))
 		{
@@ -122,23 +125,23 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 				}
 				else if (kwtoken->checkSpecial(SpecialKeywords::RightBrace))
 				{
-					//set local var offsets
-					for (auto& a : localVarAddr)
-					{
-						for (size_t i = localVar.size() - 1; i + 1 >= 1; i--)
-						{
-							if (localVar[i].offset == 0)
-								break;
+					////set local var offsets
+					//for (auto& a : localVarAddr)
+					//{
+					//	for (size_t i = localVar.size() - 1; i + 1 >= 1; i--)
+					//	{
+					//		if (localVar[i].offset == 0)
+					//			break;
 
-							if (_tcscmp(&localVar[i].name[0], a.varName) == 0)
-							{
-								*(short*)&(code.data[a.byteCodeOffset]) = localVar[i].offset;
-								break;
-							}
-						}
-						//вынести в отдельную функцию всё это?
-						//throw Exception(std::string("local variable ") + a.varName + " was lost :(");
-					}
+					//		if (_tcscmp(&localVar[i].name[0], a.varName) == 0)
+					//		{
+					//			*(short*)&(code.data[a.byteCodeOffset]) = localVar[i].offset;
+					//			break;
+					//		}
+					//	}
+					//	//вынести в отдельную функцию всё это?
+					//	//throw Exception(std::string("local variable ") + a.varName + " was lost :(");
+					//}
 
 					if (classDecl == localVarLevels.size()-1)
 					{

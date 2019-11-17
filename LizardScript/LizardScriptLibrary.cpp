@@ -49,9 +49,9 @@ void LizardScriptLibrary::eval(void* ths, stringptr type, stringptr source)
 {
 	if (printOutput)
 	{
-		print("EVAL"_sp);
-		print(type);
-		print(source);
+		//print("EVAL"_sp);
+		//print(type);
+		//print(source);
 	}
 
 	TypeInfo typeInfo = findType(&type->operator[](0));

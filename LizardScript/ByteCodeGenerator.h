@@ -92,7 +92,7 @@ namespace LizardScript
 	class ByteCodeGenerator
 	{
 	public:
-		ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type, SyntaxCore& core);
+		ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type, SyntaxCore& core, bool optimized = false);
 
 		Expr e;
 
@@ -131,5 +131,7 @@ namespace LizardScript
 		bool experimental_paramsForwarding = false;
 
 		void findFunctionToCall(PossibleFunctionCalls& call);
+
+		bool optimized = false;
 	};
 }

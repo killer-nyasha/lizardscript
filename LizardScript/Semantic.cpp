@@ -79,6 +79,12 @@ bool ByteCodeGenerator::cast(typed_reg reg, TypeInfo to)
 			&& to.full_eq(TYPEINFO(int))
 			THEN code << opcode::float_to_int << reg; from.t = to.t;
 		ENDCAST;
+
+		CAST
+			to == TYPEINFO(void)
+			&& from.ptr >= 1
+			THEN from.t = TYPEINFO(void).t;
+		ENDCAST;
 	}
 
 	//CAST
@@ -154,14 +160,14 @@ bool ByteCodeGenerator::addBinary(Keyword* kwtoken, typed_reg r1, typed_reg r2)
 	RETURNS(r1.type.withPtr(2))
 
 	KEYWORD("=") WHEN
-	(r1.type.openedSize() <= 4) && (r2.type.size() <= 4) &&
+	(r1.type.openedSize() <= 4) /*&& (r2.type.size() <= 4)*/ &&
 	cast(r1, r1.type.withPtr(1)) &&
 	cast(r2, r1.type.withPtr(0))
 	OPCODE opcode::set_32, pair
 	RETURNS(r1.type.withPtr(1))
 
 	KEYWORD("=") WHEN
-	(r1.type.openedSize() <= 8) && (r2.type.size() <= 8) &&
+	(r1.type.openedSize() <= 8) /*&& (r2.type.size() <= 8)*/ &&
 	cast(r1, r1.type.withPtr(1)) &&
 	cast(r2, r1.type.withPtr(0))
 	OPCODE opcode::set_64, pair

@@ -36,7 +36,7 @@ std::vector<TCHAR*> LizardScriptCompiler::runParser(std::vector<TCHAR*>& r)
 
 Expr LizardScriptCompiler::runByteCodeCompiler(TypeInfo type, std::vector<TCHAR*>& tokens)
 {
-	return ByteCodeGenerator(tokens, type, core).e;
+	return ByteCodeGenerator(tokens, type, core, optimized).e;
 }
 
 void LizardScriptCompiler::create_impl(TypeInfo type, const TCHAR* t)
