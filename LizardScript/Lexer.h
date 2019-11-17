@@ -21,7 +21,7 @@ namespace LizardScript
 		{
 			if (ch > 255 || ch < -1)
 			{
-				if (!wasNonasciiWarningPrinted) WARNING("Not-ASCII symbols aren`t allowed (interpreted as whitespaces).");
+				if (!wasNonasciiWarningPrinted) logger.add("Not-ASCII symbols aren`t allowed (interpreted as whitespaces).");
 				wasNonasciiWarningPrinted = true;
 				return false;
 			}
@@ -32,7 +32,7 @@ namespace LizardScript
 		{
 			if (ch > 255 || ch < -1)
 			{
-				if (!wasNonasciiWarningPrinted) WARNING("Not-ASCII symbols aren`t allowed (interpreted as whitespaces).");
+				if (!wasNonasciiWarningPrinted) logger.add("Not-ASCII symbols aren`t allowed (interpreted as whitespaces).");
 				wasNonasciiWarningPrinted = true;
 				return false;
 			}

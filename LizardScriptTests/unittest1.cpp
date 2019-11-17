@@ -4,6 +4,7 @@
 #include "../LizardScript/LizardScriptCompiler.h"
 #include "../LizardScript/Print.h"
 #include "../LizardScript/Runtime.h"
+#include "../LizardScript/metagen.h"
 
 using namespace LizardScript;
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;

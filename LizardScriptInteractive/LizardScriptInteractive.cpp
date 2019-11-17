@@ -12,6 +12,7 @@
 #include "../LizardScript/Print.h"
 #include "../LizardScript/Runtime.h"
 #include "../LizardScript/LizardScriptLibrary.h"
+#include "../LizardScript/metagen.h"
 
 using namespace LizardScript;
 

@@ -5,6 +5,7 @@
 #include "interpreter_util.h"
 #include "FindType.h"
 #include "Runtime.h"
+#include "metagen.h"
 
 using namespace LizardScript;
 

@@ -154,5 +154,8 @@
       <Filter>ExternalHeaders</Filter>
     </ClInclude>
     <ClInclude Include="Logger.h" />
+    <ClInclude Include="metagen_classes.h">
+      <Filter>ExternalHeaders</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

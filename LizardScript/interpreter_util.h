@@ -14,7 +14,8 @@
 #include "Exception.h"
 
 #include "Logger.h"
-#include "metagen.h"
+#include "metagen_classes.h"
+#include "Print.h"
 
 namespace LizardScript
 {

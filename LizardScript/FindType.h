@@ -1,5 +1,5 @@
 #pragma once
-#include "metagen.h"
+#include "metagen_classes.h"
 
 inline const TypeInfo findType(TCHAR* name)
 {
