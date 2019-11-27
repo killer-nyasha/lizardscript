@@ -344,6 +344,7 @@
     <ClInclude Include="algorithms.h" />
     <ClInclude Include="ByteCodeGenerator.h" />
     <ClInclude Include="crossplatform_tchar.h" />
+    <ClInclude Include="Delegate.h" />
     <ClInclude Include="Exception.h" />
     <ClInclude Include="Expr.h" />
     <ClInclude Include="FindType.h" />

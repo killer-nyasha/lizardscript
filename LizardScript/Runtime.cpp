@@ -44,6 +44,7 @@ void Runtime::run_impl()
 	memset(stackbase, 0, expr.maxStackSize);
 	stackptr = (char*)stackptr + expr.maxStackSize;
 
+
 	//global_stack += expr.maxStackSize;
 	//alloca(expr.maxStackSize+0x08);
 
@@ -79,12 +80,13 @@ void Runtime::run_impl()
 
 		//}
 		//else
+		unsigned char* data = (unsigned char*)&expr.code.data[0];
 		for (; /*i < expr.code.data.size()*/; )
 		{
 			//std::cout << i << ": " << *(long long int*)stackdata << ";" << std::endl;
 
-			opcode op = (opcode)expr.code.data[i];
-			regindex_pair rn = *reinterpret_cast<regindex_pair*>(&expr.code.data[i + 1]);
+			opcode op = (opcode)data[i];
+			regindex_pair rn = *reinterpret_cast<regindex_pair*>(&data[i + 1]);
 			regindex rnfirst = rn.first;
 			regindex rnsecond = rn.second;
 			i += 2;
@@ -95,7 +97,7 @@ void Runtime::run_impl()
 
 			default:
 			{
-				throw Exception("Unknown opcode " + std::to_string(*(unsigned char*)&expr.code.data[i]) + " at " + std::to_string(i));
+				throw Exception("Unknown opcode " + std::to_string(*(unsigned char*)&data[i]) + " at " + std::to_string(i));
 			}
 			}
 

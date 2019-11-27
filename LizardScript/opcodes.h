@@ -107,7 +107,7 @@ case opcode::jmp:
 
 case opcode::call_cpp:
 {
-	AbstractCallStruct* callStruct = reinterpret_cast<AbstractCallStruct*>(&expr.code.data[i]);
+	AbstractCallStruct* callStruct = reinterpret_cast<AbstractCallStruct*>(&data[i]);
 	callStruct->call(registers, (int)rnfirst);
 	i += sizeof(FunctionInfo().callStruct);
 	break;

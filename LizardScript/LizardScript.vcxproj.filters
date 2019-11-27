@@ -157,5 +157,8 @@
     <ClInclude Include="metagen_classes.h">
       <Filter>ExternalHeaders</Filter>
     </ClInclude>
+    <ClInclude Include="Delegate.h">
+      <Filter>Other headers</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

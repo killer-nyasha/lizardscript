@@ -6,8 +6,8 @@
 //
 //}
 
-#define CODEGET(type) *(type*)(&expr.code.data[(i += sizeof(type)) - sizeof(type)])
-#define PCODEGET(type) (type*)(&expr.code.data[(i += sizeof(type)) - sizeof(type)])
+#define CODEGET(type) *(type*)(&data[(i += sizeof(type)) - sizeof(type)])
+#define PCODEGET(type) (type*)(&data[(i += sizeof(type)) - sizeof(type)])
 
 #define OPEN(type, r) (r == 0 ? *(type*)((char*)stackbase + CODEGET(short)) : *(type*)&(registers[r]))
 
