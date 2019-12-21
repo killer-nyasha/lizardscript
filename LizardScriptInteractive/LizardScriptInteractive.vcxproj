@@ -171,6 +171,9 @@
   <ItemGroup>
     <None Include="test.ls" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="sstp.ls" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

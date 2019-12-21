@@ -25,6 +25,14 @@ void LizardScriptLibrary::init_ls_standart_meta()
 	METAGEN_CLASS(stringptr) WITH_MEMBERS(,
 		PARAMS()::FUNC(CtorProvider<stringptr>) WITHNAME(ctor)
 	);
+
+	METAGEN_CLASS(TypeInfo) WITH_MEMBERS(
+		//,PARAMS()::FUNC(CtorProvider<stringptr>) WITHNAME(ctor)
+	);
+
+	METAGEN_CLASS(TypeInfoEx) WITH_MEMBERS(
+		//,PARAMS()::FUNC(CtorProvider<stringptr>) WITHNAME(ctor)
+	);
 }
 
 void LizardScriptLibrary::print(int i)

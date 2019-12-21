@@ -41,6 +41,7 @@ namespace LizardScript
 		DISASM(dec),
 		DISASM(jmp),
 		DISASM(jz),
+		DISASM(ret),
 
 		DISASM(push_lsl),
 		DISASM(push_stackbase),
@@ -82,9 +83,17 @@ void Expr::disasm()
 			continue;
 		}
 
-		auto command = disasmMap.count((opcode)code.data[i]) > 0 ? disasmMap[(opcode)code.data[i]] : "unknown";
+		if (disasmMap.count((opcode)code.data[i]) > 0)
+		{
+			auto command = disasmMap[(opcode)code.data[i]];
+			_out_ << COLOR_YELLOW << i << ": " << "\t" << command << COLOR_NC << " ";
+		}
+		else
+		{
+			auto command = std::string("unknown") + std::to_string((int)code.data[i]);
+			_out_ << COLOR_YELLOW << i << ": " << "\t" << command << COLOR_NC << " ";
+		}
 
-		_out_ << COLOR_YELLOW << i << ": " << "\t" << command << COLOR_NC << " ";
 		operator<<(_out_, *reinterpret_cast<regindex_pair*>(&code.data[i + 1]));
 
 		if ((opcode)code.data[i] == opcode::push_32 || (opcode)code.data[i] == opcode::jz || (opcode)code.data[i] == opcode::jmp)

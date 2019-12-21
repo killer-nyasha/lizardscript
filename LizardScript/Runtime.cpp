@@ -40,10 +40,11 @@ void Runtime::run_impl()
 	memset(registers, 0, sizeof(registers));
 	void*& stackptr = registers[16];
 	void*& stackbase = registers[17];
+	global_stack += expr.maxStackSize;
 	stackbase = stackptr = global_stack;
+	//std::cout << expr.maxStackSize << std::endl;
 	memset(stackbase, 0, expr.maxStackSize);
 	stackptr = (char*)stackptr + expr.maxStackSize;
-
 
 	//global_stack += expr.maxStackSize;
 	//alloca(expr.maxStackSize+0x08);
