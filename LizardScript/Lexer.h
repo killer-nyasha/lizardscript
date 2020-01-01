@@ -1,19 +1,19 @@
 #pragma once
 #include "SyntaxCore.h"
-
-#include <cctype>
+#include "ILexer.h"
 
 namespace LizardScript
 {
 	class Lexer
 	{
 	private:
+		LexerData* data;
+		bool isMultiThread;
+
 		SyntaxCore& core;
 		const TCHAR* text;
 		size_t lastValueIndex;
 		size_t textLength;
-		std::vector<TCHAR>& values;
-		std::vector<TCHAR*>& tokens;
 
 		bool wasNonasciiWarningPrinted = false;
 
@@ -21,7 +21,8 @@ namespace LizardScript
 		{
 			if (ch > 255 || ch < -1)
 			{
-				if (!wasNonasciiWarningPrinted) logger.add("Not-ASCII symbols aren`t allowed (interpreted as whitespaces).");
+				if (!wasNonasciiWarningPrinted)
+					logger.add("Not-ASCII symbols aren`t allowed (interpreted as whitespaces).");
 				wasNonasciiWarningPrinted = true;
 				return false;
 			}
@@ -32,7 +33,8 @@ namespace LizardScript
 		{
 			if (ch > 255 || ch < -1)
 			{
-				if (!wasNonasciiWarningPrinted) logger.add("Not-ASCII symbols aren`t allowed (interpreted as whitespaces).");
+				if (!wasNonasciiWarningPrinted)
+					logger.add("Not-ASCII symbols aren`t allowed (interpreted as whitespaces).");
 				wasNonasciiWarningPrinted = true;
 				return false;
 			}
@@ -46,18 +48,17 @@ namespace LizardScript
 
 		void newToken();
 
-		void run();
-
 	public:
-		Lexer(SyntaxCore& c, const TCHAR* t, std::vector<TCHAR>& values, std::vector<TCHAR*>& tokens)
-			: core(c), values(values), tokens(tokens)
+		Lexer(SyntaxCore& c, const TCHAR* t, bool multiThread);
+
+
+		virtual ~Lexer()
 		{
-			text = t;
-			textLength = _tcslen(text);
-			//values.reserve(textLength + 64);
-			lastValueIndex = 0;
-			run();
+			if (isMultiThread)
+				delete data;
 		}
+
+		LexerData* run();
 
 	};
 }

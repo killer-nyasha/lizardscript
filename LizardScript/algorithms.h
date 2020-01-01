@@ -1,9 +1,8 @@
 #pragma once
-#ifndef SSTP_INCLUDED
 #include <vector>
 
-
-template <typename T> size_t MedianOfThree(T &a, T &b, T &c, size_t ai, size_t bi, size_t ci)
+template <typename T> 
+inline size_t MedianOfThree(T &a, T &b, T &c, size_t ai, size_t bi, size_t ci)
 {
 	if (a >= b && a <= c)
 		return ai;
@@ -12,7 +11,8 @@ template <typename T> size_t MedianOfThree(T &a, T &b, T &c, size_t ai, size_t b
 	return ci;
 }
 
-template <typename T> size_t QuicksortPartition(std::vector<T> &A, size_t lo, size_t hi)
+template <typename T> 
+inline size_t QuicksortPartition(std::vector<T> &A, size_t lo, size_t hi)
 {
 	size_t ci = (int)(0.5*(lo + hi) + 0.5);
 	size_t pivotIndex = MedianOfThree(A[lo], A[ci], A[hi], lo, ci, hi);
@@ -38,7 +38,8 @@ template <typename T> size_t QuicksortPartition(std::vector<T> &A, size_t lo, si
 	}
 }
 
-template <typename T> void Quicksort(std::vector<T> &A, size_t lo, size_t hi)
+template <typename T> 
+inline void Quicksort(std::vector<T> &A, size_t lo, size_t hi)
 {
 	if (lo < hi)
 	{
@@ -50,7 +51,7 @@ template <typename T> void Quicksort(std::vector<T> &A, size_t lo, size_t hi)
 }
 
 template <typename T>
-bool isSorted(const std::vector<T> &A)
+inline bool isSorted(const std::vector<T> &A)
 {
 	for (int i = 0; i < (int)A.size() - 1; i++)
 		if (A[i] > A[i + 1])
@@ -59,7 +60,7 @@ bool isSorted(const std::vector<T> &A)
 }
 
 template <typename T> 
-void QuickSort(std::vector<T> &A)
+inline void QuickSort(std::vector<T> &A)
 {
 	if (A.size() <= 1)
 		return; 
@@ -67,24 +68,18 @@ void QuickSort(std::vector<T> &A)
 }
 
 template <typename T>
-int BinarySearch(const std::vector<T>& a, const T& x)
+inline int BinarySearch(const std::vector<T>& a, const T& x)
 {
 	if (a.size() == 0)
 		return -1;
 
 	int left = 0;
 	int right = a.size() - 1;
-	//int match = 0;
 	while (left <= right)
 	{
 		size_t middle = (left + right) / 2;
 		if (a[middle] == x)
 		{
-			//cout << "Success! \n";
-			//cout << a[middle];
-			//match++;
-			//break;
-
 			return (int)middle;
 		}
 		if (a[middle] < x)
@@ -98,11 +93,4 @@ int BinarySearch(const std::vector<T>& a, const T& x)
 	}
 
 	return -1;
-	//throw new Exception();
-	//if (match == 0)
-	//{
-		//cout << "Failure! \n";
-	//}
 }
-
-#endif

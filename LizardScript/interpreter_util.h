@@ -1,14 +1,7 @@
 #pragma once
 
-#define _CRT_SECURE_NO_WARNINGS
 #include "crossplatform_tchar.h"
-#include <vector>
-#include <stack>
-#include <algorithm>
-#include <string>
-#include <typeindex>
-#include <map>
-#include <iostream>
+#include "stdafx.h"
 
 #include "stringptr.h"
 #include "Exception.h"
@@ -31,9 +24,9 @@ namespace LizardScript
 		return (r != vec.size() && vec[r] == elem) ? (int)r : -1;
 	}
 
-	//template <typename T>
-	//inline int t_compare(const void* x1, const void* x2)
-	//{
-	//	return (*(T*)x1) - (*(T*)x2);
-	//}
+#define ALIAS(member, name) decltype(member)& name = member;
+
+//#define COMPARATOR_LESS(type, ...) bool operator<(const type& other) const { return __VA_ARGS__; }
+//#define COMPARATOR_EQ(type, ...) bool operator==(const type& other) const { return __VA_ARGS__; }
+//#define OTHER_COMPARATORS(type)
 }

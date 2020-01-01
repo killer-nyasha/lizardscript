@@ -1,9 +1,15 @@
 #include "opcodes_template.h"
 
-#define DO(body) { body; break; }
-
-case opcode::set_32: DO(opcode_set(int, int))//int = int
-case opcode::set_64: DO(opcode_set(long long int, long long int))//int = int
+case opcode::set_32: 
+{
+	opcode_set(int, int);
+	break;
+}
+case opcode::set_64: 
+{
+	opcode_set(long long int, long long int);
+	break;
+}
 
 case opcode::set_big: 
 {
@@ -41,22 +47,7 @@ case opcode::push_stringptr:
 case opcode::comment:
 {
 	int allocSize = CODEGET(int);
-
 	i += allocSize;
-
-	//std::string str = std::string(allocSize, ' ');
-
-	//for (size_t j = 0; j < allocSize; j++)
-	//{
-	//	str[j] = CODEGET(char);
-	//}
-
-	//stringptr p = stringptr(std::move(str));
-	//registers[rnfirst] = *reinterpret_cast<void**>(&p);
-	//p.pointer = nullptr;
-
-	//i += allocSize;
-	//i -= 2;
 	break;
 }
 
@@ -113,8 +104,16 @@ case opcode::call_cpp:
 	break;
 }
 
-case opcode::push_32: DO(opcode_push_const(int)) //push int const
-case opcode::push_64: DO(opcode_push_const(long long int)) //push int const
+case opcode::push_32: 
+{
+	opcode_push_const(int); 
+	break; 
+} //push int const
+case opcode::push_64: 
+{
+	opcode_push_const(long long int);
+	break;
+}//push int const
 case opcode::push_this://push this
 {
 	registers[rnfirst] = ths; 

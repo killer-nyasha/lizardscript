@@ -1,7 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
-
-#include <chrono>
-
+#include "stdafx.h"
 #include "Runtime.h"
 #include "LizardScriptLibrary.h"
 

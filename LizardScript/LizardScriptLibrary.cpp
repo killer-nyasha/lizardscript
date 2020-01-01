@@ -1,6 +1,5 @@
-#define _CRT_SECURE_NO_WARNINGS
+#include "stdafx.h"
 
-#include <iostream>
 #include "LizardScriptLibrary.h"
 #include "interpreter_util.h"
 #include "FindType.h"

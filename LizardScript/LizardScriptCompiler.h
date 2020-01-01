@@ -44,7 +44,7 @@ namespace LizardScript
 		//!split text to tokens (such as operators, names and values)
 		//!\returns ExprCompiler::LexerResult object, which contains tokens
 		//!\param[in] t expression source text
-		void runLexer(const TCHAR* t, std::vector<TCHAR>& values, std::vector<TCHAR*>& tokens);
+		//void runLexer(const TCHAR* t, std::vector<TCHAR>& values, std::vector<TCHAR*>& tokens);
 
 		//!converts infix sequence of tokens to postfix notation
 		//!used simplified shunting-yard algorithm

@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Print.h"
 
 //using namespace LizardScript;

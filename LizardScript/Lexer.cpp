@@ -1,9 +1,36 @@
-﻿#include "Lexer.h"
+﻿#include "stdafx.h"
+#include "Lexer.h"
 
 using namespace LizardScript;
 
+LexerData global_lexerData;
+
+Lexer::Lexer(SyntaxCore& c, const TCHAR* t, bool multiThread)
+	: core(c), data(&global_lexerData), isMultiThread(multiThread)
+{
+	text = t;
+	textLength = _tcslen(text);
+	lastValueIndex = 0;
+
+	if (isMultiThread)
+		data = new LexerData();
+	else
+	{
+		data = &global_lexerData;
+		size_t nCapacity = _tcslen(t) + 256;
+		if (data->values.capacity() < nCapacity)
+			data->values.reserve(nCapacity);
+
+		data->values.resize(0);
+		data->tokens.resize(0);
+	}
+}
+
 void Lexer::newToken()
 {
+	ALIAS(data->values, values);
+	ALIAS(data->tokens, tokens);
+
 	if (values.size() != lastValueIndex)
 	{
 		values.push_back(0);
@@ -22,8 +49,11 @@ void Lexer::newToken()
 	}
 }
 
-void Lexer::run()
+LexerData* Lexer::run()
 {
+	ALIAS(data->values, values);
+	ALIAS(data->tokens, tokens);
+
 	size_t i = 0;
 	while (i < textLength)
 	{
@@ -114,4 +144,6 @@ void Lexer::run()
 		}
 	}
 	newToken();
+
+	return data;
 }

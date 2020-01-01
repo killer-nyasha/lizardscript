@@ -159,7 +159,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Create</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -182,7 +182,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DemoRelease|x64'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Create</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -205,7 +205,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Create</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
@@ -224,7 +224,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DemoDebug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Create</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
@@ -243,7 +243,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Create</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
@@ -262,7 +262,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DemoDebug|x64'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Create</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
@@ -281,7 +281,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Create</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -304,7 +304,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DemoRelease|Win32'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Create</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -329,6 +329,7 @@
     <ClCompile Include="ByteCodeGenerator.cpp" />
     <ClCompile Include="Expr.cpp" />
     <ClCompile Include="FindFunctionToCall.cpp" />
+    <ClCompile Include="ILexer.cpp" />
     <ClCompile Include="LizardScriptCompiler.cpp" />
     <ClCompile Include="Lexer.cpp" />
     <ClCompile Include="LizardScriptLibrary.cpp" />
@@ -338,6 +339,7 @@
     <ClCompile Include="Print.cpp" />
     <ClCompile Include="Runtime.cpp" />
     <ClCompile Include="Semantic.cpp" />
+    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="SyntaxCore.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -349,6 +351,7 @@
     <ClInclude Include="Expr.h" />
     <ClInclude Include="FindType.h" />
     <ClInclude Include="IdentifiersProcessor.h" />
+    <ClInclude Include="ILexer.h" />
     <ClInclude Include="LizardScriptLibrary.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="metagen.h" />
@@ -366,6 +369,7 @@
     <ClInclude Include="Registers.h" />
     <ClInclude Include="Runtime.h" />
     <ClInclude Include="Jumps.h" />
+    <ClInclude Include="stdafx.h" />
     <ClInclude Include="stringptr.h" />
     <ClInclude Include="SyntaxCore.h" />
     <ClInclude Include="DefaultSyntaxCore.h" />

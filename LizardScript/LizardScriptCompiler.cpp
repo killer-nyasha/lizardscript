@@ -1,9 +1,7 @@
-﻿#define _CRT_SECURE_NO_WARNINGS
-
-#include <chrono>
+﻿#include "stdafx.h"
 
 #include "LizardScriptCompiler.h"
-#include "Lexer.h"
+#include "ILexer.h"
 #include "Parser.h"
 #include "Expr.h"
 #include "ByteCodeGenerator.h"
@@ -11,8 +9,6 @@
 
 using namespace LizardScript;
 
-std::vector<TCHAR> global_values;
-std::vector<TCHAR*> global_tokens;
 std::vector<TCHAR*> global_parserTokens; 
 std::stack<Keyword*> global_parserStack;
 
@@ -20,11 +16,6 @@ namespace LizardScript
 {
 	std::map<TypeInfo, TypeInfoEx> globalMetadataTable;
 	LizardScriptCompiler* standartCompiler;
-}
-
-void LizardScriptCompiler::runLexer(const TCHAR* t, std::vector<TCHAR>& values, std::vector<TCHAR*>& tokens)
-{
-	Lexer(core, t, values, tokens);
 }
 
 std::vector<TCHAR*> LizardScriptCompiler::runParser(std::vector<TCHAR*>& r)
@@ -51,21 +42,14 @@ void LizardScriptCompiler::create_impl(TypeInfo type, const TCHAR* t)
 	std::chrono::high_resolution_clock::time_point t1 =
 		std::chrono::high_resolution_clock::now();
 
-	size_t nCapacity = _tcslen(t) + 256;
-	if (global_values.capacity() < nCapacity)
-		global_values.reserve(nCapacity);
-
-	global_values.resize(0);
-	global_tokens.resize(0);
-
-	runLexer(t, global_values, global_tokens);
+	LexerData* ld = runLexer(core, t, false);
 
 	logger.add("lexer tokens:");
 	logger.addSeparator();
-	logger.add(global_tokens);
+	logger.add(ld->tokens);
 	logger.addSeparator();
 
-	runParser(global_tokens);
+	runParser(ld->tokens);
 
 	logger.add("parser tokens:");
 	logger.addSeparator();

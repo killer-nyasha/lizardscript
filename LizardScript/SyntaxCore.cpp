@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "SyntaxCore.h"
 #include "DefaultSyntaxCore.h"
 #include "algorithms.h"

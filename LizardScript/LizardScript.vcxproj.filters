@@ -31,14 +31,14 @@
     <Filter Include="Logger">
       <UniqueIdentifier>{f0d14edf-0605-452d-abfb-306cc8ae1c49}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Parser\Lexer">
+      <UniqueIdentifier>{19c104ac-710c-4907-9f67-83d327607c38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parser\SyntaxCore">
+      <UniqueIdentifier>{a3883655-1168-4f70-ac70-30abef1b11e7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Lexer.cpp">
-      <Filter>Parser</Filter>
-    </ClCompile>
-    <ClCompile Include="SyntaxCore.cpp">
-      <Filter>Parser</Filter>
-    </ClCompile>
     <ClCompile Include="Parser.cpp">
       <Filter>Parser</Filter>
     </ClCompile>
@@ -70,6 +70,16 @@
       <Filter>Compiler</Filter>
     </ClCompile>
     <ClCompile Include="Logger.cpp" />
+    <ClCompile Include="Lexer.cpp">
+      <Filter>Parser\Lexer</Filter>
+    </ClCompile>
+    <ClCompile Include="ILexer.cpp">
+      <Filter>Parser\Lexer</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="SyntaxCore.cpp">
+      <Filter>Parser\SyntaxCore</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="interpreter_util.h">
@@ -77,15 +87,6 @@
     </ClInclude>
     <ClInclude Include="crossplatform_tchar.h">
       <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="SyntaxCore.h">
-      <Filter>Parser</Filter>
-    </ClInclude>
-    <ClInclude Include="Lexer.h">
-      <Filter>Parser</Filter>
-    </ClInclude>
-    <ClInclude Include="DefaultSyntaxCore.h">
-      <Filter>Parser</Filter>
     </ClInclude>
     <ClInclude Include="TypeInfo.h">
       <Filter>Metagen</Filter>
@@ -159,6 +160,19 @@
     </ClInclude>
     <ClInclude Include="Delegate.h">
       <Filter>Other headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ILexer.h">
+      <Filter>Parser\Lexer</Filter>
+    </ClInclude>
+    <ClInclude Include="Lexer.h">
+      <Filter>Parser\Lexer</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="SyntaxCore.h">
+      <Filter>Parser\SyntaxCore</Filter>
+    </ClInclude>
+    <ClInclude Include="DefaultSyntaxCore.h">
+      <Filter>Parser\SyntaxCore</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

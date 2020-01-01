@@ -1,4 +1,5 @@
-﻿#include "Expr.h"
+﻿#include "stdafx.h"
+#include "Expr.h"
 
 using namespace LizardScript;
 

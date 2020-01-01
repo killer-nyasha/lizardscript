@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "ByteCodeGenerator.h"
 #include "LizardScriptLibrary.h"
 

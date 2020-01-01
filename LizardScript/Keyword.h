@@ -41,22 +41,40 @@ namespace LizardScript
 		};
 	}
 
+	enum class Arity
+	{
+		None,
+		Unary,
+		Binary
+	};
+
+	enum class Associativity
+	{
+		None,
+		Left,
+		Right
+	};
+
 	//!\warning There aren't any differences between "keywords" and "operators" in expression language
 	struct Keyword
 	{
 		//!text representation of Keyword
-		TCHAR value[32];
+		TCHAR value[16];
 
 		//!by default '+' and '-' has priority 50, '*' and '/' - 70
 		int priority;
 
 		//deprecated
-		int arity;
+		Arity arity;
 
-		bool isRightAssociative;
+		Associativity associativity;
+
+	private:
 
 		SpecialKeywords special;
-		/*KeywordFlags::Flags*/int flags = 0;
+		int flags = 0;
+
+	public:
 
 		Keyword()
 		{ }
@@ -66,16 +84,62 @@ namespace LizardScript
 			_tcscpy(value, val);
 		}
 
-		Keyword(const TCHAR* val, int prioriry, int arity, SpecialKeywords special = SpecialKeywords::None, int flags = 0, bool rightAssoc = false) 
-			: priority(prioriry), arity(arity), isRightAssociative(rightAssoc), flags(flags), special(special)
+		Keyword(const TCHAR* val, 
+			int prioriry, 
+			Arity arity, 
+			SpecialKeywords special = SpecialKeywords::None, 
+			int flags = 0, 
+			Associativity associativity = Associativity::Left)
+			: priority(prioriry), arity(arity), associativity(associativity), flags(flags), special(special)
 		{
 
 			_tcscpy(value, val);
 		}
 
-		bool operator==(const Keyword &kw) const { return _tcscmp(value, kw.value) == 0; }
-		bool operator>=(const Keyword &kw) const { return _tcscmp(value, kw.value) >= 0; }
-		bool operator<=(const Keyword &kw) const { return _tcscmp(value, kw.value) <= 0; }
+		bool operator==(const Keyword &kw) const 
+		{ 
+			return _tcscmp(value, kw.value) == 0 && arity == kw.arity; 
+		}
+		bool operator!=(const Keyword& kw) const
+		{
+			return _tcscmp(value, kw.value) != 0 && arity != kw.arity;
+		}
+		bool operator>=(const Keyword &kw) const 
+		{
+			int c = _tcscmp(value, kw.value);
+			if (c > 0)
+				return true;
+			else if (c == 0)
+				return arity >= kw.arity;
+			else return false;
+		}
+		bool operator<=(const Keyword &kw) const 
+		{ 
+			int c = _tcscmp(value, kw.value);
+			if (c < 0)
+				return true;
+			else if (c == 0)
+				return arity <= kw.arity;
+			else return false;
+		}
+		bool operator>(const Keyword& kw) const
+		{
+			int c = _tcscmp(value, kw.value);
+			if (c < 0)
+				return true;
+			else if (c == 0)
+				return arity > kw.arity;
+			else return false;
+		}
+		bool operator<(const Keyword& kw) const
+		{
+			int c = _tcscmp(value, kw.value);
+			if (c < 0)
+				return true;
+			else if (c == 0)
+				return arity < kw.arity;
+			else return false;
+		}
 
 		bool checkFlag(int f)
 		{
