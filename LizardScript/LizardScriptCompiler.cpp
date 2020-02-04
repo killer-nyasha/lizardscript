@@ -2,32 +2,18 @@
 
 #include "LizardScriptCompiler.h"
 #include "ILexer.h"
-#include "Parser.h"
-#include "Expr.h"
-#include "ByteCodeGenerator.h"
+#include "IParser.h"
+#include "LsExpr.h"
+#include "IByteCodeGenerator.h"
 #include "LizardScriptLibrary.h"
 
-using namespace LizardScript;
+#include "Pools.h"
 
-std::vector<TCHAR*> global_parserTokens; 
-std::stack<Keyword*> global_parserStack;
+using namespace LizardScript;
 
 namespace LizardScript
 {
 	std::map<TypeInfo, TypeInfoEx> globalMetadataTable;
-	LizardScriptCompiler* standartCompiler;
-}
-
-std::vector<TCHAR*> LizardScriptCompiler::runParser(std::vector<TCHAR*>& r)
-{
-	global_parserTokens.resize(0);
-	Parser(core, r, global_parserTokens, global_parserStack);
-	return global_parserTokens;//Parser::optimize(core, parserTokens);
-}
-
-Expr LizardScriptCompiler::runByteCodeCompiler(TypeInfo type, std::vector<TCHAR*>& tokens)
-{
-	return ByteCodeGenerator(tokens, type, core, optimized).e;
 }
 
 void LizardScriptCompiler::create_impl(TypeInfo type, const TCHAR* t)
@@ -42,21 +28,16 @@ void LizardScriptCompiler::create_impl(TypeInfo type, const TCHAR* t)
 	std::chrono::high_resolution_clock::time_point t1 =
 		std::chrono::high_resolution_clock::now();
 
-	LexerData* ld = runLexer(core, t, false);
+	PoolPointer<LexerData> ld = runLexer(core, t);
 
 	logger.add("lexer tokens:");
 	logger.addSeparator();
 	logger.add(ld->tokens);
 	logger.addSeparator();
 
-	runParser(ld->tokens);
-
-	logger.add("parser tokens:");
-	logger.addSeparator();
-	logger.add(global_parserTokens);
-	logger.addSeparator();
-
-	expr = runByteCodeCompiler(type, global_parserTokens);
+	std::vector<TCHAR*>* pt = runParser(ld->tokens);
+	expr = runByteCodeCompiler(type, *pt);
+	delete pt;
 
 	std::chrono::high_resolution_clock::time_point t2 =
 		std::chrono::high_resolution_clock::now();

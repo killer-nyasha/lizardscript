@@ -13,3 +13,6 @@
 #include <chrono>
 #include <iostream>
 #include <fstream>
+#include <locale>
+#include <type_traits>
+#include <string>

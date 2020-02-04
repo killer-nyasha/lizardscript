@@ -4,8 +4,6 @@
 
 using namespace LizardScript;
 
-SyntaxCore* IOperator::core;
-
 #define CAST/*(predicate, ...)*/ if (
 #define THEN ) { 
 #define ENDCAST logger.add("  -> ", from); /*if (from.full_eq(to))*/ breakFlag = true; /*else breakFlag = false;*/ }
@@ -110,7 +108,7 @@ bool ByteCodeGenerator::cast(typed_reg reg, TypeInfo to)
 	}
 }
 
-bool ByteCodeGenerator::addUnary(Keyword* kwtoken, typed_reg r1)
+bool ByteCodeGenerator::addUnary(KeywordToken* kwtoken, typed_reg r1)
 {
 	logger.add("Searching for unary operator ", kwtoken->value, " for ", r1.type);
 
@@ -133,7 +131,7 @@ bool ByteCodeGenerator::addUnary(Keyword* kwtoken, typed_reg r1)
 	return false;
 }
 
-bool ByteCodeGenerator::addBinary(Keyword* kwtoken, typed_reg r1, typed_reg r2)
+bool ByteCodeGenerator::addBinary(KeywordToken* kwtoken, typed_reg r1, typed_reg r2)
 {
 	logger.add("Searching for binary operator ", kwtoken->value, " for ", r1.type, " and ", r2.type);
 

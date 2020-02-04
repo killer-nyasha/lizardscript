@@ -2,10 +2,11 @@
 #include <typeindex>
 #include <type_traits>
 #include <string>
-//namespace std
-//{
-//	class string;
-//}
+
+struct ErrorType
+{
+
+};
 
 struct TypeInfo
 {
@@ -48,35 +49,6 @@ public:
 		return t;
 	}
 
-	//template <typename T>
-	//void create(T& object)
-	//{
-	//	t = typeid(object);
-	//	size = sizeof(object);
-	//}
-
-	//template <typename T>
-	//void create(T&& object)
-	//{
-	//	t = typeid(object);
-	//	size = sizeof(object);
-	//}
-
-	//template <typename T>
-	//void create(T*& object)
-	//{
-	//	ptr++;
-	//	create(*object);
-	//	
-	//}
-
-	//template <typename T>
-	//void create(T*&& object)
-	//{
-	//	ptr++;
-	//	create(*object);
-	//}
-
 	template <typename T>
 	struct Wrapper
 	{
@@ -101,7 +73,6 @@ public:
 		int get() { return 0; }
 	};
 
-	//size of pointer!!
 	template <typename T>
 	struct NoArgs
 	{
@@ -221,19 +192,3 @@ TypeInfo makeTypeInfo(int p)
 }
 
 #define TYPEINFO(T, ...) makeTypeInfo<T>(__VA_ARGS__)
-
-//template <typename T>
-//TypeInfo makeTypeInfo(T& object)
-//{
-//	TypeInfo info;
-//	info.create(object);
-//	return info;
-//}
-//
-//template <typename T>
-//TypeInfo makeTypeInfo(T&& object)
-//{
-//	TypeInfo info;
-//	info.create(object);
-//	return info;
-//}

@@ -11,6 +11,7 @@ using TCHAR = wchar_t;
 #define _tcstoll wcstoll
 #define _tcstof wcstof
 #define _T(str) L##str
+#define tstring std::wstring
 #else
 using TCHAR = char;
 #define _tcscmp strcmp
@@ -19,4 +20,5 @@ using TCHAR = char;
 #define _tcstoll strtoll
 #define _tcstof strtof
 #define _T(str) str
+#define tstring std::string
 #endif

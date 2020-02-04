@@ -13,12 +13,14 @@ struct byval_ptr
 		T object;
 	};
 
-	byval_ptr_obj* pointer;
+	byval_ptr_obj* pointer = nullptr;
 
-	//или же создать новый экземпляр
-	byval_ptr() { pointer = nullptr; }
-	//byval_ptr(T* ptr) { pointer = new byval_ptr_obj; pointer->refcount = 1; pointer->object = ptr; }
+	//!init with nullptr
+	byval_ptr() { /*pointer = nullptr;*/ }
 	byval_ptr(std::nullptr_t) { pointer = nullptr; }
+
+	//byval_ptr(T* ptr) { pointer = new byval_ptr_obj; pointer->refcount = 1; pointer->object = ptr; }
+	
 	~byval_ptr()
 	{
 		if (pointer != nullptr)
@@ -72,6 +74,15 @@ struct byval_ptr
 	T& operator*() const { return pointer->object; }
 	T* operator->() const { return &pointer->object; }
 
+	void make_unique()
+	{
+		if (this->pointer->refcount > 1)
+		{
+			byval_ptr_obj* newobj = *this->pointer;
+			newobj->refcount = 1;
+			this->pointer = newobj;
+		}
+	}
 
 	bool operator ==(std::nullptr_t) const
 	{

@@ -1,5 +1,4 @@
 ﻿#pragma once
-#ifndef SSTP_INCLUDED
 #include <vector>
 #include <map>
 
@@ -35,7 +34,7 @@ public:
 
 	void sort()
 	{
-		size_t dummy[] = { (QuickSort(std::get<std::vector<T>>(vectors)), 0U)... };
+		size_t dummy[] = { (quickSort(std::get<std::vector<T>>(vectors)), 0U)... };
 	}
 };
 
@@ -51,5 +50,3 @@ public:
 		std::get<std::map<K, G>>(maps).insert(std::make_pair(key, value));
 	}
 };
-
-#endif

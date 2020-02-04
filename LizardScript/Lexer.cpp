@@ -1,28 +1,55 @@
 ﻿#include "stdafx.h"
 #include "Lexer.h"
+#include "algorithms.h"
+#include "Tokens.h"
 
 using namespace LizardScript;
 
-LexerData global_lexerData;
+KeywordToken Lexer::stringKw = KeywordToken("__string__");
+OperatorToken Lexer::callKw = OperatorToken("__call__", Arity::Unary, 1);
 
-Lexer::Lexer(SyntaxCore& c, const TCHAR* t, bool multiThread)
-	: core(c), data(&global_lexerData), isMultiThread(multiThread)
+void Lexer::init()
 {
-	text = t;
 	textLength = _tcslen(text);
-	lastValueIndex = 0;
+	size_t nCapacity = textLength + 256;
+	if (data->values.capacity() < nCapacity)
+		data->values.reserve(nCapacity);
 
-	if (isMultiThread)
-		data = new LexerData();
+	data->values.resize(0);
+	data->tokens.resize(0);
+}
+
+Lexer::Lexer(SyntaxCore& c, const TCHAR* t)
+	: core(c), text(t)
+{
+	init();
+}
+
+bool Lexer::addFromList(const std::vector<KeywordToken*>& list, KeywordToken& pseudoKw)
+{
+	ALIAS(data->values, values);
+	ALIAS(data->tokens, tokens);
+
+	int index = pBinarySearch(list, &pseudoKw);
+
+	if (index != -1)
+	{
+		//add keyword
+		KeywordToken* kw = list[index];
+		tokens.push_back(kw->value);
+		values.resize(lastValueIndex);
+
+		lastKeywordType = kw->type;
+		return true;
+	}
 	else
 	{
-		data = &global_lexerData;
-		size_t nCapacity = _tcslen(t) + 256;
-		if (data->values.capacity() < nCapacity)
-			data->values.reserve(nCapacity);
+		//add non-keyword
+		tokens.push_back(&values[lastValueIndex]);
+		lastValueIndex = values.size();
 
-		data->values.resize(0);
-		data->tokens.resize(0);
+		lastKeywordType = KeywordTokenType::Unary;
+		return false;
 	}
 }
 
@@ -34,22 +61,20 @@ void Lexer::newToken()
 	if (values.size() != lastValueIndex)
 	{
 		values.push_back(0);
-		int kwi = vectorBinarySearch(core.keywords, Keyword(&(values)[lastValueIndex]));
-		if (kwi != -1)
-		{
-			Keyword* kw = &core.keywords[kwi];
-			tokens.push_back(kw->value);
-			values.resize(lastValueIndex);
-		}
-		else
-		{
-			tokens.push_back(&values[lastValueIndex]);
-			lastValueIndex = values.size();
-		}
+
+		KeywordToken pseudoKw = KeywordToken(&(values)[lastValueIndex]);
+		int aIndex = pBinarySearch(core.keywords_listA, &pseudoKw);
+
+		if (kwtype_before_listA(lastKeywordType))
+			addFromList(core.keywords_listA, pseudoKw);
+		else if (kwtype_before_listB(lastKeywordType))
+			addFromList(core.keywords_listB, pseudoKw);
+		else throw Exception("Is's a fucking odd keyword");
+
 	}
 }
 
-LexerData* Lexer::run()
+PoolPointer<LexerData> Lexer::run()
 {
 	ALIAS(data->values, values);
 	ALIAS(data->tokens, tokens);
@@ -57,83 +82,90 @@ LexerData* Lexer::run()
 	size_t i = 0;
 	while (i < textLength)
 	{
-		if (i + 1 < textLength && text[i] == '/' && text[i + 1] == '*')
-		{
-			int level = 1;
-			i++;
-			while (level != 0 && i + 1 < textLength)
-			{
-				if (text[i] == '/' && text[i + 1] == '*')
-					level++;
-				if (text[i] == '*' && text[i + 1] == '/')
-					level--;
-				i++;
-			}
-			i++;
-		}
-		else if (i + 1 < textLength && text[i] == '/' && text[i + 1] == '/')
-			while (text[i] != '\r' && text[i] != '\n')
-				i++;
-		else if (text[i] == '[')
-		{
-			int level = 1;
-			i++; newToken();
 
-			values.push_back('$');
-			newToken();
+		////comments
+		//if (i + 1 < textLength && text[i] == '/' && text[i + 1] == '*')
+		//{
+		//	int level = 1;
+		//	i++;
+		//	while (level != 0 && i + 1 < textLength)
+		//	{
+		//		if (text[i] == '/' && text[i + 1] == '*')
+		//			level++;
+		//		if (text[i] == '*' && text[i + 1] == '/')
+		//			level--;
+		//		i++;
+		//	}
+		//	i++;
+		//}
+		//else if (i + 1 < textLength && text[i] == '/' && text[i + 1] == '/')
+		//	while (text[i] != '\r' && text[i] != '\n')
+		//		i++;
 
-			while (level > 0 && i < textLength)
-			{
-				if (text[i] == '[')
-					level++;
-				if (text[i] == ']')
-				{
-					level--;
-					if (level == 0) break;
-				}
-				values.push_back(text[i++]);
-			}
-			if (text[i] != ']')
-			{
-				throw Exception("Unclosed quote.");
-			}
-			i++; newToken();
-		}
-		else if (text[i] == '\"')
-		{
-			i++; newToken();
 
-			values.push_back('$');
-			newToken();
+		////string literals
+		//else if (text[i] == '[')
+		//{
+		//	int level = 1;
+		//	i++; newToken();
 
-			while (text[i] != '\"' && i < textLength)
-				values.push_back(text[i++]);
-			if (text[i] != '\"')
-			{
-				throw Exception("Unclosed quote.");
-			}
-			i++; newToken();
-		}
-		else if (text[i] == '\`')
-		{
-			i++; newToken();
+		//	values.push_back('$');
+		//	newToken();
 
-			while (text[i] != '\`' && i < textLength)
-				values.push_back(text[i++]);
-			if (text[i] != '\`')
-			{
-				throw Exception("Unclosed quote.");
-			}
-			i++; newToken();
-		}
-		else
+		//	while (level > 0 && i < textLength)
+		//	{
+		//		if (text[i] == '[')
+		//			level++;
+		//		if (text[i] == ']')
+		//		{
+		//			level--;
+		//			if (level == 0) break;
+		//		}
+		//		values.push_back(text[i++]);
+		//	}
+		//	if (text[i] != ']')
+		//	{
+		//		throw Exception("Unclosed quote.");
+		//	}
+		//	i++; newToken();
+		//}
+		//else if (text[i] == '\"')
+		//{
+		//	i++; newToken();
+
+		//	values.push_back('$');
+		//	newToken();
+
+		//	while (text[i] != '\"' && i < textLength)
+		//		values.push_back(text[i++]);
+		//	if (text[i] != '\"')
+		//	{
+		//		throw Exception("Unclosed quote.");
+		//	}
+		//	i++; newToken();
+		//}
+		//else if (text[i] == '\`')
+		//{
+		//	i++; newToken();
+
+		//	while (text[i] != '\`' && i < textLength)
+		//		values.push_back(text[i++]);
+		//	if (text[i] != '\`')
+		//	{
+		//		throw Exception("Unclosed quote.");
+		//	}
+		//	i++; newToken();
+		//}
+
+		//other
+		//else
 		{
 			if (safe_isgraph(text[i]))
 			{
 				values.push_back(text[i++]);
 
-				if (vectorBinarySearch(core.breakChars, text[i]) != -1
-					|| vectorBinarySearch(core.breakChars, text[i - 1]) != -1
+				if (binarySearch(core.breakChars, text[i]) != -1
+					|| binarySearch(core.breakChars, text[i - 1]) != -1
 					|| charIsTextChar(text[i - 1]) != charIsTextChar(text[i]))
 					newToken();
 			}
@@ -145,5 +177,5 @@ LexerData* Lexer::run()
 	}
 	newToken();
 
-	return data;
+	return std::move(data);
 }

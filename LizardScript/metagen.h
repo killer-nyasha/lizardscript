@@ -7,6 +7,7 @@
 
 #define FIELD(field) rawFieldInfo(&(sample->field), #field)
 #define FUNC(...) rawFieldInfo(&__VA_ARGS__::
+#define VFUNC(...) rawFieldInfo(&__VA_ARGS__::
 #define WITHNAME(fname) fname, #fname)
 #define PARAMS(...) WithParams<__VA_ARGS__>
 
@@ -141,6 +142,5 @@ namespace LizardScript
 		for (auto& type : globalMetadataTable)
 			processParents(type.first, type.second);
 	}
-
 }
 

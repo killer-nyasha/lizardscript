@@ -1,21 +1,32 @@
 #pragma once
 #include "SyntaxCore.h"
 #include "ILexer.h"
+#include "algorithms.h"
+#include "Pools.h"
 
 namespace LizardScript
 {
 	class Lexer
 	{
 	private:
-		LexerData* data;
-		bool isMultiThread;
+
+		static KeywordToken stringKw;
+		static OperatorToken callKw;
+
+		//!result of our work
+		PoolPointer<LexerData> data;
 
 		SyntaxCore& core;
+
+		//!source
 		const TCHAR* text;
-		size_t lastValueIndex;
+
+		size_t lastValueIndex = 0;
 		size_t textLength;
 
 		bool wasNonasciiWarningPrinted = false;
+
+		KeywordTokenType lastKeywordType = KeywordTokenType::Unary;
 
 		bool safe_isalnum(int ch)
 		{
@@ -43,22 +54,20 @@ namespace LizardScript
 
 		bool charIsTextChar(TCHAR a)
 		{
-			return safe_isalnum(a) || (vectorBinarySearch(core.textChars, a) != -1);
+			return safe_isalnum(a) || (binarySearch(core.textChars, a) != -1);
 		}
 
 		void newToken();
 
+		bool addFromList(const std::vector<KeywordToken*>& list, KeywordToken& pseudoKw);
+
 	public:
-		Lexer(SyntaxCore& c, const TCHAR* t, bool multiThread);
 
+		void init();
 
-		virtual ~Lexer()
-		{
-			if (isMultiThread)
-				delete data;
-		}
+		Lexer(SyntaxCore& c, const TCHAR* t);
 
-		LexerData* run();
+		PoolPointer<LexerData> run();
 
 	};
 }

@@ -22,8 +22,6 @@ case opcode::nop:
 	break;
 }
 
-//case opcode::set_float_float: DO(opcode_set(float, float))//float = float
-
 case opcode::push_stringptr:
 {
 	int allocSize = CODEGET(int);
@@ -39,8 +37,6 @@ case opcode::push_stringptr:
 	registers[rnfirst] = *reinterpret_cast<void**>(&p);
 	p.pointer = nullptr;
 
-	//i += allocSize;
-	//i -= 2;
 	break;
 }
 
@@ -108,22 +104,19 @@ case opcode::push_32:
 {
 	opcode_push_const(int); 
 	break; 
-} //push int const
+} 
+
 case opcode::push_64: 
 {
 	opcode_push_const(long long int);
 	break;
-}//push int const
+}
+
 case opcode::push_this://push this
 {
 	registers[rnfirst] = ths; 
 	break;
 }
-//case opcode::push_stackptr://push this
-//{
-//	registers[rnfirst] = stackptr;
-//	break;
-//}
 case opcode::set_stackptr://push this
 {
 	stackptr = (char*)stackbase + CODEGET(short);

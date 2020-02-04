@@ -1,10 +1,12 @@
 ﻿#include "stdafx.h"
-#include "Expr.h"
+#include "LsExpr.h"
+#include "LsOpcode.h"
 
 using namespace LizardScript;
 
 namespace LizardScript
 {
+#define DISASM(code) { LsOpcode::code, #code }
 	std::map<opcode, const char*> disasmMap =
 	{
 		DISASM(nop),
@@ -66,7 +68,7 @@ void Expr::disasm()
 {
 	for (size_t i = 0; i < code.data.size(); i += 2)
 	{
-		if ((opcode)code.data[i] == opcode::comment)
+		if (code.data[i] == LsOpcode::comment)
 		{
 			i += 2;
 			int allocSize = CODEGET(int);
@@ -97,13 +99,13 @@ void Expr::disasm()
 
 		operator<<(_out_, *reinterpret_cast<regindex_pair*>(&code.data[i + 1]));
 
-		if ((opcode)code.data[i] == opcode::push_32 || (opcode)code.data[i] == opcode::jz || (opcode)code.data[i] == opcode::jmp)
+		if ((opcode)code.data[i] == LsOpcode::push_32 || (opcode)code.data[i] == LsOpcode::jz || (opcode)code.data[i] == LsOpcode::jmp)
 		{
 			_out_ << " value: " << *reinterpret_cast<int*>(&code.data[i + 2]);
 			i += 4;
 		}
-		else if ((opcode)code.data[i] == opcode::alloc || (opcode)code.data[i] == opcode::push_offset 
-			|| (opcode)code.data[i] == opcode::set_big || (opcode)code.data[i] == opcode::set_stackptr
+		else if ((opcode)code.data[i] == LsOpcode::alloc || (opcode)code.data[i] == LsOpcode::push_offset
+			|| (opcode)code.data[i] == LsOpcode::set_big || (opcode)code.data[i] == LsOpcode::set_stackptr
 			/*|| (opcode)code.data[i] == opcode::_opt_push_this_and_offset |
 			| (opcode)code.data[i] == opcode::_opt_set_this_and_offset*/
 			)
@@ -111,11 +113,11 @@ void Expr::disasm()
 			_out_ << " offset: " << *reinterpret_cast<short int*>(&code.data[i + 2]);
 			i += 2;
 		}
-		else if ((opcode)code.data[i] == opcode::call_cpp)
+		else if ((opcode)code.data[i] == LsOpcode::call_cpp)
 		{
 			i += sizeof(FunctionInfo().callStruct);
 		}
-		else if ((opcode)code.data[i] == opcode::push_stringptr /*|| (opcode)code.data[i] == opcode::comment*/)
+		else if ((opcode)code.data[i] == LsOpcode::push_stringptr /*|| (opcode)code.data[i] == opcode::comment*/)
 		{
 			//_out_ << " offset: " << *reinterpret_cast<short int*>(&code.data[i + 2]);
 

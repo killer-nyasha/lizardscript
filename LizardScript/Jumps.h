@@ -40,7 +40,7 @@ int ByteCodeGenerator::findEndLine(std::vector<TCHAR*>::iterator ptoken)
 		if (!core.isKeyword(*nptoken))
 			continue;
 
-		auto nkwtoken = reinterpret_cast<Keyword*>(*nptoken);
+		auto nkwtoken = reinterpret_cast<KeywordToken*>(*nptoken);
 		int ntIndex = nptoken - tokens.begin();
 
 		if (nkwtoken->checkSpecial(SpecialKeywords::LeftBrace))

@@ -11,6 +11,8 @@ using namespace LizardScript;
 
 #include "stringptr.h"
 
+#include "LsOpcode.h"
+
 template <typename T>
 struct vector_rewrite
 {
@@ -33,62 +35,135 @@ struct vector_rewrite
 	}
 };
 
-std::stack<typed_reg> global_stackEmul;
-std::stack<regindex> global_otherReg;
-std::vector<jmp> global_jmps;
-std::vector<futurejmp> global_fjmps;
-std::vector<FieldInfo> global_localVar;
-std::stack<PossibleFunctionCalls> global_functionCalls;
-
-std::stack<size_t> global_localVarLevels;
-std::stack<size_t> global_functionCallsLevels;
-
-std::vector<LocalVarAddr> global_localVarAddr;
-
-//std::stack<size_t> global_class;
-
-template <typename T>
-void clear(std::stack<T>& st)
+void ByteCodeGenerator::parseLiteral(TCHAR* token)
 {
-	while (st.size() > 0)
-		st.pop();
+	TCHAR* z1 = nullptr, * z2 = nullptr;
+
+	int radix = 10;
+
+	int len = _tcslen(token);
+
+	if (token[0] == '0' && token[1] == 'x')
+	{
+		radix = 16;
+		token += 2;
+	}
+	else if (token[0] == '0' && token[1] == 'b')
+	{
+		radix = 2;
+		radix = 16;
+	}
+
+	int intValue = (int)_tcstoll(token, &z1, 10);
+	//float fval = (float)_tcstof(token, &z2);
+
+	if (z1 != token)
+	{
+		//int token
+
+		if (optStack->check(intValue))
+		{
+			optStack->push(intValue);
+		}
+		else
+		{
+			//инкапсулировать в метод, в который запихиваешь любой тип???
+			//typed_reg& rn = reg.alloc(TYPEINFO(int));
+			//code << LsOpcode::push_32 << rn;
+
+			try_push_static(intValue);
+		}
+
+		//typed_reg& rn = reg.alloc(makeTypeInfo<float>());
+		//code << LsOpcode::push_32;
+		//code << rn;
+
+		//if (z2 > z1)
+		//{
+		//	code << fval;
+		//	rn.type = makeTypeInfo<float>();
+		//}
+		//else
+		//{
+		//	code << ival;
+		//	rn.type = makeTypeInfo<int>();
+		//}
+	}
+	else
+	{
+		//identifier
+		//identifiersProcessor(ptoken);
+	}
 }
 
-ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type, SyntaxCore& core, bool optimized)
-	: jmps(global_jmps), fjmps(global_fjmps), localVar(global_localVar), functionCalls(global_functionCalls),
-	code(e.code), core(core), tokens(tokens), type(type),
-	reg(global_stackEmul, global_otherReg), localVarMaxOffset(e.maxStackSize), localVarAddr(global_localVarAddr), optimized(optimized)
+ByteCodeGenerator::ByteCodeGenerator(SemanticCore& core, std::vector<TCHAR*>& tokens, TypeInfo type, bool optimized)
+	: core(core), code(e->code), tokens(tokens), type(type), localVarMaxOffset(e->maxStackSize), optimized(optimized)
 {
-	e.type = type;
+	e->type = type;
 
-	short int stackofs = 0;
+	for (auto ptoken = tokens.begin(); ptoken < tokens.end(); ptoken++)
+	{
+		//index of the current token
+		int tIndex = ptoken - tokens.begin();
+		//text value of the current token
+		auto token = *ptoken;
 
-	TCHAR* className = nullptr;
-	int classDecl = -111;
+		if (KeywordToken::isKeyword(token))
+		{
+			auto kwtoken = reinterpret_cast<KeywordToken*>(token);
+			core.findOperator(kwtoken);
+		}
+		else
+		{
 
-	auto& localVarLevels = global_localVarLevels;
-	clear(localVarLevels);
-	localVarLevels.push(0);
+		}
+	}
 
-	auto& functionCallsLevels = global_functionCallsLevels;
-	clear(functionCallsLevels);
-	functionCallsLevels.push(0);
 
-	jmps.clear();
-	fjmps.clear();
-	localVar.clear();
-	localVarAddr.clear();
-	clear(functionCalls);
 
-	//Keyword2::core = &core;
-	auto& unary = initUnary(core);
-	auto& binary = initBinary(core);
 
-	//int& localVarMaxOffset = e.maxStackSize;
-	//localVarMaxOffset = 0;
 
-	int startLineIndex = 0;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	//short int stackofs = 0;
+
+	//TCHAR* className = nullptr;
+	//int classDecl = -111;
+
+	//localVarLevels->push(0);
+	//functionCallsLevels->push(0);
+
+	//int startLineIndex = 0;
+
+	/*
 	for (auto ptoken = tokens.begin(); ptoken < tokens.end(); ptoken++)
 	{
 		//index of current token
@@ -101,7 +176,7 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 		//comments
 		if (!optimized)
 		{
-			code << opcode::comment;
+			code << LsOpcode::comment;
 			code << regindex(0);
 			int len = _tcslen(*ptoken);
 			code << len;
@@ -109,9 +184,9 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 				code << (*ptoken)[i];
 		}
 
-		if (core.isKeyword(token))
+		if (KeywordToken::isKeyword(token))
 		{
-			auto kwtoken = reinterpret_cast<Keyword*>(token);
+			auto kwtoken = reinterpret_cast<KeywordToken*>(token);
 
 			if (kwtoken->checkFlag(KeywordFlags::EndLine) || 
 				kwtoken->checkSpecial(SpecialKeywords::LeftBrace) || 
@@ -191,7 +266,7 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 				int ntIndex = findEndLine(ptoken);
 				call.ntokenIndex = ntIndex;
 
-				if (ntIndex + 1 < tokens.size() && reinterpret_cast<Keyword*>(tokens[ntIndex + 1])->checkSpecial(SpecialKeywords::Else))
+				if (ntIndex + 1 < tokens.size() && reinterpret_cast<KeywordToken*>(tokens[ntIndex + 1])->checkSpecial(SpecialKeywords::Else))
 				{
 					call.elseNtokenIndex = findEndLine(tokens.begin() + ntIndex + 1);
 				}
@@ -353,6 +428,7 @@ ByteCodeGenerator::ByteCodeGenerator(std::vector<TCHAR*>& tokens, TypeInfo type,
 			}
 		}
 	}
+	*/
 
-	code << opcode::ret << regindex(0);
+	code << LsOpcode::ret << regindex_pair(0);
 }

@@ -89,6 +89,15 @@ namespace LizardScript
 		}
 	};
 
+    template <typename O>
+    struct DtorProvider
+    {
+        void dtor()
+        {
+            delete ((O*)this);
+        }
+    };
+
 	struct MemberInfo
 	{
 		TypeInfo type;
@@ -139,7 +148,7 @@ namespace LizardScript
 				e.members.get<FieldInfo>().end());
 
 			for (size_t i = 0; i < e.members.get<FieldInfo>().size(); i++)
-				members.get<FieldInfo>()[i].offset += offset;
+				members.get<FieldInfo>()[i].offset += static_cast<int>(offset);
 
 			members.get<FunctionInfo>().insert(members.get<FunctionInfo>().begin(),
 				e.members.get<FunctionInfo>().begin(),

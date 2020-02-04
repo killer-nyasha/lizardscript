@@ -3,68 +3,114 @@
 
 namespace LizardScript
 {
-	Parser::Parser(SyntaxCore& core, std::vector<TCHAR*>& tokens, std::vector<TCHAR*>& parserTokens, std::stack<Keyword*>& parserStack)
+	void Parser::endLine()
+	{
+		while (!parserStack->empty())
+		{
+			parserTokens->push_back(parserStack->top()->value);
+			parserStack->pop();
+		}
+	}
+
+	bool Parser::popPredicate(OperatorToken* operatorToken)
+	{
+		if (parserStack->empty())
+			return false;
+
+		if (parserStack->top()->type == KeywordTokenType::Unary || 
+			parserStack->top()->type == KeywordTokenType::Binary)
+		{
+			OperatorToken* otherOperator = reinterpret_cast<OperatorToken*>(parserStack->top());
+
+			if (operatorToken->associativity == Associativity::Left)
+				return (operatorToken->priority < otherOperator->priority);
+			else return operatorToken->priority <= otherOperator->priority;
+		}
+			
+		return false;
+			//&& !parserStack->top()->checkSpecial(SpecialKeywords::LeftBracket)
+	}
+
+	void Parser::endBrackets()
+	{
+		bool ok = false;
+		
+		while (parserStack->size() > 0 
+			&& parserStack->top()->type != KeywordTokenType::LeftBracket
+			)
+		{
+			parserTokens->push_back(parserStack->top()->value), parserStack->pop();
+		}
+		if (parserStack->size() > 0 && parserStack->top()->type == KeywordTokenType::LeftBracket)
+		{
+			ok = true; parserStack->pop();
+		}
+
+		if (!ok)
+			throw Exception("Unclosed bracket");
+	}
+
+	Parser::Parser(const std::vector<TCHAR*>& tokens)
+		: tokens(tokens)
+	{
+		parserTokens->clear();
+		while (parserStack->size() > 0)
+			parserStack->pop();
+	}
+
+	void Parser::run()
 	{
 		for (TCHAR* token : tokens)
 		{
-			if (core.isKeyword(token))
+			if (KeywordToken::isKeyword(token))
 			{
-				Keyword* keywordToken = (Keyword*)token;
-					
-				if (keywordToken->checkFlag(KeywordFlags::ParserAsNonOp))//parser::asNonKeyword
+				KeywordToken* kwtoken = reinterpret_cast<KeywordToken*>(token);
+
+				if (kwtoken->type == KeywordTokenType::Simple)
 				{
-					parserTokens.push_back(token);
-				}
-				else if (keywordToken->checkSpecial(SpecialKeywords::Comma))
-				{
-					while (!parserStack.top()->checkSpecial(SpecialKeywords::LeftBracket))
-						parserTokens.push_back(parserStack.top()->value), parserStack.pop();
-				}
-				else if (keywordToken->checkFlag(KeywordFlags::EndLine))
-				{
-					while (!parserStack.empty())
-						parserTokens.push_back(parserStack.top()->value), parserStack.pop();
-					parserTokens.push_back(token);
-				}
-				else if (keywordToken->checkSpecial(SpecialKeywords::LeftBracket))
-				{
-					parserTokens.push_back(token);
-					parserStack.push(keywordToken);
-				}
-				else if (keywordToken->checkSpecial(SpecialKeywords::RightBracket))
-				{
-					//тут может вылететь!
-					bool ok = false;
-					while (parserStack.size() > 0 && !parserStack.top()->checkSpecial(SpecialKeywords::LeftBracket))
+					if (kwtoken->parserFlags == ParserFlags::None)
 					{
-						parserTokens.push_back(parserStack.top()->value), parserStack.pop();
+
 					}
-					if (parserStack.size() > 0 && parserStack.top()->checkSpecial(SpecialKeywords::LeftBracket))
+					else if (kwtoken->parserFlags == ParserFlags::Comma)
 					{
-						ok = true; parserStack.pop();
+						while (parserStack->top()->type != KeywordTokenType::LeftBracket)
+							parserTokens->push_back(parserStack->top()->value), parserStack->pop();
+					}
+					else if (kwtoken->parserFlags == ParserFlags::EndLine)
+					{
+						endLine();
 					}
 
-					if (!ok)
-						throw Exception("Unclosed bracket");
-						
-					parserTokens.push_back(token);
+					parserTokens->push_back(token);
 				}
-				else
+				else if (kwtoken->type == KeywordTokenType::Unary ||
+					kwtoken->type == KeywordTokenType::Binary)
 				{
-					while (!parserStack.empty()
-						&&
-						(keywordToken->priority < parserStack.top()->priority ||
-						(keywordToken->associativity == Associativity::Left && keywordToken->priority == parserStack.top()->priority))
-						&& !parserStack.top()->checkSpecial(SpecialKeywords::LeftBracket))
-						parserTokens.push_back(parserStack.top()->value), parserStack.pop();
-					parserStack.push(keywordToken);
+					OperatorToken* operatorToken = OperatorToken::asOperator(kwtoken);
+
+					while (popPredicate(operatorToken))
+					{
+						parserTokens->push_back(parserStack->top()->value);
+						parserStack->pop();
+					}
+					parserStack->push(operatorToken);
+				}
+				else if (kwtoken->type == KeywordTokenType::LeftBracket)
+				{
+					parserStack->push(kwtoken);
+					parserTokens->push_back(token);
+				}
+				else if (kwtoken->type == KeywordTokenType::LeftBracket)
+				{
+					endBrackets();
+					parserTokens->push_back(token);
 				}
 			}
-			else parserTokens.push_back(token);
+			else parserTokens->push_back(token);
 		}
-		while (!parserStack.empty())
-		{
-			parserTokens.push_back(parserStack.top()->value), parserStack.pop();
-		}
+
+		endLine();
 	}
+
 }

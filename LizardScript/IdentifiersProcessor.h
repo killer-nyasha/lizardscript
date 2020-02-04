@@ -39,9 +39,9 @@ void ByteCodeGenerator::identifiersProcessor(std::vector<TCHAR*>::iterator& ptok
 	bool thisPushed = false;
 	bool exit = false;
 
-	if (core.isKeyword(token) && ((Keyword*)token)->checkSpecial(SpecialKeywords::This))
+	if (core.isKeyword(token) && ((KeywordToken*)token)->checkSpecial(SpecialKeywords::This))
 	{
-		if (core.isKeyword(*(ptoken + 1)) && ((Keyword*)*(ptoken + 1))->checkSpecial(SpecialKeywords::Dot))
+		if (core.isKeyword(*(ptoken + 1)) && ((KeywordToken*)*(ptoken + 1))->checkSpecial(SpecialKeywords::Dot))
 		{
 			thisPushed = true;
 			ptoken += 2;
@@ -161,7 +161,7 @@ void ByteCodeGenerator::identifiersProcessor(std::vector<TCHAR*>::iterator& ptok
 		}
 
 		if (  core.isKeyword(*(ptoken + 1)) &&
-			((Keyword*)*(ptoken + 1))->checkSpecial(SpecialKeywords::Dot)
+			((KeywordToken*)*(ptoken + 1))->checkSpecial(SpecialKeywords::Dot)
 			&& ((ptoken += 2) >= tokens.begin()) && ((token = *ptoken))
 			)
 		{

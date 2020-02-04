@@ -11,15 +11,11 @@ namespace LizardScript
 		std::vector<TCHAR*> tokens;
 	};
 
-	//class ILexer
-	//{
-	//	ILexer(SyntaxCore& core, const TCHAR* text, bool multiThread = false)
-	//	{ }
-
-	//	virtual ~ILexer() = 0;
-
-	//	virtual LexerData* run() = 0;
-	//};
-
-	LexerData* runLexer(SyntaxCore& core, const TCHAR* text, bool multiThread = false);
+	//!Lexical analysis
+	//!Splits text to tokens (such as operators, names and values)
+	//!\returns pointer to LexerData object. you have to free it manually
+	//!\param[in] core SyntaxCore
+	//!\param[in] text expression source text
+	//void runLexer(const TCHAR* t, std::vector<TCHAR>& values, std::vector<TCHAR*>& tokens);
+	PoolPointer<LexerData> runLexer(SyntaxCore& core, const TCHAR* text);
 }

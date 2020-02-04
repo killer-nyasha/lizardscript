@@ -4,9 +4,6 @@
     <Filter Include="headers">
       <UniqueIdentifier>{880eb206-417b-4f3b-a317-841455fb95ac}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Parser">
-      <UniqueIdentifier>{b52d04ed-6301-4306-ab69-21889c8f0399}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Compiler">
       <UniqueIdentifier>{0c5f2747-396d-4765-a633-7652c186c835}</UniqueIdentifier>
     </Filter>
@@ -31,20 +28,29 @@
     <Filter Include="Logger">
       <UniqueIdentifier>{f0d14edf-0605-452d-abfb-306cc8ae1c49}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Parser\Lexer">
+    <Filter Include="Containers">
+      <UniqueIdentifier>{8f05cdcf-78bd-4580-becf-674ce8b4b9df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules">
+      <UniqueIdentifier>{b52d04ed-6301-4306-ab69-21889c8f0399}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\Lexer">
       <UniqueIdentifier>{19c104ac-710c-4907-9f67-83d327607c38}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Parser\SyntaxCore">
+    <Filter Include="Modules\SyntaxCore">
       <UniqueIdentifier>{a3883655-1168-4f70-ac70-30abef1b11e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\Parser">
+      <UniqueIdentifier>{4e2f5c14-d104-48b5-a30f-847f303025cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\ByteCodeGenerator">
+      <UniqueIdentifier>{585abfec-009a-4947-b174-9462ee3a7c0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\Standart">
+      <UniqueIdentifier>{ad5d340b-9d8b-4c1c-9331-7a05525a19b7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Parser.cpp">
-      <Filter>Parser</Filter>
-    </ClCompile>
-    <ClCompile Include="Expr.cpp">
-      <Filter>Compiler</Filter>
-    </ClCompile>
     <ClCompile Include="ByteCodeGenerator.cpp">
       <Filter>Compiler</Filter>
     </ClCompile>
@@ -71,15 +77,31 @@
     </ClCompile>
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="Lexer.cpp">
-      <Filter>Parser\Lexer</Filter>
+      <Filter>Modules\Lexer</Filter>
     </ClCompile>
     <ClCompile Include="ILexer.cpp">
-      <Filter>Parser\Lexer</Filter>
+      <Filter>Modules\Lexer</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="SyntaxCore.cpp">
-      <Filter>Parser\SyntaxCore</Filter>
+      <Filter>Modules\SyntaxCore</Filter>
     </ClCompile>
+    <ClCompile Include="Parser.cpp">
+      <Filter>Modules\Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="IParser.cpp">
+      <Filter>Modules\Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="IByteCodeGenerator.cpp">
+      <Filter>Modules\ByteCodeGenerator</Filter>
+    </ClCompile>
+    <ClCompile Include="LsExpr.cpp">
+      <Filter>Compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="StandartCompiler.cpp">
+      <Filter>Modules\Standart</Filter>
+    </ClCompile>
+    <ClCompile Include="SemanticCore.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="interpreter_util.h">
@@ -90,15 +112,6 @@
     </ClInclude>
     <ClInclude Include="TypeInfo.h">
       <Filter>Metagen</Filter>
-    </ClInclude>
-    <ClInclude Include="Parser.h">
-      <Filter>Parser</Filter>
-    </ClInclude>
-    <ClInclude Include="Keyword.h">
-      <Filter>Parser</Filter>
-    </ClInclude>
-    <ClInclude Include="Expr.h">
-      <Filter>Compiler</Filter>
     </ClInclude>
     <ClInclude Include="Registers.h">
       <Filter>Compiler</Filter>
@@ -162,17 +175,48 @@
       <Filter>Other headers</Filter>
     </ClInclude>
     <ClInclude Include="ILexer.h">
-      <Filter>Parser\Lexer</Filter>
+      <Filter>Modules\Lexer</Filter>
     </ClInclude>
     <ClInclude Include="Lexer.h">
-      <Filter>Parser\Lexer</Filter>
+      <Filter>Modules\Lexer</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SyntaxCore.h">
-      <Filter>Parser\SyntaxCore</Filter>
+      <Filter>Modules\SyntaxCore</Filter>
     </ClInclude>
-    <ClInclude Include="DefaultSyntaxCore.h">
-      <Filter>Parser\SyntaxCore</Filter>
+    <ClInclude Include="Pools.h">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="FastRemoveVector.h">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Parser.h">
+      <Filter>Modules\Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="IParser.h">
+      <Filter>Modules\Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="IByteCodeGenerator.h">
+      <Filter>Modules\ByteCodeGenerator</Filter>
+    </ClInclude>
+    <ClInclude Include="LsExpr.h">
+      <Filter>Compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="LsOpcode.h">
+      <Filter>Compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="StandartCompiler.h">
+      <Filter>Modules\Standart</Filter>
+    </ClInclude>
+    <ClInclude Include="Tokens.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Operators.h">
+      <Filter>Modules\SyntaxCore</Filter>
+    </ClInclude>
+    <ClInclude Include="SemanticCore.h" />
+    <ClInclude Include="NonTypedStack.h">
+      <Filter>Compiler</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
