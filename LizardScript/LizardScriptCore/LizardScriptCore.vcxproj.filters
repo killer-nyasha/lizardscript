@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="external">
+      <UniqueIdentifier>{a24d7f60-b328-4d8d-a62c-cdac7947890a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pch">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="lexer">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="system">
+      <UniqueIdentifier>{67548bce-7e13-4636-81a1-5a8332b90fd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="metagen">
+      <UniqueIdentifier>{d7df5b58-2e53-4637-9069-3329e02d8506}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="LizardScript.h">
+      <Filter>external</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>pch</Filter>
+    </ClInclude>
+    <ClInclude Include="Lexer.h">
+      <Filter>lexer</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithms.h">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="Delegate.h">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="Exception.h">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="interpreter_util.h">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="NonTypedStack.h">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="stringptr.h">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="VectorsTuple.h">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="StringBuilder.h">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="metagen_def.h">
+      <Filter>metagen</Filter>
+    </ClInclude>
+    <ClInclude Include="metagen_init.h">
+      <Filter>metagen</Filter>
+    </ClInclude>
+    <ClInclude Include="metagen_system.h">
+      <Filter>metagen</Filter>
+    </ClInclude>
+    <ClInclude Include="Pools.h">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="Print.h">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeInfo.h">
+      <Filter>metagen</Filter>
+    </ClInclude>
+    <ClInclude Include="crossplatform_tchar.h">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsoleColor.h">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="i_lexer.h">
+      <Filter>lexer</Filter>
+    </ClInclude>
+    <ClInclude Include="Tokens.h">
+      <Filter>lexer</Filter>
+    </ClInclude>
+    <ClInclude Include="SyntaxCore.h">
+      <Filter>lexer</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp">
+      <Filter>pch</Filter>
+    </ClCompile>
+    <ClCompile Include="Lexer.cpp">
+      <Filter>lexer</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>system</Filter>
+    </ClCompile>
+    <ClCompile Include="Print.cpp">
+      <Filter>system</Filter>
+    </ClCompile>
+    <ClCompile Include="i_lexer.cpp">
+      <Filter>lexer</Filter>
+    </ClCompile>
+    <ClCompile Include="SyntaxCore.cpp">
+      <Filter>lexer</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
