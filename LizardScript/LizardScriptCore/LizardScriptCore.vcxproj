@@ -156,6 +156,7 @@
     <ClInclude Include="interpreter_util.h" />
     <ClInclude Include="Lexer.h" />
     <ClInclude Include="LizardScript.h" />
+    <ClInclude Include="LizardScriptDefault.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="metagen_init.h" />
     <ClInclude Include="metagen_system.h" />
@@ -174,6 +175,7 @@
   <ItemGroup>
     <ClCompile Include="i_lexer.cpp" />
     <ClCompile Include="Lexer.cpp" />
+    <ClCompile Include="LizardScriptDefault.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

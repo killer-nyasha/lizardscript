@@ -8,6 +8,9 @@
 //#include "..\LizardScriptCore\NonTypedStack.h"
 #include "..\LizardScriptCore\VectorsTuple.h"
 
+#include "..\LizardScriptCore\i_lexer.h"
+#include "..\LizardScriptCore\LizardScriptDefault.h"
+
 int f(int x)
 {
     return x * x;
@@ -21,21 +24,19 @@ struct sample
     }
 };
 
+using namespace LizardScript;
+
 int main()
 {
-    VectorsTuple<int, char*> vt;
-    vt.push_back(1500);
+    Default::init();
+    auto data = runLexer(Default::syntaxCore, "hello + world");
 
-    //NonTypedStack stack;
-    //stack.push(15);
-    //stack.push("abcdef");
-    //Dynamic a = stack.pop();
-    //Dynamic b = stack.pop();
+    std::cout << data->tokens[1];
 
-    auto f1 = nmakedel(f);
-    sample s;
-    auto f2 = nmakedel(&s, &sample::f);
-    std::cout << f1(5) << f2(10);
+    //auto f1 = nmakedel(f);
+    //sample s;
+    //auto f2 = nmakedel(&s, &sample::f);
+    //std::cout << f1(5) << f2(10);
 }
 
 // Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"

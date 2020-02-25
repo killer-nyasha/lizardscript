@@ -13,16 +13,11 @@ OperatorToken Lexer::callKw = OperatorToken("__call__", Arity::Unary, 1);
 
 void Lexer::init()
 {
-	textLength = _tcslen(text);
-	size_t nCapacity = textLength + 256;
-	if (data->values.capacity() < nCapacity)
-		data->values.reserve(nCapacity);
-
 	data->values.resize(0);
 	data->tokens.resize(0);
 }
 
-Lexer::Lexer(SyntaxCore& c, const TCHAR* t)
+Lexer::Lexer(const SyntaxCore& c, const TCHAR* t)
 	: core(c), text(t)
 {
 	init();
@@ -33,25 +28,32 @@ bool Lexer::addFromList(const std::vector<KeywordToken*>& list, KeywordToken& ps
 	ALIAS(data->values, values);
 	ALIAS(data->tokens, tokens);
 
-	int index = binarySearch(list, &pseudoKw);
+	int index = pSearch::binary<KeywordToken*>(list, &pseudoKw);
 
 	if (index != -1)
 	{
 		//add keyword
 		KeywordToken* kw = list[index];
-		tokens.push_back(kw->value);
+		tokens.push_back(reinterpret_cast<void*>(kw->value));
 		values.resize(lastValueIndex);
-
 		lastKeywordType = kw->type;
 		return true;
 	}
 	else
 	{
 		//add non-keyword
-		tokens.push_back(&values[lastValueIndex]);
+
+#ifdef _DEBUG
+		if (lastValueIndex >= data->minReserved() && lastValueIndex < data->maxReserved())
+		{ }
+		else throw Exception("too many tokens");
+#endif	
+
+		tokens.push_back(reinterpret_cast<void*>(lastValueIndex));
 		lastValueIndex = values.size();
 
-		lastKeywordType = KeywordTokenType::Unary;
+		lastKeywordType = KeywordTokenType::Simple;
+
 		return false;
 	}
 }
@@ -64,9 +66,7 @@ void Lexer::newToken()
 	if (values.size() != lastValueIndex)
 	{
 		values.push_back(0);
-
 		KeywordToken pseudoKw = KeywordToken(&(values)[lastValueIndex]);
-		int aIndex = binarySearch(core.keywords_listA, &pseudoKw);
 
 		if (kwtype_before_listA(lastKeywordType))
 			addFromList(core.keywords_listA, pseudoKw);
@@ -82,6 +82,7 @@ PoolPointer<LexerData> Lexer::run()
 	ALIAS(data->values, values);
 	ALIAS(data->tokens, tokens);
 
+	size_t textLength = _tcslen(text);
 	size_t i = 0;
 	while (i < textLength)
 	{
@@ -167,8 +168,8 @@ PoolPointer<LexerData> Lexer::run()
 			{
 				values.push_back(text[i++]);
 
-				if (binarySearch(core.breakChars, text[i]) != -1
-					|| binarySearch(core.breakChars, text[i - 1]) != -1
+				if (Search::binary(core.breakChars, text[i]) != -1
+					|| Search::binary(core.breakChars, text[i - 1]) != -1
 					|| charIsTextChar(text[i - 1]) != charIsTextChar(text[i]))
 					newToken();
 			}

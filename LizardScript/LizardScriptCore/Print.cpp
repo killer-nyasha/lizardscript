@@ -3,8 +3,6 @@
 #include "Print.h"
 #include "ConsoleColor.h"
 
-//using namespace LizardScript;
-
 namespace LizardScript
 {
 	void print(std::ostream& stream, char* object, TypeInfo currentType)

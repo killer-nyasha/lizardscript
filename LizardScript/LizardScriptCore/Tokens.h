@@ -32,28 +32,28 @@ namespace LizardScript
 		Override
 	};
 	
-	bool kwtype_listA(KeywordTokenType type)
+	inline bool kwtype_listA(KeywordTokenType type)
 	{
 		return type == KeywordTokenType::Simple
 			|| type == KeywordTokenType::Unary
 			|| type == KeywordTokenType::LeftBracket;
 	}
 
-	bool kwtype_listB(KeywordTokenType type)
+	inline bool kwtype_listB(KeywordTokenType type)
 	{
 		return type == KeywordTokenType::Binary
 			|| type == KeywordTokenType::LeftBracket
 			|| type == KeywordTokenType::RightBracket;
 	}
 
-	bool kwtype_before_listA(KeywordTokenType type)
+	inline bool kwtype_before_listA(KeywordTokenType type)
 	{
 		return type == KeywordTokenType::Unary
 			|| type == KeywordTokenType::Binary
 			|| type == KeywordTokenType::LeftBracket;
 	}
 
-	bool kwtype_before_listB(KeywordTokenType type)
+	inline bool kwtype_before_listB(KeywordTokenType type)
 	{
 		return type == KeywordTokenType::Simple
 			|| type == KeywordTokenType::Unary
@@ -83,9 +83,6 @@ namespace LizardScript
 			return reinterpret_cast<const KeywordToken*>(token)->signature == IKEYWORD_SIGNATURE;
 		}
 
-		//virtual void parse() { };
-		//virtual void action() { };
-
 		bool operator==(const KeywordToken &kw) const 
 		{ 
 			return _tcscmp(value, kw.value) == 0; 
@@ -104,6 +101,13 @@ namespace LizardScript
 		bool operator<=(const KeywordToken& kw) const
 		{
 			return _tcscmp(value, kw.value) <= 0;
+		}
+
+		template <typename T>
+		friend T& operator<<(T& stream, const KeywordToken & t)
+		{
+			stream << t.value;
+			return stream;
 		}
 
 		bool listA() { return kwtype_listA(type); }

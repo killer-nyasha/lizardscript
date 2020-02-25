@@ -25,7 +25,7 @@ namespace Impl
 	{
 		size_t ci = (int)(0.5*(lo + hi) + 0.5);
 		size_t pivotIndex = MedianOfThree(A[lo], A[ci], A[hi], lo, ci, hi);
-		T pivot = A[pivotIndex];
+		T& pivot = A[pivotIndex];
 
 		size_t i = lo;
 		size_t j = hi;
@@ -36,9 +36,10 @@ namespace Impl
 			if (i == pivotIndex && j == pivotIndex)
 				return pivotIndex;
 
-			T tmp = A[i];
-			A[i] = A[j];
-			A[j] = tmp;
+			std::swap(A[i], A[j]);
+			//T tmp = A[i];
+			//A[i] = A[j];
+			//A[j] = tmp;
 
 			if (i == pivotIndex)
 				pivotIndex = j;
@@ -48,11 +49,11 @@ namespace Impl
 	}
 
 	template <typename T>
-	inline size_t QuicksortPartition(std::vector<T*>& A, size_t lo, size_t hi)
+	inline size_t pQuicksortPartition(std::vector<T>& A, size_t lo, size_t hi)
 	{
 		size_t ci = (int)(0.5 * (lo + hi) + 0.5);
 		size_t pivotIndex = MedianOfThree(*A[lo], *A[ci], *A[hi], lo, ci, hi);
-		T* pivot = A[pivotIndex];
+		T& pivot = A[pivotIndex];
 
 		size_t i = lo;
 		size_t j = hi;
@@ -63,9 +64,10 @@ namespace Impl
 			if (i == pivotIndex && j == pivotIndex)
 				return pivotIndex;
 
-			T tmp = A[i];
-			A[i] = A[j];
-			A[j] = tmp;
+			std::swap(A[i], A[j]);
+			//T tmp = A[i];
+			//A[i] = A[j];
+			//A[j] = tmp;
 
 			if (i == pivotIndex)
 				pivotIndex = j;
@@ -85,6 +87,18 @@ namespace Impl
 			Quicksort<T>(A, p + 1, hi);
 		}
 	}
+
+	template <typename T>
+	inline void pQuicksort(std::vector<T>& A, size_t lo, size_t hi)
+	{
+		if (lo < hi)
+		{
+			size_t p = pQuicksortPartition<T>(A, lo, hi);
+			if (p > 0) //p is unsigned, so prevent negative
+				pQuicksort<T>(A, lo, p - 1);
+			pQuicksort<T>(A, p + 1, hi);
+		}
+	}
 }
 
 //!Quick sort of a vector
@@ -98,71 +112,90 @@ inline void quickSort(std::vector<T> &A)
 	Impl::Quicksort(A, 0, A.size() - 1);
 }
 
-//!Binary search in a vector
-//!\param[in] a Vector
-//!\param[in] x Element
-//!\warning Operators < and == required
-//!\returns index of elem if it's found, else -1
+//!Quick sort of a vector
+//!\param[in] A Vector
+//!\warning Operators >= and <= required
 template <typename T>
-inline int binarySearch(const std::vector<T>& a, const T& x)
+inline void pquickSort(std::vector<T>& A)
 {
-	if (a.size() == 0)
-		return -1;
-
-	int left = 0;
-	int right = static_cast<int>(a.size()) - 1;
-	while (left <= right)
-	{
-		int middle = (left + right) / 2;
-		if (a[middle] == x)
-		{
-			return (int)middle;
-		}
-		if (a[middle] < x)
-		{
-			left = middle + 1;
-		}
-		else
-		{
-			right = middle - 1;
-		}
-	}
-
-	return -1;
+	if (A.size() <= 1)
+		return;
+	Impl::pQuicksort(A, 0, A.size() - 1);
 }
 
-//!Binary search in a vector of pointers
-//!\param[in] a Vector
-//!\param[in] x Element
-//!\warning Operators < and == required
-//!\returns index of elem if it's found, else -1
-template <typename T>
-inline int binarySearch(const std::vector<T*>& a, const T& x)
+namespace Search
 {
-	if (a.size() == 0)
-		return -1;
-
-	int left = 0;
-	int right = static_cast<int>(a.size()) - 1;
-	while (left <= right)
+	//!Binary search in a vector
+	//!\param[in] a Vector
+	//!\param[in] x Element
+	//!\warning Operators < and == required
+	//!\returns index of elem if it's found, else -1
+	template <typename T>
+	inline int binary(const std::vector<T>& a, const T& x)
 	{
-		int middle = (left + right) / 2;
-		if (*a[middle] == *x)
-		{
-			return (int)middle;
-		}
-		if (*a[middle] < *x)
-		{
-			left = middle + 1;
-		}
-		else
-		{
-			right = middle - 1;
-		}
-	}
+		if (a.size() == 0)
+			return -1;
 
-	return -1;
-}
+		int left = 0;
+		int right = static_cast<int>(a.size()) - 1;
+		while (left <= right)
+		{
+			int middle = (left + right) / 2;
+			if (a[middle] == x)
+			{
+				return (int)middle;
+			}
+			if (a[middle] < x)
+			{
+				left = middle + 1;
+			}
+			else
+			{
+				right = middle - 1;
+			}
+		}
+
+		return -1;
+	}
+};
+
+namespace pSearch
+{
+	//!Binary search in a vector of pointers using by-value comparison
+	//!\param[in] a Vector
+	//!\param[in] x Element
+	//!\warning Operators < and == required
+	//!\returns index of elem if it's found, else -1
+	template <typename T>
+	inline int binary(const std::vector<T>& a, const T x)
+	{
+		if (a.size() == 0)
+			return -1;
+
+		int left = 0;
+		int right = static_cast<int>(a.size()) - 1;
+		while (left <= right)
+		{
+
+			int middle = (left + right) / 2;
+
+			if (*a[middle] == *x)
+			{
+				return (int)middle;
+			}
+			if (*a[middle] < *x)
+			{
+				left = middle + 1;
+			}
+			else
+			{
+				right = middle - 1;
+			}
+		}
+
+		return -1;
+	}
+};
 
 //!Find range in which elements in sorted vector are equal to some element
 //!\param[in] a Sorted ector

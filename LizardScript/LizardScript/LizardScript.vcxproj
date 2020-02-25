@@ -149,6 +149,11 @@
   <ItemGroup>
     <ClCompile Include="LizardScript.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LizardScriptCore\LizardScriptCore.vcxproj">
+      <Project>{9b5d7747-16bf-4ac7-b473-4c10684bd8d3}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

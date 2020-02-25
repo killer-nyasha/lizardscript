@@ -10,7 +10,12 @@ void SyntaxCore::confirmChanges()
 {
 	quickSort(textChars);
 	quickSort(breakChars);
-	quickSort(keywords);
+	//quickSort(keywords);
+
+	pquickSort(keywords);
+
+	keywords_listA.clear();
+	keywords_listB.clear();
 
 	for (auto& kw : keywords)
 	{
@@ -19,12 +24,12 @@ void SyntaxCore::confirmChanges()
 		if (kw->listA())
 		{
 			isOk = true;
-			keywords_listA.push_back(kw);
+			keywords_listA.push_back(&*kw);
 		}
 		if (kw->listB())
 		{
 			isOk = true;
-			keywords_listB.push_back(kw);
+			keywords_listB.push_back(&*kw);
 		}
 
 		if (!isOk)

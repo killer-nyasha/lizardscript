@@ -11,19 +11,22 @@ namespace LizardScript
 	{
 	private:
 
+		//!special keyword which shows that next token is a string literal
 		static KeywordToken stringKw;
+
+		//!special keyword which shows that compiler have to interpret tokens within next branches as arguments passed to function
 		static OperatorToken callKw;
 
 		//!result of our work
 		PoolPointer<LexerData> data;
 
-		SyntaxCore& core;
+		const SyntaxCore& core;
 
 		//!source
 		const TCHAR* text;
 
 		size_t lastValueIndex = 0;
-		size_t textLength;
+		//size_t textLength;
 
 		bool wasNonasciiWarningPrinted = false;
 
@@ -55,7 +58,7 @@ namespace LizardScript
 
 		bool charIsTextChar(TCHAR a)
 		{
-			return safe_isalnum(a) || (binarySearch(core.textChars, a) != -1);
+			return safe_isalnum(a) || (Search::binary(core.textChars, a) != -1);
 		}
 
 		void newToken();
@@ -66,7 +69,7 @@ namespace LizardScript
 
 		void init();
 
-		Lexer(SyntaxCore& c, const TCHAR* t);
+		Lexer(const SyntaxCore& c, const TCHAR* t);
 
 		PoolPointer<LexerData> run();
 

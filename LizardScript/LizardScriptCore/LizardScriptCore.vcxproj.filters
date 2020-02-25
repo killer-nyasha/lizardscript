@@ -18,6 +18,9 @@
     <Filter Include="metagen">
       <UniqueIdentifier>{d7df5b58-2e53-4637-9069-3329e02d8506}</UniqueIdentifier>
     </Filter>
+    <Filter Include="default">
+      <UniqueIdentifier>{e8ebb64a-1283-4814-80e8-d714e3e8dbd3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LizardScript.h">
@@ -89,6 +92,9 @@
     <ClInclude Include="SyntaxCore.h">
       <Filter>lexer</Filter>
     </ClInclude>
+    <ClInclude Include="LizardScriptDefault.h">
+      <Filter>default</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -108,6 +114,9 @@
     </ClCompile>
     <ClCompile Include="SyntaxCore.cpp">
       <Filter>lexer</Filter>
+    </ClCompile>
+    <ClCompile Include="LizardScriptDefault.cpp">
+      <Filter>default</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
