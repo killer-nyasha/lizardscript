@@ -35,6 +35,7 @@ namespace LizardScript
 				new OperatorToken("/", Arity::Binary, 50),
 
 				new OperatorToken(".", Arity::Binary, 100),
+				new OperatorToken(",", Arity::Binary, 10),
 
 				new BracketToken(_T("("), true),
 				new BracketToken(_T(")"), false),

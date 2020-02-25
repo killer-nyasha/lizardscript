@@ -23,10 +23,11 @@ namespace LizardScript
 		//!\warning pointer is temporary - it will become invalid after deletion of LexerData instance or any modyfication of it
 		TCHAR* operator[](size_t index)
 		{
-			if (index >= minReserved() && index < maxReserved())
-				return &values[reinterpret_cast<size_t>(tokens[index])];
+			size_t iIndex = reinterpret_cast<size_t>(tokens[index]);
+			if (iIndex >= minReserved() && iIndex < maxReserved())
+				return &values[reinterpret_cast<size_t>(tokens[index])]; 
 			else
-				return reinterpret_cast<TCHAR*>(index);
+				return reinterpret_cast<TCHAR*>(tokens[index]);
 		}
 	};
 

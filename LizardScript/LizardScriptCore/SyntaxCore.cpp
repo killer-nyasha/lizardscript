@@ -12,7 +12,7 @@ void SyntaxCore::confirmChanges()
 	quickSort(breakChars);
 	//quickSort(keywords);
 
-	pquickSort(keywords);
+	pQuickSort(keywords);
 
 	keywords_listA.clear();
 	keywords_listB.clear();

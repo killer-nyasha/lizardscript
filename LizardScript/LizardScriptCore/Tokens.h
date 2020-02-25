@@ -78,6 +78,11 @@ namespace LizardScript
 			_tcsncpy(value, cvalue, sizeof(value)/sizeof(TCHAR));
 		}
 
+		~KeywordToken()
+		{
+			int i = 1;
+		}
+
 		static inline bool isKeyword(const TCHAR* token)
 		{
 			return reinterpret_cast<const KeywordToken*>(token)->signature == IKEYWORD_SIGNATURE;

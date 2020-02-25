@@ -112,11 +112,11 @@ inline void quickSort(std::vector<T> &A)
 	Impl::Quicksort(A, 0, A.size() - 1);
 }
 
-//!Quick sort of a vector
+//!Quick sort of a vector of pointers using by-value comparison
 //!\param[in] A Vector
 //!\warning Operators >= and <= required
 template <typename T>
-inline void pquickSort(std::vector<T>& A)
+inline void pQuickSort(std::vector<T>& A)
 {
 	if (A.size() <= 1)
 		return;
