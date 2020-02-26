@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "SyntaxCore.h"
-//#include "DefaultSyntaxCore.h"
 #include "algorithms.h"
 #include "Exception.h"
 
@@ -10,8 +9,6 @@ void SyntaxCore::confirmChanges()
 {
 	quickSort(textChars);
 	quickSort(breakChars);
-	//quickSort(keywords);
-
 	pQuickSort(keywords);
 
 	keywords_listA.clear();
@@ -36,8 +33,3 @@ void SyntaxCore::confirmChanges()
 			throw Exception("Is's a fucking odd keyword");
 	}
 }
-
-//namespace LizardScript
-//{
-//	SyntaxCore defaultSyntaxCore = createDefaultSyntaxCore();
-//}

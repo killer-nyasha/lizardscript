@@ -31,4 +31,5 @@ public:
 	void toFile();
 };
 
+//!global logger instance
 extern Logger logger;

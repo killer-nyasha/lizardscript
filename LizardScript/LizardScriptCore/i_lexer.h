@@ -1,3 +1,11 @@
+/*!
+\file i_lexer.h
+\brief Interface for calling lexical analyzer. 
+Someday I'll make builder pattern for it, but now we don't have to use different lexers
+\author killer-nyasha
+\version 0.2
+\date 26.02.2020
+*/
 #pragma once
 #include <vector>
 

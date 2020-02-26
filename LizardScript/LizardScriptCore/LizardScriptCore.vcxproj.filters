@@ -21,6 +21,9 @@
     <Filter Include="default">
       <UniqueIdentifier>{e8ebb64a-1283-4814-80e8-d714e3e8dbd3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="system\containers">
+      <UniqueIdentifier>{549e85f0-a24d-4bac-b89e-61b24fbd8803}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LizardScript.h">
@@ -47,13 +50,7 @@
     <ClInclude Include="Logger.h">
       <Filter>system</Filter>
     </ClInclude>
-    <ClInclude Include="NonTypedStack.h">
-      <Filter>system</Filter>
-    </ClInclude>
     <ClInclude Include="stringptr.h">
-      <Filter>system</Filter>
-    </ClInclude>
-    <ClInclude Include="VectorsTuple.h">
       <Filter>system</Filter>
     </ClInclude>
     <ClInclude Include="StringBuilder.h">
@@ -67,9 +64,6 @@
     </ClInclude>
     <ClInclude Include="metagen_system.h">
       <Filter>metagen</Filter>
-    </ClInclude>
-    <ClInclude Include="Pools.h">
-      <Filter>system</Filter>
     </ClInclude>
     <ClInclude Include="Print.h">
       <Filter>system</Filter>
@@ -94,6 +88,18 @@
     </ClInclude>
     <ClInclude Include="LizardScriptDefault.h">
       <Filter>default</Filter>
+    </ClInclude>
+    <ClInclude Include="Pools.h">
+      <Filter>system\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="NonTypedStack.h">
+      <Filter>system\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="FastRemoving.h">
+      <Filter>system\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="VectorsTuple.h">
+      <Filter>system\containers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

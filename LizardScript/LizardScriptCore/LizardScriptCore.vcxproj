@@ -152,6 +152,7 @@
     <ClInclude Include="crossplatform_tchar.h" />
     <ClInclude Include="Delegate.h" />
     <ClInclude Include="Exception.h" />
+    <ClInclude Include="FastRemoving.h" />
     <ClInclude Include="i_lexer.h" />
     <ClInclude Include="interpreter_util.h" />
     <ClInclude Include="Lexer.h" />

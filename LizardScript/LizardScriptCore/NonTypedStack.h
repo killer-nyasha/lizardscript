@@ -7,6 +7,7 @@
 */
 #pragma once
 #include "interpreter_util.h"
+#include "TypeInfo.h"
 
 //!All genius is simple ^_^
 struct Dynamic

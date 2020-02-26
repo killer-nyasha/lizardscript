@@ -1,3 +1,10 @@
+/*!
+\file Lexer.h
+\brief Lexical analyzer class
+\author killer-nyasha
+\version 0.2
+\date 26.02.2020
+*/
 #pragma once
 #include "SyntaxCore.h"
 #include "i_lexer.h"
@@ -28,10 +35,14 @@ namespace LizardScript
 		size_t lastValueIndex = 0;
 		//size_t textLength;
 
+		//!when lexer meets first non-ascii symbol, it prints warning
 		bool wasNonasciiWarningPrinted = false;
 
+		//!type of the last keyword. it helps us to know which types of the next keyword are allowed 
+		//!(for example binary operator cannot be met right after other binary operator)
 		KeywordTokenType lastKeywordType = KeywordTokenType::Unary;
 
+		//!alternative to isalnum. prints warning if symbol isn't from ASCII but doesn't throw an exception
 		bool safe_isalnum(int ch)
 		{
 			if (ch > 255 || ch < -1)
@@ -44,6 +55,7 @@ namespace LizardScript
 			else return isalnum(ch);
 		}
 
+		//!alternative to isgraph. prints warning if symbol isn't from ASCII but doesn't throw an exception
 		bool safe_isgraph(int ch)
 		{
 			if (ch > 255 || ch < -1)
@@ -65,9 +77,9 @@ namespace LizardScript
 
 		bool addFromList(const std::vector<KeywordToken*>& list, KeywordToken& pseudoKw);
 
-	public:
-
 		void init();
+
+	public:
 
 		Lexer(const SyntaxCore& c, const TCHAR* t);
 

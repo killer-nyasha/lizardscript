@@ -155,6 +155,8 @@ namespace LizardScript
 		}
 	}
 
+	//!call this function when process of metadata generation is completed
+	//!it finds metadata of parents of all types
 	inline void endMetadata()
 	{
 		for (auto& type : globalMetadataTable)

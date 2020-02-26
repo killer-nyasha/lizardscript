@@ -1,8 +1,16 @@
+/*!
+\file Tokens.h
+\brief Classes of tokens for lexical analyzer
+\author killer-nyasha
+\version 0.2
+\date 17.01.2020
+*/
 #pragma once
 #include "crossplatform_tchar.h"
 
 namespace LizardScript
 {
+	//!some special algorithms when parser should do when it meet an operator with this flags
 	enum class ParserFlags
 	{
 		None = 0,
@@ -10,28 +18,44 @@ namespace LizardScript
 		EndLine
 	};
 
+	//!unary or binary. ternary operators can be realized via binary
 	enum class Arity
 	{
 		Unary,
 		Binary
 	};
 
+	//!now parser doesn't support non-associative operators
 	enum class Associativity
 	{
 		Left,
 		Right
 	};
 
+	//!type of token
 	enum class KeywordTokenType
 	{
+		//!returns some value. for example, 'this'
 		Simple,
+
+		//!unary operator
 		Unary,
+
+		//!binary operator
 		Binary,
+
+		//!left bracket, like (, [ or {
 		LeftBracket,
+
+		//!left bracket, like ), ] or }
 		RightBracket,
+
+		//some custom actions
 		Override
 	};
 	
+	//!"list A" - token types which we can meet right after a binary operator.
+	//!\returns is this type a part of "list A"
 	inline bool kwtype_listA(KeywordTokenType type)
 	{
 		return type == KeywordTokenType::Simple
@@ -39,6 +63,8 @@ namespace LizardScript
 			|| type == KeywordTokenType::LeftBracket;
 	}
 
+	//!"list B" - token types which we can meet right after some value.
+	//!\returns is this type a part of "list B"
 	inline bool kwtype_listB(KeywordTokenType type)
 	{
 		return type == KeywordTokenType::Binary
@@ -46,6 +72,7 @@ namespace LizardScript
 			|| type == KeywordTokenType::RightBracket;
 	}
 
+	//!\returns is after this type can be a type from "list A"
 	inline bool kwtype_before_listA(KeywordTokenType type)
 	{
 		return type == KeywordTokenType::Unary
@@ -53,6 +80,7 @@ namespace LizardScript
 			|| type == KeywordTokenType::LeftBracket;
 	}
 
+	//!\returns is after this type can be a type from "list B"
 	inline bool kwtype_before_listB(KeywordTokenType type)
 	{
 		return type == KeywordTokenType::Simple
@@ -60,13 +88,17 @@ namespace LizardScript
 			|| type == KeywordTokenType::RightBracket;
 	}
 
+	//!Base class for any token
+	//\warning children can be converted to KeywordToken by reinterpret_cast
+	//!\warning field signature must be first (offset 0). you mustn't change the signature, otherwise parser won't interpret object as a KeywordToken
 	class KeywordToken
 	{
 #define IKEYWORD_SIGNATURE ('~'*256*256*256 + 'k'*256*256 + 'w'*256 + '~')
-		int signature = IKEYWORD_SIGNATURE;
+		const int signature = IKEYWORD_SIGNATURE;
 		
 	public:
 
+		//!text representation of a keyword
 		TCHAR value[16];
 
 		KeywordTokenType type = KeywordTokenType::Simple;
@@ -74,35 +106,35 @@ namespace LizardScript
 
 		KeywordToken(const TCHAR* cvalue)
 		{
-			static_assert(offsetof(KeywordToken, signature) == 0, "pizda");
+			static_assert(offsetof(KeywordToken, signature) == 0, "pizdec");
 			_tcsncpy(value, cvalue, sizeof(value)/sizeof(TCHAR));
 		}
 
-		~KeywordToken()
-		{
-			int i = 1;
-		}
-
+		//!\warning may be dangerous
 		static inline bool isKeyword(const TCHAR* token)
 		{
 			return reinterpret_cast<const KeywordToken*>(token)->signature == IKEYWORD_SIGNATURE;
 		}
 
+		//!compare text representation of keywords
 		bool operator==(const KeywordToken &kw) const 
 		{ 
 			return _tcscmp(value, kw.value) == 0; 
 		}
 
+		//!compare text representation of keywords
 		bool operator<(const KeywordToken& kw) const
 		{
 			return _tcscmp(value, kw.value) < 0;
 		}
 
+		//!compare text representation of keywords
 		bool operator>=(const KeywordToken& kw) const
 		{
 			return _tcscmp(value, kw.value) >= 0;
 		}
 
+		//!compare text representation of keywords
 		bool operator<=(const KeywordToken& kw) const
 		{
 			return _tcscmp(value, kw.value) <= 0;
@@ -119,6 +151,7 @@ namespace LizardScript
 		bool listB() { return kwtype_listB(type); }
 	};
 
+	//!Token of bracket. Any keyword which has KeywordTokenType::LeftBracket or KeywordTokenType::RightBracket must be derived from this class.
 	class BracketToken : public KeywordToken
 	{
 	public:
@@ -133,6 +166,7 @@ namespace LizardScript
 		}
 	};
 
+	//!Token of operator. Any keyword which has KeywordTokenType::Unary or KeywordTokenType::Binary must be derived from this class.
 	class OperatorToken : public KeywordToken
 	{
 	public:

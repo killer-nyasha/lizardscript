@@ -6,5 +6,8 @@
 */
 #pragma once
 
+//!auto metagen script will create metadata for this class
 #define lsclass
+
+//!this definition mustn't be parsed and included to metadata automatically. use it when metagen script can't parse something
 #define NOT_METADATA
