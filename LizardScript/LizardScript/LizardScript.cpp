@@ -4,12 +4,8 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <iostream>
-#include "..\LizardScriptCore\Delegate.h"
-//#include "..\LizardScriptCore\NonTypedStack.h"
-#include "..\LizardScriptCore\VectorsTuple.h"
 
-#include "..\LizardScriptCore\i_lexer.h"
-#include "..\LizardScriptCore\LizardScriptDefault.h"
+#include "../LizardScriptCore/LizardScript.h"
 
 int f(int x)
 {
@@ -28,6 +24,12 @@ using namespace LizardScript;
 
 int main()
 {
+    stringptr s1 = "test ";
+    stringptr s2 = s1;
+    s2.make_unique();
+    *s2 += "ololo";
+    std::cout << s1 << s2;
+
     Default::init();
     auto data = runLexer(Default::syntaxCore, "hello+world(1,2)()");
 

@@ -13,7 +13,7 @@
 template <typename T>
 class byval_ptr
 {
-private:
+protected:
 	//!shared pointer data
 	struct byval_ptr_obj
 	{
@@ -63,28 +63,6 @@ public:
 		t.pointer = nullptr;
 	}
 
-	//void operator=(const byval_ptr& t)
-	//{
-	//	if (pointer == t.pointer)
-	//		return;
-
-	//	this->~byval_ptr();
-	//	pointer = t.pointer;
-	//	if (t.pointer != nullptr)
-	//		t.pointer->refcount++;
-	//}
-
-	//void operator=(byval_ptr&& t)
-	//{
-	//	if (pointer == t.pointer)
-	//		return;
-
-	//	this->~byval_ptr();
-	//	pointer = t.pointer;
-	//	if (t.pointer != nullptr)
-	//		t.pointer->refcount++;
-	//}
-
 	T& operator*() const { return pointer->object; }
 	T* operator->() const { return &pointer->object; }
 
@@ -94,7 +72,7 @@ public:
 	{
 		if (this->pointer->refcount > 1)
 		{
-			byval_ptr_obj* newobj = *this->pointer;
+			byval_ptr_obj* newobj = new byval_ptr_obj (*this->pointer);
 			newobj->refcount = 1;
 			this->pointer = newobj;
 		}
@@ -179,6 +157,18 @@ struct stringptr : public byval_ptr<std::string>
 	{
 		**this += cString;
 		return *this;
+	}
+
+	//!copies char* content to new std::string
+	stringptr(const char* data) : byval_ptr(std::string(data))
+	{
+		
+	}
+
+	//!\warning returns temporary pointer
+	operator const char* ()
+	{
+		return pointer->object.c_str();
 	}
 };
 

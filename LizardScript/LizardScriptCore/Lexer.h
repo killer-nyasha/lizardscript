@@ -33,7 +33,7 @@ namespace LizardScript
 		const TCHAR* text;
 
 		size_t lastValueIndex = 0;
-		//size_t textLength;
+		size_t textLength;
 
 		//!when lexer meets first non-ascii symbol, it prints warning
 		bool wasNonasciiWarningPrinted = false;
@@ -78,6 +78,9 @@ namespace LizardScript
 		bool addFromList(const std::vector<KeywordToken*>& list, KeywordToken& pseudoKw);
 
 		void init();
+
+		void processComments(size_t& i);
+		void processQuotes(size_t& i);
 
 	public:
 

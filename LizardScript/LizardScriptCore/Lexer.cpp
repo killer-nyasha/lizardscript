@@ -77,35 +77,40 @@ void Lexer::newToken()
 	}
 }
 
+void Lexer::processComments(size_t& i)
+{
+	if (i + 1 < textLength && text[i] == '/' && text[i + 1] == '*')
+	{
+		int level = 1;
+		i++;
+		while (level != 0 && i + 1 < textLength)
+		{
+			if (text[i] == '/' && text[i + 1] == '*')
+				level++;
+			if (text[i] == '*' && text[i + 1] == '/')
+				level--;
+			i++;
+		}
+		i++;
+	}
+	else if (i + 1 < textLength && text[i] == '/' && text[i + 1] == '/')
+		while (text[i] != '\r' && text[i] != '\n')
+			i++;
+}
+
 PoolPointer<LexerData> Lexer::run()
 {
 	ALIAS(data->values, values);
 	ALIAS(data->tokens, tokens);
 
-	size_t textLength = _tcslen(text);
+	/*size_t*/ textLength = _tcslen(text);
 	size_t i = 0;
 	while (i < textLength)
 	{
 
-		////comments
-		//if (i + 1 < textLength && text[i] == '/' && text[i + 1] == '*')
-		//{
-		//	int level = 1;
-		//	i++;
-		//	while (level != 0 && i + 1 < textLength)
-		//	{
-		//		if (text[i] == '/' && text[i + 1] == '*')
-		//			level++;
-		//		if (text[i] == '*' && text[i + 1] == '/')
-		//			level--;
-		//		i++;
-		//	}
-		//	i++;
-		//}
-		//else if (i + 1 < textLength && text[i] == '/' && text[i + 1] == '/')
-		//	while (text[i] != '\r' && text[i] != '\n')
-		//		i++;
+		//comments
 
+		
 
 		////string literals
 		//else if (text[i] == '[')
