@@ -153,6 +153,7 @@
     <ClInclude Include="Delegate.h" />
     <ClInclude Include="Exception.h" />
     <ClInclude Include="FastRemoving.h" />
+    <ClInclude Include="i_parser.h" />
     <ClInclude Include="i_lexer.h" />
     <ClInclude Include="interpreter_util.h" />
     <ClInclude Include="Lexer.h" />
@@ -163,6 +164,7 @@
     <ClInclude Include="metagen_system.h" />
     <ClInclude Include="metagen_def.h" />
     <ClInclude Include="NonTypedStack.h" />
+    <ClInclude Include="Parser.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Pools.h" />
     <ClInclude Include="Print.h" />
@@ -174,10 +176,12 @@
     <ClInclude Include="VectorsTuple.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="i_parser.cpp" />
     <ClCompile Include="i_lexer.cpp" />
     <ClCompile Include="Lexer.cpp" />
     <ClCompile Include="LizardScriptDefault.cpp" />
     <ClCompile Include="Logger.cpp" />
+    <ClCompile Include="Parser.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

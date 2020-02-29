@@ -24,17 +24,14 @@ using namespace LizardScript;
 
 int main()
 {
-    stringptr s1 = "test ";
-    stringptr s2 = s1;
-    s2.make_unique();
-    *s2 += "ololo";
-    std::cout << s1 << s2;
-
     Default::init();
-    auto data = runLexer(Default::syntaxCore, "hello+world(1,2)()");
+    auto ldata = runLexer(Default::syntaxCore, "[hello+world](1,2)()");
+    auto pdata = runParser(*ldata);
 
-    for (size_t i = 0; i < data->tokens.size(); i++)
-        std::cout << (*data)[i];
+    //for (size_t i = 0; i < pdata->size(); i++)
+    //    std::cout << (*pdata)[i] << "    ";
+
+
 
     //auto f1 = nmakedel(f);
     //sample s;

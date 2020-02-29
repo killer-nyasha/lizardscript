@@ -10,5 +10,6 @@
 #include "NonTypedStack.h"
 #include "VectorsTuple.h"
 #include "i_lexer.h"
+#include "i_parser.h"
 #include "stringptr.h"
 #include "LizardScriptDefault.h"

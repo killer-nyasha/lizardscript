@@ -53,6 +53,14 @@ namespace LizardScript
 		//some custom actions
 		Override
 	};
+
+	//!"list A" - token types which we can meet right after a binary operator.
+	//!"list B" - token types which we can meet right after some value.
+	enum class LexerList
+	{
+		A,
+		B,
+	};
 	
 	//!"list A" - token types which we can meet right after a binary operator.
 	//!\returns is this type a part of "list A"
@@ -111,7 +119,7 @@ namespace LizardScript
 		}
 
 		//!\warning may be dangerous
-		static inline bool isKeyword(const TCHAR* token)
+		static inline bool isKeyword(const void* token)
 		{
 			return reinterpret_cast<const KeywordToken*>(token)->signature == IKEYWORD_SIGNATURE;
 		}
@@ -164,6 +172,11 @@ namespace LizardScript
 		{
 			return reinterpret_cast<BracketToken*>(kw);
 		}
+
+		static const BracketToken* asBracket(const KeywordToken* kw)
+		{
+			return reinterpret_cast<const BracketToken*>(kw);
+		}
 	};
 
 	//!Token of operator. Any keyword which has KeywordTokenType::Unary or KeywordTokenType::Binary must be derived from this class.
@@ -182,6 +195,11 @@ namespace LizardScript
 		static OperatorToken* asOperator(KeywordToken* kw)
 		{
 			return reinterpret_cast<OperatorToken*>(kw);
+		}
+
+		static const OperatorToken* asOperator(const KeywordToken* kw)
+		{
+			return reinterpret_cast<const OperatorToken*>(kw);
 		}
 	};
 }

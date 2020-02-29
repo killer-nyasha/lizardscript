@@ -23,7 +23,7 @@ Lexer::Lexer(const SyntaxCore& c, const TCHAR* t)
 	init();
 }
 
-bool Lexer::addFromList(const std::vector<KeywordToken*>& list, KeywordToken& pseudoKw)
+bool Lexer::addFromList(LexerList ll, const std::vector<KeywordToken*>& list, KeywordToken& pseudoKw)
 {
 	ALIAS(data->values, values);
 	ALIAS(data->tokens, tokens);
@@ -34,7 +34,16 @@ bool Lexer::addFromList(const std::vector<KeywordToken*>& list, KeywordToken& ps
 	{
 		//add keyword
 		KeywordToken* kw = list[index];
-		tokens.push_back(reinterpret_cast<void*>(kw->value));
+
+		if (lastKeywordType == KeywordTokenType::Simple //or None??
+			&& BracketToken::asBracket(kw) 
+			&& BracketToken::asBracket(kw)->type == KeywordTokenType::LeftBracket)
+		{
+			tokens.push_back(reinterpret_cast<void*>(&callKw));
+		}
+
+
+		tokens.push_back(reinterpret_cast<void*>(kw));
 		values.resize(lastValueIndex);
 		lastKeywordType = kw->type;
 		return true;
@@ -69,9 +78,9 @@ void Lexer::newToken()
 		KeywordToken pseudoKw = KeywordToken(&(values)[lastValueIndex]);
 
 		if (kwtype_before_listA(lastKeywordType))
-			addFromList(core.keywords_listA, pseudoKw);
+			addFromList(LexerList::A, core.keywords_listA, pseudoKw);
 		else if (kwtype_before_listB(lastKeywordType))
-			addFromList(core.keywords_listB, pseudoKw);
+			addFromList(LexerList::B, core.keywords_listB, pseudoKw);
 		else throw Exception("Is's a fucking odd keyword");
 
 	}
@@ -98,6 +107,52 @@ void Lexer::processComments(size_t& i)
 			i++;
 }
 
+void Lexer::processQuotes(size_t& i)
+{
+	ALIAS(data->values, values);
+	ALIAS(data->tokens, tokens);
+
+	if (text[i] == '[')
+	{
+		int level = 1;
+		i++; newToken();
+
+		tokens.push_back(reinterpret_cast<void*>(&stringKw));
+
+		while (level > 0 && i < textLength)
+		{
+			if (text[i] == '[')
+				level++;
+			if (text[i] == ']')
+			{
+				level--;
+				if (level == 0) break;
+			}
+			values.push_back(text[i++]);
+		}
+		if (text[i] != ']')
+		{
+			throw Exception("Quote wasn't closed");
+		}
+		i++; newToken();
+	}
+	else if (text[i] == '\"')
+	{
+		i++; newToken();
+
+		values.push_back('$');
+		newToken();
+
+		while (text[i] != '\"' && i < textLength)
+			values.push_back(text[i++]);
+		if (text[i] != '\"')
+		{
+			throw Exception("Quote wasn't closed");
+		}
+		i++; newToken();
+	}
+}
+
 PoolPointer<LexerData> Lexer::run()
 {
 	ALIAS(data->values, values);
@@ -107,81 +162,21 @@ PoolPointer<LexerData> Lexer::run()
 	size_t i = 0;
 	while (i < textLength)
 	{
+		processComments(i);
+		processQuotes(i);
 
-		//comments
-
-		
-
-		////string literals
-		//else if (text[i] == '[')
-		//{
-		//	int level = 1;
-		//	i++; newToken();
-
-		//	values.push_back('$');
-		//	newToken();
-
-		//	while (level > 0 && i < textLength)
-		//	{
-		//		if (text[i] == '[')
-		//			level++;
-		//		if (text[i] == ']')
-		//		{
-		//			level--;
-		//			if (level == 0) break;
-		//		}
-		//		values.push_back(text[i++]);
-		//	}
-		//	if (text[i] != ']')
-		//	{
-		//		throw Exception("Unclosed quote.");
-		//	}
-		//	i++; newToken();
-		//}
-		//else if (text[i] == '\"')
-		//{
-		//	i++; newToken();
-
-		//	values.push_back('$');
-		//	newToken();
-
-		//	while (text[i] != '\"' && i < textLength)
-		//		values.push_back(text[i++]);
-		//	if (text[i] != '\"')
-		//	{
-		//		throw Exception("Unclosed quote.");
-		//	}
-		//	i++; newToken();
-		//}
-		//else if (text[i] == '\`')
-		//{
-		//	i++; newToken();
-
-		//	while (text[i] != '\`' && i < textLength)
-		//		values.push_back(text[i++]);
-		//	if (text[i] != '\`')
-		//	{
-		//		throw Exception("Unclosed quote.");
-		//	}
-		//	i++; newToken();
-		//}
-
-		//other
-		//else
+		if (safe_isgraph(text[i]))
 		{
-			if (safe_isgraph(text[i]))
-			{
-				values.push_back(text[i++]);
+			values.push_back(text[i++]);
 
-				if (Search::binary(core.breakChars, text[i]) != -1
-					|| Search::binary(core.breakChars, text[i - 1]) != -1
-					|| charIsTextChar(text[i - 1]) != charIsTextChar(text[i]))
-					newToken();
-			}
-			else
-			{
-				i++; newToken();
-			}
+			if (Search::binary(core.breakChars, text[i]) != -1
+				|| Search::binary(core.breakChars, text[i - 1]) != -1
+				|| charIsTextChar(text[i - 1]) != charIsTextChar(text[i]))
+				newToken();
+		}
+		else
+		{
+			i++; newToken();
 		}
 	}
 	newToken();

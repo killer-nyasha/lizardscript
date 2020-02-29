@@ -75,7 +75,7 @@ namespace LizardScript
 
 		void newToken();
 
-		bool addFromList(const std::vector<KeywordToken*>& list, KeywordToken& pseudoKw);
+		bool addFromList(LexerList ll, const std::vector<KeywordToken*>& list, KeywordToken& pseudoKw);
 
 		void init();
 

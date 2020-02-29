@@ -22,20 +22,31 @@ namespace LizardScript
 		std::vector<TCHAR> values;
 		std::vector<void*> tokens;
 
-		size_t minReserved()
+		size_t minReserved() const
 		{ return 0; }
-		size_t maxReserved()
+		size_t maxReserved() const
 		{ return 65535; }
 
-		//!\returns pointer to token at requested index
+		//!\returns pointer to text of token at requested index
 		//!\warning pointer is temporary - it will become invalid after deletion of LexerData instance or any modyfication of it
-		TCHAR* operator[](size_t index)
+		const TCHAR* text_at(size_t index) const
 		{
 			size_t iIndex = reinterpret_cast<size_t>(tokens[index]);
 			if (iIndex >= minReserved() && iIndex < maxReserved())
 				return &values[reinterpret_cast<size_t>(tokens[index])]; 
 			else
-				return reinterpret_cast<TCHAR*>(tokens[index]);
+				return reinterpret_cast<KeywordToken*>(tokens[index])->value;
+		}
+
+		//!\returns pointer to token at requested index
+		//!\warning pointer is temporary - it will become invalid after deletion of LexerData instance or any modyfication of it
+		const void* operator[](size_t index) const
+		{
+			size_t iIndex = reinterpret_cast<size_t>(tokens[index]);
+			if (iIndex >= minReserved() && iIndex < maxReserved())
+				return reinterpret_cast<const void*>(&values[reinterpret_cast<size_t>(tokens[index])]);
+			else
+				return reinterpret_cast<const void*>(tokens[index]);
 		}
 	};
 
