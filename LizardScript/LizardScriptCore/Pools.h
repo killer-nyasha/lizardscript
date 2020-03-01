@@ -107,7 +107,7 @@ public:
 			objects.push(new T());
 
 		T* object = objects.top();
-		objects.top();
+		objects.pop();
 		//pool_init(object);
 
 		return /*std::move(*//*)*/object;
@@ -151,6 +151,13 @@ public:
 		m.pointer = nullptr;
 	}
 
+	PoolPointer& operator=(PoolPointer&& ptr)
+	{
+		this->~PoolPointer();
+		this->PoolPointer::PoolPointer(std::forward<PoolPointer<T>>(ptr));
+		return *this;
+	}
+
 	//!return object to the pool
 	~PoolPointer()
 	{
@@ -163,7 +170,17 @@ public:
 		return pointer;
 	}
 
+	const T* operator->() const
+	{
+		return pointer;
+	}
+
 	T& operator*()
+	{
+		return *pointer;
+	}
+
+	const T& operator*() const
 	{
 		return *pointer;
 	}

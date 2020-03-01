@@ -12,7 +12,7 @@ namespace LizardScript
 		}
 	}
 
-	bool Parser::popPredicate(const OperatorToken* operatorToken)
+	bool Parser::popPredicate(OperatorToken* operatorToken)
 	{
 		if (parserStack->empty())
 			return false;
@@ -50,7 +50,7 @@ namespace LizardScript
 			throw Exception("Bracket wasn't closed");
 	}
 
-	Parser::Parser(const LexerData& lexerData)
+	Parser::Parser(LexerData& lexerData)
 		: lexerData(lexerData)
 	{
 		parserTokens->clear();
@@ -58,16 +58,15 @@ namespace LizardScript
 			parserStack->pop();
 	}
 
-	//ссылка на LexerData???
-	PoolPointer<std::vector<const void*>> Parser::run()
+	PoolPointer<std::vector<void*>> Parser::run()
 	{
-		for (size_t i = 0; i < lexerData.tokens.size(); i++)
+		for (size_t i = 0; i < lexerData.tokens->size(); i++)
 		{
-			const void* token = lexerData[i];
+			void* token = lexerData[i];
 
 			if (KeywordToken::isKeyword(token))
 			{
-				const KeywordToken* kwtoken = reinterpret_cast<const KeywordToken*>(token);
+				KeywordToken* kwtoken = reinterpret_cast<KeywordToken*>(token);
 
 				if (kwtoken->type == KeywordTokenType::Simple)
 				{
@@ -90,7 +89,7 @@ namespace LizardScript
 				else if (kwtoken->type == KeywordTokenType::Unary ||
 					kwtoken->type == KeywordTokenType::Binary)
 				{
-					const OperatorToken* operatorToken = OperatorToken::asOperator(kwtoken);
+					OperatorToken* operatorToken = OperatorToken::asOperator(kwtoken);
 
 					while (popPredicate(operatorToken))
 					{

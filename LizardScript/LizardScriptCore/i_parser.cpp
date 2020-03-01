@@ -5,13 +5,18 @@
 
 namespace LizardScript
 {
-	PoolPointer<std::vector<const void*>> runParser(const LexerData& lexerData)
+	void runParser(LexerData& lexerData)
 	{
 		Parser p = Parser(lexerData);
 		//logger.add("parser tokens:");
 		//logger.addSeparator();
 		//logger.add(std::ref(*p.parserTokens));
 		//logger.addSeparator();
-		return std::move(p.run());//Parser::optimize(core, parserTokens);
+
+		auto tokens = p.run();
+		//LexerData ret = LexerData();
+		lexerData.tokens = std::move(tokens);
+
+		//return ret;//Parser::optimize(core, parserTokens);
 	}
 }

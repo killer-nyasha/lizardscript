@@ -13,8 +13,8 @@ OperatorToken Lexer::callKw = OperatorToken("__call__", Arity::Unary, 1);
 
 void Lexer::init()
 {
-	data->values.resize(0);
-	data->tokens.resize(0);
+	data->values->resize(0);
+	data->tokens->resize(0);
 }
 
 Lexer::Lexer(const SyntaxCore& c, const TCHAR* t)
@@ -39,12 +39,12 @@ bool Lexer::addFromList(LexerList ll, const std::vector<KeywordToken*>& list, Ke
 			&& BracketToken::asBracket(kw) 
 			&& BracketToken::asBracket(kw)->type == KeywordTokenType::LeftBracket)
 		{
-			tokens.push_back(reinterpret_cast<void*>(&callKw));
+			tokens->push_back(reinterpret_cast<void*>(&callKw));
 		}
 
 
-		tokens.push_back(reinterpret_cast<void*>(kw));
-		values.resize(lastValueIndex);
+		tokens->push_back(reinterpret_cast<void*>(kw));
+		values->resize(lastValueIndex);
 		lastKeywordType = kw->type;
 		return true;
 	}
@@ -58,8 +58,8 @@ bool Lexer::addFromList(LexerList ll, const std::vector<KeywordToken*>& list, Ke
 		else throw Exception("too many tokens");
 #endif	
 
-		tokens.push_back(reinterpret_cast<void*>(lastValueIndex));
-		lastValueIndex = values.size();
+		tokens->push_back(reinterpret_cast<void*>(lastValueIndex));
+		lastValueIndex = values->size();
 
 		lastKeywordType = KeywordTokenType::Simple;
 
@@ -72,10 +72,10 @@ void Lexer::newToken()
 	ALIAS(data->values, values);
 	ALIAS(data->tokens, tokens);
 
-	if (values.size() != lastValueIndex)
+	if (values->size() != lastValueIndex)
 	{
-		values.push_back(0);
-		KeywordToken pseudoKw = KeywordToken(&(values)[lastValueIndex]);
+		values->push_back(0);
+		KeywordToken pseudoKw = KeywordToken(&(*values)[lastValueIndex]);
 
 		if (kwtype_before_listA(lastKeywordType))
 			addFromList(LexerList::A, core.keywords_listA, pseudoKw);
@@ -117,7 +117,7 @@ void Lexer::processQuotes(size_t& i)
 		int level = 1;
 		i++; newToken();
 
-		tokens.push_back(reinterpret_cast<void*>(&stringKw));
+		tokens->push_back(reinterpret_cast<void*>(&stringKw));
 
 		while (level > 0 && i < textLength)
 		{
@@ -128,7 +128,7 @@ void Lexer::processQuotes(size_t& i)
 				level--;
 				if (level == 0) break;
 			}
-			values.push_back(text[i++]);
+			values->push_back(text[i++]);
 		}
 		if (text[i] != ']')
 		{
@@ -140,11 +140,11 @@ void Lexer::processQuotes(size_t& i)
 	{
 		i++; newToken();
 
-		values.push_back('$');
+		values->push_back('$');
 		newToken();
 
 		while (text[i] != '\"' && i < textLength)
-			values.push_back(text[i++]);
+			values->push_back(text[i++]);
 		if (text[i] != '\"')
 		{
 			throw Exception("Quote wasn't closed");
@@ -167,7 +167,7 @@ PoolPointer<LexerData> Lexer::run()
 
 		if (safe_isgraph(text[i]))
 		{
-			values.push_back(text[i++]);
+			values->push_back(text[i++]);
 
 			if (Search::binary(core.breakChars, text[i]) != -1
 				|| Search::binary(core.breakChars, text[i - 1]) != -1

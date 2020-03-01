@@ -16,18 +16,18 @@ namespace LizardScript
 	{
 		void endLine();
 		void endBrackets();
-		bool popPredicate(const OperatorToken* operatorToken);
+		bool popPredicate(OperatorToken* operatorToken);
 
-		const LexerData& lexerData;
+		LexerData& lexerData;
 		//const std::vector<void*>& lexerTokens;
-		PoolPointer<std::stack<const KeywordToken*>> parserStack;
-		PoolPointer<std::vector<const void*>> parserTokens;
+		PoolPointer<std::stack<KeywordToken*>> parserStack;
+		PoolPointer<std::vector<void*>> parserTokens;
 
 	public:
 
-		Parser(const LexerData& tokens);
+		Parser(LexerData& tokens);
 
-		PoolPointer<std::vector<const void*>> run();
+		PoolPointer<std::vector<void*>> run();
 
 		//std::vector<TCHAR*> optimize(SyntaxCore& core, std::vector<TCHAR*>& tokens);
 	};
