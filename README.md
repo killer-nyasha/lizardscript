@@ -1,2 +1,2 @@
-# lizardscript
-Скриптовый язык, работающий с классами С++ как с родными.
+# LizardScript
+Scripting language which works with C++ classes as with its native ones.
