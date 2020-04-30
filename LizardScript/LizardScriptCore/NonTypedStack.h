@@ -44,7 +44,7 @@ public:
 		this->capacity = capacity;
 		if (capacity == 0)
 			data = nullptr;
-		else data = new unsigned char[capacity];
+		else data = (unsigned char*)malloc(capacity);
 	}
 
 	//!\warning I'm to lazy to implement this right now.
@@ -60,7 +60,7 @@ public:
 
 	~NonTypedStack()
 	{
-		delete[] data;
+		free(data);
 	}
 
 	bool isEmpty()
@@ -72,12 +72,18 @@ public:
 	template <typename T>
 	bool check(const T& value)
 	{
-		return size + sizeof(TypeInfo) + TYPEINFO(T).size() < capacity;
+		return size + sizeof(TypeInfo) + typeInfo<T>().size() < capacity;
 	}
 
 	template <typename T>
 	void push(const T& value)
 	{
+		if (!check(value))
+		{
+			capacity *= 2;
+			realloc(data, capacity);
+		}
+
 		TypeInfo info = TYPEINFO(T);
 		*reinterpret_cast<T*>(data[size]) = value;
 		size += info.size();
@@ -86,7 +92,7 @@ public:
 		count++;
 	}
 
-	//!warning Dynamic instanse will become invalid when you use push
+	//!\warning Dynamic instanse become invalid when you use push
 	Dynamic pop()
 	{
 		size -= sizeof(TypeInfo);

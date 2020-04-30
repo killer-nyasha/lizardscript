@@ -95,13 +95,13 @@ namespace LizardScript
 				}
 				else if (kwtoken->type == KeywordTokenType::LeftBracket)
 				{
-					//parserStack->push(kwtoken);
-					//parserTokens->push_back(kwtoken);
+					parserStack->push(kwtoken);
+					parserTokens->push_back(kwtoken);
 				}
 				else if (kwtoken->type == KeywordTokenType::RightBracket)
 				{
-					//endBrackets();
-					//parserTokens->push_back(kwtoken);
+					endBrackets();
+					parserTokens->push_back(kwtoken);
 				}
 			}
 			else

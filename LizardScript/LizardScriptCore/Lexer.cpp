@@ -9,7 +9,7 @@
 using namespace LizardScript;
 
 KeywordToken Lexer::stringKw = KeywordToken("__string__");
-OperatorToken Lexer::callKw = OperatorToken("__call__", KeywordTokenType::PrefixUnary, 1);
+OperatorToken Lexer::callKw = OperatorToken("__call__", KeywordTokenType::Simple, 100);
 
 void Lexer::init()
 {
@@ -78,8 +78,7 @@ void Lexer::newToken()
 		values->push_back(0);//null-terminator for current token
 		TCHAR* kwtext = &(*values)[lastValueIndex];
 
-
-		if (charIsTextChar((*values)[lastValueIndex]))
+		//if (charIsTextChar((*values)[lastValueIndex]))
 		{
 			//try to find a simple keyword
 			int index = pSearch::binary(core.simpleKeywords, &kwtext);
@@ -88,7 +87,19 @@ void Lexer::newToken()
 				KeywordToken* kw = &*core.simpleKeywords[index];
 				tokens->push_back(reinterpret_cast<void*>(kw));
 				values->resize(lastValueIndex);
-				lastKeywordType = KeywordTokenType::Simple;
+
+				if (kwtext[0] == '(')
+				{
+					hasSpacesPost = true;
+					if (lastKeywordType == KeywordTokenType::Simple)
+					{
+						tokens->push_back(reinterpret_cast<void*>(&callKw));
+					}
+				}
+				else if (kwtext[0] == ')')
+					hasSpacesPost = false;
+
+				lastKeywordType = kw->type;
 				hasSpacesPre = hasSpacesPost;
 				return;
 			}
@@ -103,7 +114,7 @@ void Lexer::newToken()
 				KeywordToken* kw = &*core.binaryOperators[index];
 				tokens->push_back(reinterpret_cast<void*>(kw));
 				values->resize(lastValueIndex);
-				lastKeywordType = KeywordTokenType::Binary;
+				lastKeywordType = kw->type;
 				hasSpacesPre = hasSpacesPost;
 				return;
 			}
@@ -117,7 +128,7 @@ void Lexer::newToken()
 				KeywordToken* kw = &*core.prefixUnary[index];
 				tokens->push_back(reinterpret_cast<void*>(kw));
 				values->resize(lastValueIndex);
-				lastKeywordType = KeywordTokenType::PrefixUnary;
+				lastKeywordType = kw->type;
 				hasSpacesPre = hasSpacesPost;
 				return;
 			}
@@ -131,7 +142,7 @@ void Lexer::newToken()
 				KeywordToken* kw = &*core.postfixUnary[index];
 				tokens->push_back(reinterpret_cast<void*>(kw));
 				values->resize(lastValueIndex);
-				lastKeywordType = KeywordTokenType::PostfixUnary;
+				lastKeywordType = kw->type;
 				hasSpacesPre = hasSpacesPost;
 				return;
 			}
@@ -230,10 +241,8 @@ PoolPointer<LexerData> Lexer::run()
 		{
 			values->push_back(text[i++]);
 
-			//break char or other token starts
-			if (Search::binary(core.breakChars, text[i]) != -1
-				|| Search::binary(core.breakChars, text[i - 1]) != -1
-				|| charIsTextChar(text[i - 1]) != charIsTextChar(text[i]))
+			//other token starts
+			if (Search::binary(core.breakChars, text[i]) != -1 || Search::binary(core.breakChars, text[i - 1]) != -1 || charIsTextChar(text[i - 1]) != charIsTextChar(text[i]))
 			{
 				hasSpacesPost = false;
 				newToken();

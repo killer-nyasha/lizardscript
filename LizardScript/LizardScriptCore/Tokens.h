@@ -142,6 +142,11 @@ namespace LizardScript
 			_tcsncpy(value, cvalue, sizeof(value)/sizeof(TCHAR));
 		}
 
+		KeywordToken(const TCHAR* cvalue, KeywordTokenType type) : KeywordToken(cvalue)
+		{
+			this->type = type;
+		}
+
 		//!\warning may be dangerous
 		static inline bool isKeyword(const void* token)
 		{
@@ -214,24 +219,24 @@ namespace LizardScript
 	};
 
 	//!Token of bracket. Any keyword which has KeywordTokenType::LeftBracket or KeywordTokenType::RightBracket must be derived from this class.
-	class BracketToken : public KeywordToken
-	{
-	public:
-		BracketToken(const TCHAR* cvalue, bool isLeft) : KeywordToken(cvalue)
-		{
-			type = isLeft ? KeywordTokenType::LeftBracket : KeywordTokenType::RightBracket;
-		}
+	//class BracketToken : public KeywordToken
+	//{
+	//public:
+	//	BracketToken(const TCHAR* cvalue, bool isLeft) : KeywordToken(cvalue)
+	//	{
+	//		type = isLeft ? KeywordTokenType::LeftBracket : KeywordTokenType::RightBracket;
+	//	}
 
-		static BracketToken* asBracket(KeywordToken* kw)
-		{
-			return reinterpret_cast<BracketToken*>(kw);
-		}
+	//	static BracketToken* asBracket(KeywordToken* kw)
+	//	{
+	//		return reinterpret_cast<BracketToken*>(kw);
+	//	}
 
-		static const BracketToken* asBracket(const KeywordToken* kw)
-		{
-			return reinterpret_cast<const BracketToken*>(kw);
-		}
-	};
+	//	static const BracketToken* asBracket(const KeywordToken* kw)
+	//	{
+	//		return reinterpret_cast<const BracketToken*>(kw);
+	//	}
+	//};
 
 	//!Token of operator. Any keyword which has KeywordTokenType::Unary or KeywordTokenType::Binary must be derived from this class.
 	class OperatorToken : public KeywordToken

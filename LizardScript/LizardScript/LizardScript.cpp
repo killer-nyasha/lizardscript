@@ -38,7 +38,9 @@ void print_ldata(LexerData& ldata)
 int main()
 {
     Default::init();
-    auto ldata = runLexer(Default::syntaxCore, "-hello- -- -world--world1-");
+    //-hello -- -(-world--world1)
+    //-hello- --(-world--world1)-
+    auto ldata = runLexer(Default::syntaxCore, "[f 1](1,g(2,3))");
 
     //for (auto& k : Default::syntaxCore.keywords)
     //{
