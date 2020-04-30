@@ -18,12 +18,12 @@ namespace LizardScript
 		EndLine
 	};
 
-	//!unary or binary. ternary operators can be realized via binary
-	enum class Arity
-	{
-		Unary,
-		Binary
-	};
+	////!unary or binary. ternary operators can be realized via binary
+	//enum class Arity
+	//{
+	//	Unary,
+	//	Binary
+	//};
 
 	//!now parser doesn't support non-associative operators
 	enum class Associativity
@@ -38,8 +38,11 @@ namespace LizardScript
 		//!returns some value. for example, 'this'
 		Simple,
 
-		//!unary operator
-		Unary,
+		//!prefix unary operator
+		PrefixUnary,
+
+		//!postfix unary operator
+		PostfixUnary,
 
 		//!binary operator
 		Binary,
@@ -47,54 +50,75 @@ namespace LizardScript
 		//!left bracket, like (, [ or {
 		LeftBracket,
 
-		//!left bracket, like ), ] or }
+		//!right bracket, like ), ] or }
 		RightBracket,
 
-		//some custom actions
+		//!some custom actions
 		Override
 	};
 
+	inline TCHAR kwtypes_str(KeywordTokenType t)
+	{
+		switch (t)
+		{
+		case KeywordTokenType::Simple:
+			return 's';
+		case KeywordTokenType::PrefixUnary:
+			return 'u';
+		case KeywordTokenType::PostfixUnary:
+			return 'U';
+		case KeywordTokenType::Binary:
+			return 'b';
+		case KeywordTokenType::LeftBracket:
+			return '(';
+		case KeywordTokenType::RightBracket:
+			return ')';
+		default:
+			return '?';
+		}
+	}
+
 	//!"list A" - token types which we can meet right after a binary operator.
 	//!"list B" - token types which we can meet right after some value.
-	enum class LexerList
-	{
-		A,
-		B,
-	};
+	//enum class LexerList
+	//{
+	//	A,
+	//	B,
+	//};
 	
-	//!"list A" - token types which we can meet right after a binary operator.
-	//!\returns is this type a part of "list A"
-	inline bool kwtype_listA(KeywordTokenType type)
-	{
-		return type == KeywordTokenType::Simple
-			|| type == KeywordTokenType::Unary
-			|| type == KeywordTokenType::LeftBracket;
-	}
+	////!"list A" - token types which we can meet right after a binary operator.
+	////!\returns is this type a part of "list A"
+	//inline bool kwtype_listA(KeywordTokenType type)
+	//{
+	//	return type == KeywordTokenType::Simple
+	//		|| type == KeywordTokenType::Unary
+	//		|| type == KeywordTokenType::LeftBracket;
+	//}
 
-	//!"list B" - token types which we can meet right after some value.
-	//!\returns is this type a part of "list B"
-	inline bool kwtype_listB(KeywordTokenType type)
-	{
-		return type == KeywordTokenType::Binary
-			|| type == KeywordTokenType::LeftBracket
-			|| type == KeywordTokenType::RightBracket;
-	}
+	////!"list B" - token types which we can meet right after a unary operator (or simple value??).
+	////!\returns is this type a part of "list B"
+	//inline bool kwtype_listB(KeywordTokenType type)
+	//{
+	//	return type == KeywordTokenType::Binary
+	//		|| type == KeywordTokenType::LeftBracket
+	//		|| type == KeywordTokenType::RightBracket;
+	//}
 
-	//!\returns is after this type can be a type from "list A"
-	inline bool kwtype_before_listA(KeywordTokenType type)
-	{
-		return type == KeywordTokenType::Unary
-			|| type == KeywordTokenType::Binary
-			|| type == KeywordTokenType::LeftBracket;
-	}
+	////!\returns is after this type can be a type from "list A"
+	//inline bool kwtype_before_listA(KeywordTokenType type)
+	//{
+	//	return type == KeywordTokenType::Unary
+	//		|| type == KeywordTokenType::Binary
+	//		|| type == KeywordTokenType::LeftBracket;
+	//}
 
-	//!\returns is after this type can be a type from "list B"
-	inline bool kwtype_before_listB(KeywordTokenType type)
-	{
-		return type == KeywordTokenType::Simple
-			|| type == KeywordTokenType::Unary
-			|| type == KeywordTokenType::RightBracket;
-	}
+	////!\returns is after this type can be a type from "list B"
+	//inline bool kwtype_before_listB(KeywordTokenType type)
+	//{
+	//	return type == KeywordTokenType::Simple
+	//		|| type == KeywordTokenType::Unary
+	//		|| type == KeywordTokenType::RightBracket;
+	//}
 
 	//!Base class for any token
 	//\warning children can be converted to KeywordToken by reinterpret_cast
@@ -122,6 +146,30 @@ namespace LizardScript
 		static inline bool isKeyword(const void* token)
 		{
 			return reinterpret_cast<const KeywordToken*>(token)->signature == IKEYWORD_SIGNATURE;
+		}
+
+		//!compare text representation of keyword with a string
+		bool operator==(const TCHAR* kw) const
+		{
+			return _tcscmp(value, kw) == 0;
+		}
+
+		//!compare text representation of keyword with a string
+		bool operator<(const TCHAR* kw) const
+		{
+			return _tcscmp(value, kw) < 0;
+		}
+
+		//!compare text representation of keyword with a string
+		bool operator>=(const TCHAR* kw) const
+		{
+			return _tcscmp(value, kw) >= 0;
+		}
+
+		//!compare text representation of keyword with a string
+		bool operator<=(const TCHAR* kw) const
+		{
+			return _tcscmp(value, kw) <= 0;
 		}
 
 		//!compare text representation of keywords
@@ -155,8 +203,14 @@ namespace LizardScript
 			return stream;
 		}
 
-		bool listA() { return kwtype_listA(type); }
-		bool listB() { return kwtype_listB(type); }
+		//bool listA() { return kwtype_listA(type); }
+		//bool listB() { return kwtype_listB(type); }
+
+		bool is_operator()
+		{
+			return type == KeywordTokenType::PrefixUnary || type == KeywordTokenType::PostfixUnary ||
+				type == KeywordTokenType::Binary;
+		}
 	};
 
 	//!Token of bracket. Any keyword which has KeywordTokenType::LeftBracket or KeywordTokenType::RightBracket must be derived from this class.
@@ -186,10 +240,10 @@ namespace LizardScript
 		Associativity associativity;
 		int priority;
 
-		OperatorToken(const TCHAR* cvalue, Arity arity, int priority, Associativity associativity = Associativity::Left)
+		OperatorToken(const TCHAR* cvalue, KeywordTokenType type, int priority, Associativity associativity = Associativity::Left)
 			: KeywordToken(cvalue), priority(priority), associativity(associativity)
 		{
-			type = arity == Arity::Unary ? KeywordTokenType::Unary : KeywordTokenType::Binary;
+			this->type = type;// arity == Arity::Unary ? KeywordTokenType::Unary : KeywordTokenType::Binary;
 		}
 
 		static OperatorToken* asOperator(KeywordToken* kw)

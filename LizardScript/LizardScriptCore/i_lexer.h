@@ -16,7 +16,6 @@ Someday I'll make builder pattern for it, but now we don't have to use different
 namespace LizardScript
 {
 	//class SyntaxCore;
-
 	struct LexerData
 	{
 		PoolPointer<std::vector<TCHAR>> values;
@@ -47,6 +46,33 @@ namespace LizardScript
 				return reinterpret_cast<void*>(&(*values)[reinterpret_cast<size_t>((*tokens)[index])]);
 			else
 				return reinterpret_cast<void*>((*tokens)[index]);
+		}
+
+		bool tryGetKeyword(size_t tIndex, KeywordToken*& ret)
+		{
+			size_t elem = reinterpret_cast<size_t>((*tokens)[tIndex]);
+
+			if (elem >= minReserved() && elem < maxReserved())
+				return false;
+
+			ret = reinterpret_cast<KeywordToken*>(elem);
+			return true;
+		}
+
+		bool tryGetValue(size_t tIndex, TCHAR*& ret, size_t* rIndex = nullptr)
+		{
+			size_t elem = reinterpret_cast<size_t>((*tokens)[tIndex]);
+
+			if (elem >= minReserved() && elem < maxReserved())
+			{
+				ret = &(*values)[elem];
+
+				if (rIndex) 
+					*rIndex = elem;
+
+				return true;
+			}
+			else return false;
 		}
 	};
 

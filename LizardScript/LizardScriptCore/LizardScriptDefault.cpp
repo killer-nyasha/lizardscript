@@ -22,24 +22,36 @@ namespace LizardScript
 			core.textChars = { ':', '_', '@', '&' };
 			core.breakChars = { '{', '}', '(', ')', '.', ';' };
 
-			set_vector<std::unique_ptr<KeywordToken>, KeywordToken*>(core.keywords,
+			//new OperatorToken(".", KeywordTokenType::Binary, 100),
+			//	new OperatorToken(",", KeywordTokenType::Binary, 10),
+
+			//	new BracketToken(_T("("), true),
+			//	new BracketToken(_T(")"), false),
+
+			set_vector<std::unique_ptr<OperatorToken>, OperatorToken*>(core.prefixUnary,
 			{
-				new OperatorToken("=", Arity::Binary, 20, Associativity::Right),
+				new OperatorToken("-", KeywordTokenType::PrefixUnary, 70),
+			});
 
-				new OperatorToken(">", Arity::Binary, 30),
-				new OperatorToken("<", Arity::Binary, 30),
+			set_vector<std::unique_ptr<OperatorToken>, OperatorToken*>(core.postfixUnary,
+			{
+				new OperatorToken("-", KeywordTokenType::PostfixUnary, 60),
+				new OperatorToken("--", KeywordTokenType::PostfixUnary, 60),
+			});
 
-				new OperatorToken("+", Arity::Binary, 50),
-				new OperatorToken("-", Arity::Binary, 50),
-				new OperatorToken("*", Arity::Binary, 50),
-				new OperatorToken("/", Arity::Binary, 50),
+			set_vector<std::unique_ptr<OperatorToken>, OperatorToken*>(core.binaryOperators,
+			{
+				new OperatorToken("=", KeywordTokenType::Binary, 20, Associativity::Right),
 
-				new OperatorToken(".", Arity::Binary, 100),
-				new OperatorToken(",", Arity::Binary, 10),
+				new OperatorToken(">", KeywordTokenType::Binary, 30),
+				new OperatorToken("<", KeywordTokenType::Binary, 30),
 
-				new BracketToken(_T("("), true),
-				new BracketToken(_T(")"), false),
+				new OperatorToken("+", KeywordTokenType::Binary, 50),
+				new OperatorToken("-", KeywordTokenType::Binary, 50),
+				new OperatorToken("*", KeywordTokenType::Binary, 50),
+				new OperatorToken("/", KeywordTokenType::Binary, 50),
 
+				new OperatorToken("--", KeywordTokenType::Binary, 50),
 
 				//new Keyword(_T("="), 20, Arity::Binary, SpecialKeywords::None, 0, Associativity::Right),
 				//Keyword(_T(">"), 30, Arity::Binary),

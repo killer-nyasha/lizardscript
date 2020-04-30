@@ -40,7 +40,7 @@ namespace LizardScript
 
 		//!type of the last keyword. it helps us to know which types of the next keyword are allowed 
 		//!(for example binary operator cannot be met right after other binary operator)
-		KeywordTokenType lastKeywordType = KeywordTokenType::Unary;
+		KeywordTokenType lastKeywordType = KeywordTokenType::PrefixUnary;
 
 		//!alternative to isalnum. prints warning if symbol isn't from ASCII but doesn't throw an exception
 		bool safe_isalnum(int ch)
@@ -75,12 +75,15 @@ namespace LizardScript
 
 		void newToken();
 
-		bool addFromList(LexerList ll, const std::vector<KeywordToken*>& list, KeywordToken& pseudoKw);
+		//bool addFromList(LexerList ll, const std::vector<KeywordToken*>& list, KeywordToken& pseudoKw);
 
 		void init();
 
 		void processComments(size_t& i);
 		void processQuotes(size_t& i);
+
+		bool hasSpacesPre = true;
+		bool hasSpacesPost = true;
 
 	public:
 

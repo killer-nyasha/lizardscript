@@ -7,7 +7,7 @@ namespace LizardScript
 	{
 		while (!parserStack->empty())
 		{
-			parserTokens->push_back(parserStack->top()->value);
+			parserTokens->push_back(parserStack->top());
 			parserStack->pop();
 		}
 	}
@@ -17,8 +17,7 @@ namespace LizardScript
 		if (parserStack->empty())
 			return false;
 
-		if (parserStack->top()->type == KeywordTokenType::Unary || 
-			parserStack->top()->type == KeywordTokenType::Binary)
+		if (parserStack->top()->is_operator())
 		{
 			const OperatorToken* otherOperator = reinterpret_cast<const OperatorToken*>(parserStack->top());
 
@@ -28,7 +27,6 @@ namespace LizardScript
 		}
 			
 		return false;
-			//&& !parserStack->top()->checkSpecial(SpecialKeywords::LeftBracket)
 	}
 
 	void Parser::endBrackets()
@@ -39,7 +37,7 @@ namespace LizardScript
 			&& parserStack->top()->type != KeywordTokenType::LeftBracket
 			)
 		{
-			parserTokens->push_back(parserStack->top()->value), parserStack->pop();
+			parserTokens->push_back(parserStack->top()), parserStack->pop();
 		}
 		if (parserStack->size() > 0 && parserStack->top()->type == KeywordTokenType::LeftBracket)
 		{
@@ -62,12 +60,10 @@ namespace LizardScript
 	{
 		for (size_t i = 0; i < lexerData.tokens->size(); i++)
 		{
-			void* token = lexerData[i];
+			KeywordToken* kwtoken;
 
-			if (KeywordToken::isKeyword(token))
+			if (lexerData.tryGetKeyword(i, kwtoken))
 			{
-				KeywordToken* kwtoken = reinterpret_cast<KeywordToken*>(token);
-
 				if (kwtoken->type == KeywordTokenType::Simple)
 				{
 					if (kwtoken->parserFlags == ParserFlags::None)
@@ -77,39 +73,45 @@ namespace LizardScript
 					else if (kwtoken->parserFlags == ParserFlags::Comma)
 					{
 						while (parserStack->top()->type != KeywordTokenType::LeftBracket)
-							parserTokens->push_back(parserStack->top()->value), parserStack->pop();
+							parserTokens->push_back(parserStack->top()), parserStack->pop();
 					}
 					else if (kwtoken->parserFlags == ParserFlags::EndLine)
 					{
 						endLine();
 					}
 
-					parserTokens->push_back(token);
+					parserTokens->push_back(kwtoken);
 				}
-				else if (kwtoken->type == KeywordTokenType::Unary ||
-					kwtoken->type == KeywordTokenType::Binary)
+				else if (kwtoken->is_operator())
 				{
 					OperatorToken* operatorToken = OperatorToken::asOperator(kwtoken);
 
 					while (popPredicate(operatorToken))
 					{
-						parserTokens->push_back(parserStack->top()->value);
+						parserTokens->push_back(parserStack->top());
 						parserStack->pop();
 					}
 					parserStack->push(operatorToken);
 				}
 				else if (kwtoken->type == KeywordTokenType::LeftBracket)
 				{
-					parserStack->push(kwtoken);
-					parserTokens->push_back(token);
+					//parserStack->push(kwtoken);
+					//parserTokens->push_back(kwtoken);
 				}
-				else if (kwtoken->type == KeywordTokenType::LeftBracket)
+				else if (kwtoken->type == KeywordTokenType::RightBracket)
 				{
-					endBrackets();
-					parserTokens->push_back(token);
+					//endBrackets();
+					//parserTokens->push_back(kwtoken);
 				}
 			}
-			else parserTokens->push_back(token);
+			else
+			{
+				TCHAR* t; size_t tIndex;
+				if (lexerData.tryGetValue(i, t, &tIndex))
+					parserTokens->push_back(reinterpret_cast<void*>(tIndex));
+				else throw Exception();
+			}
+				
 		}
 
 		endLine();

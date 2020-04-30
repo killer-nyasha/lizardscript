@@ -10,6 +10,9 @@
 
 namespace Impl
 { 
+	//Tim Sheerman-Chase
+	//https://gist.github.com/TimSC/226f46f01fce70205fcd927454104250
+
 	template <typename T> 
 	inline size_t MedianOfThree(T &a, T &b, T &c, size_t ai, size_t bi, size_t ci)
 	{
@@ -25,7 +28,7 @@ namespace Impl
 	{
 		size_t ci = (int)(0.5*(lo + hi) + 0.5);
 		size_t pivotIndex = MedianOfThree(A[lo], A[ci], A[hi], lo, ci, hi);
-		T& pivot = A[pivotIndex];
+		T pivot = A[pivotIndex];
 
 		size_t i = lo;
 		size_t j = hi;
@@ -37,9 +40,6 @@ namespace Impl
 				return pivotIndex;
 
 			std::swap(A[i], A[j]);
-			//T tmp = A[i];
-			//A[i] = A[j];
-			//A[j] = tmp;
 
 			if (i == pivotIndex)
 				pivotIndex = j;
@@ -53,7 +53,7 @@ namespace Impl
 	{
 		size_t ci = (int)(0.5 * (lo + hi) + 0.5);
 		size_t pivotIndex = MedianOfThree(*A[lo], *A[ci], *A[hi], lo, ci, hi);
-		T& pivot = A[pivotIndex];
+		auto pivot = &*A[pivotIndex];//for unique_ptr
 
 		size_t i = lo;
 		size_t j = hi;
@@ -65,9 +65,6 @@ namespace Impl
 				return pivotIndex;
 
 			std::swap(A[i], A[j]);
-			//T tmp = A[i];
-			//A[i] = A[j];
-			//A[j] = tmp;
 
 			if (i == pivotIndex)
 				pivotIndex = j;
@@ -130,8 +127,8 @@ namespace Search
 	//!\param[in] x Element
 	//!\warning Operators < and == required
 	//!\returns index of elem if it's found, else -1
-	template <typename T>
-	inline int binary(const std::vector<T>& a, const T& x)
+	template <typename T, typename TS>
+	inline int binary(const std::vector<T>& a, const TS& x)
 	{
 		if (a.size() == 0)
 			return -1;
@@ -166,8 +163,8 @@ namespace pSearch
 	//!\param[in] x Element
 	//!\warning Operators < and == required
 	//!\returns index of elem if it's found, else -1
-	template <typename T>
-	inline int binary(const std::vector<T>& a, const T x)
+	template <typename T, typename TS>
+	inline int binary(const std::vector<T>& a, const TS x)
 	{
 		if (a.size() == 0)
 			return -1;
@@ -202,16 +199,16 @@ namespace pSearch
 //!\param[in] x index of element
 //!\warning Operator == required
 //!\returns for example, for { 1, 2, 2, 2, 3 } and index 1 it returns (1, 3) - because elements at 1,2,3 are equal to element at 1
-template <typename T>
-inline std::pair<int, int> findRange(const std::vector<T>& a, int x)
-{
-	size_t left = x, right = x;
-
-	for (; left + 1 >= 1; left--)
-		if (!(a[left] == x))
-			break;
-	for (; right + 1 >= 1; left--)
-		if (!(a[left] == x))
-			break;
-	return std::make_pair(left, right);
-}
+//template <typename T>
+//inline std::pair<int, int> findRange(const std::vector<T>& a, int x)
+//{
+//	size_t left = x, right = x;
+//
+//	for (; left + 1 >= 1; left--)
+//		if (!(a[left] == x))
+//			break;
+//	for (; right + 1 >= 1; left--)
+//		if (!(a[left] == x))
+//			break;
+//	return std::make_pair(left, right);
+//}

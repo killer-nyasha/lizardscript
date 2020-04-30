@@ -63,6 +63,20 @@ public:
 		t.pointer = nullptr;
 	}
 
+	byval_ptr& operator=(const byval_ptr& other)
+	{
+		this->~byval_ptr();
+		this->byval_ptr::byval_ptr(other);
+		return *this;
+	}
+
+	byval_ptr& operator=(byval_ptr&& other)
+	{
+		this->~byval_ptr();
+		this->byval_ptr::byval_ptr(std::move(other));
+		return *this;
+	}
+
 	T& operator*() const { return pointer->object; }
 	T* operator->() const { return &pointer->object; }
 
@@ -126,7 +140,16 @@ struct stringptr : public byval_ptr<std::string>
 {
 	using byval_ptr<std::string>::byval_ptr;
 
+	//stringptr();
+	//stringptr& operator=(const stringptr&) = default;
+	//stringptr& operator=(stringptr&&) = default;
+
 	auto& operator[](size_t index)
+	{
+		return (*this)->operator[](index);
+	}
+
+	auto& operator[](int index)
 	{
 		return (*this)->operator[](index);
 	}
@@ -159,11 +182,16 @@ struct stringptr : public byval_ptr<std::string>
 		return *this;
 	}
 
+	//stringptr() : byval_ptr()
+	//{
+
+	//}
+
 	//!copies char* content to new std::string
-	stringptr(const char* data) : byval_ptr(std::string(data))
-	{
-		
-	}
+	//stringptr(const char* data) : byval_ptr(std::string(data))
+	//{
+	//	
+	//}
 
 	//!\warning returns temporary pointer
 	operator const char* ()

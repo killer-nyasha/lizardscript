@@ -22,18 +22,34 @@ struct sample
 
 using namespace LizardScript;
 
+void print_ldata(LexerData& ldata)
+{
+    for (size_t i = 0; i < ldata.tokens->size(); i++)
+    {
+        KeywordToken* kw;
+        if (ldata.tryGetKeyword(i, kw))
+            std::cout << kwtypes_str(kw->type) << "";
+
+        std::cout << ldata.text_at(i) << "    ";
+    }
+    std::cout << "\n\n";
+}
+
 int main()
 {
     Default::init();
-    auto ldata = runLexer(Default::syntaxCore, "[hello+world](1,2)()");
+    auto ldata = runLexer(Default::syntaxCore, "-hello- -- -world--world1-");
 
-    for (size_t i = 0; i < ldata->tokens->size(); i++)
-        std::cout << ldata->text_at(i) << "    ";
+    //for (auto& k : Default::syntaxCore.keywords)
+    //{
+    //    std::cout << (int)k->value[0] << k->value << "\n";
+    //}
+
+    print_ldata(*ldata);
 
     runParser(*ldata);
 
-    for (size_t i = 0; i < ldata->tokens->size(); i++)
-        std::cout << ldata->text_at(i) << "    ";
+    print_ldata(*ldata);
 
     //auto f1 = nmakedel(f);
     //sample s;
