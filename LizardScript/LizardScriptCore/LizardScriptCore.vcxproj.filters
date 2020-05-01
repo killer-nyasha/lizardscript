@@ -33,6 +33,12 @@
     <Filter Include="parser">
       <UniqueIdentifier>{13e193c4-5096-44a6-95af-734564698b38}</UniqueIdentifier>
     </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{dee49545-258d-4947-9aa1-896bc1078cb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="runtime">
+      <UniqueIdentifier>{6fedffe2-b0d4-4dac-b47d-c61c132adecd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LizardScript.h">
@@ -115,6 +121,9 @@
     </ClInclude>
     <ClInclude Include="i_parser.h">
       <Filter>parser</Filter>
+    </ClInclude>
+    <ClInclude Include="Runtime.h">
+      <Filter>runtime</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

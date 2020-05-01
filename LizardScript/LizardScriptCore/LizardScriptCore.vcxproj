@@ -168,6 +168,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Pools.h" />
     <ClInclude Include="Print.h" />
+    <ClInclude Include="Runtime.h" />
     <ClInclude Include="StringBuilder.h" />
     <ClInclude Include="stringptr.h" />
     <ClInclude Include="SyntaxCore.h" />
