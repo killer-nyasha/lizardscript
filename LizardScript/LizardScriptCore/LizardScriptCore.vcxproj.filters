@@ -125,6 +125,12 @@
     <ClInclude Include="Runtime.h">
       <Filter>runtime</Filter>
     </ClInclude>
+    <ClInclude Include="RuntimeCases.h">
+      <Filter>runtime</Filter>
+    </ClInclude>
+    <ClInclude Include="RuntimeMacros.h">
+      <Filter>runtime</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -153,6 +159,9 @@
     </ClCompile>
     <ClCompile Include="i_parser.cpp">
       <Filter>parser</Filter>
+    </ClCompile>
+    <ClCompile Include="Runtime.cpp">
+      <Filter>runtime</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
