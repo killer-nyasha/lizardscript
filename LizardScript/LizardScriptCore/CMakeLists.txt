@@ -160,7 +160,7 @@ endif()
 ################################################################################
 # Compile and link options
 ################################################################################
-if(MSVC)
+#if(MSVC)
     if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
         target_compile_options(${PROJECT_NAME} PRIVATE
             $<$<CONFIG:Debug>:
@@ -211,7 +211,7 @@ if(MSVC)
             /SUBSYSTEM:WINDOWS
         )
     endif()
-endif()
+#endif()
 
 ################################################################################
 # Pre build events

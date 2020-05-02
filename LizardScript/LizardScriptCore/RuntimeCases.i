@@ -1,5 +1,5 @@
 #line 1 "RuntimeCases.h"
-#line 1 "C:\\WORK_2020\\lizardscript\\LizardScript\\LizardScriptCore\\RuntimeMacros.h"
+#line 1 "C:\\WORK_2020\\lizardscript\\lizardscript\\LizardScriptCore\\RuntimeMacros.h"
 #pragma once
 
 
@@ -51,7 +51,7 @@
 
 
 #line 2 "RuntimeCases.h"
-#line 1 "C:\\WORK_2020\\lizardscript\\LizardScript\\LizardScriptCore\\LsTypedefs.h"
+#line 1 "C:\\WORK_2020\\lizardscript\\lizardscript\\LizardScriptCore\\LsTypedefs.h"
 #pragma once
 
 
