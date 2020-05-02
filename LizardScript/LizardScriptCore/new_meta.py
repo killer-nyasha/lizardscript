@@ -1,4 +1,5 @@
 import regex
+from os import system
 
 # constants
 #-------------------------------------------------------------------------------
@@ -13,8 +14,11 @@ outFilePath = 'output.h'
 simpleLsCppObjects = r'rnfirst|rnsecond'
 complexLsCppObjects = r'CODEGET([^{};]*)'
 
+# скомпилированные регулярки (для улучшения производительности)
 regLsCppObjects = regex.compile(simpleLsCppObjects+r'|'+complexLsCppObjects)
 regOpcodes = regex.compile(r'case\s+opcode::')
+regUnnecessaryPatterns = regex.compile(r'public\s*:?|private\s*:?|protected\s*:?|\n|/\*.*?\*/|#define.*?\n|//.*?\n|#include.*?\n|#line.*?\n|#pragma.*?\n'
+r'|#if.*?#endif|#error.*?\n|#undef.*?\n',regex.DOTALL)
 #-------------------------------------------------------------------------------
 
 # перед первым LsCppOpcode запятая не должна ставиться
@@ -23,12 +27,12 @@ firstComma = ''
 
 # убираем ненужный код из строки
 def deleteUnnecessaryPatterns(string):
-    return regex.sub(regex.compile("\n|/\*.*?\*/|#define.*?\n|//.*?\n|#include.*?\n",regex.DOTALL ) ," " ,string)
+    return regex.sub(regUnnecessaryPatterns, " ", string)
 
 # экранируем кавычки внутри блока case
 def shielding(string,caseBlockPos):
     ret = string[:caseBlockPos]
-    ret+=string[caseBlockPos:].replace('"',r'\"')
+    ret += string[caseBlockPos:].replace('"',r'\"')
     return ret
 
 # меняем простые LsCppObjects, например:
@@ -70,47 +74,64 @@ def isLsObject(position,lsObjects):
             return True
     return False
 
-# главная функция, в которой мы из входящей строки генерируем новую
-def genCode(string, position):
-    global firstComma
-    lsObjects = findLsCppObjects_(string)
-    res = firstComma+'LsCppOpcode('
-    firstComma = ','
-    # пишем название опкода
-    res+='opcode::'
-    while string[position]!=':':
-        res+=string[position]
-        position+=1
-    position += string[position:].find('{')+1
-    if position == 0: raise Exception('input string error, can\'t find \'{\' symbol in case command')
-    res+=', {^^{'
-    caseBlockPos = len(res)
+# записываем в результат название опкода
+def writeOpcodeName(string,position,res):
+    res += 'opcode::'
+    while string[position] != ':':
+        res += string[position]
+        position += 1
+    return res,position
+
+# функция для форматирования строки (экранирование кавычек,
+# добавления пространств имен у LsCppObjects и т.д.
+def stringFormatting(string,caseBlockPos):
+    string = replaceSimpleLsCppObjects(string)
+    string = replaceComplexLsCppObjects(string)
+    string = shielding(string,caseBlockPos)
+    string = replaceQuotes(string)
+    return string
+
+# записываем в результат блок case
+def writeCaseBlock(string,position,res,lsObjectsPositions):
     bracketCounter = 1
-    while bracketCounter !=0:
-        while not isLsObject(position,lsObjects):
+    while bracketCounter != 0:
+        while not isLsObject(position, lsObjectsPositions):
             if bracketCounter == 0: break
             if string[position] == '{':
-                bracketCounter+=1
-                position+=1
+                bracketCounter += 1
+                position += 1
                 continue
             elif string[position] == '}':
                 bracketCounter -= 1
                 position += 1
                 continue
-            res+=string[position]
+            res += string[position]
             position += 1
         if bracketCounter != 0:
-            object = getLsObjectByPosition(position,lsObjects)
-            res += '^^,'+string[object[0]:object[1]]+',^^'
+            object = getLsObjectByPosition(position, lsObjectsPositions)
+            res += '^^,' + string[object[0]:object[1]] + ',^^'
             position = object[1]
-    res += '}^^})\n'
-    res = replaceSimpleLsCppObjects(res)
-    res = replaceComplexLsCppObjects(res)
-    res = shielding(res,caseBlockPos)
-    res = replaceQuotes(res)
     return res
 
+# главная функция, в которой мы из входящей строки генерируем новую
+def genCode(string, position):
+    global firstComma
+    lsObjectsPositions = findLsCppObjects_(string)
+    res = firstComma+'LsCppOpcode('
+    firstComma = ','
+    res,position = writeOpcodeName(string,position,res)
+    position += string[position:].find('{') + 1
+    if position == 0: raise Exception('input string error, can\'t find \'{\' symbol in case command')
+    res+=', {^^{'
+    # здесь начинается блок case, кавычки должны экранироваться
+    caseBlockPos = len(res)
+    res = writeCaseBlock(string,position,res,lsObjectsPositions)
+    res += '}^^})\n'
+    return stringFormatting(res,caseBlockPos)
+
 # main
+
+#system('pip install regex')
 outFile = open(outFilePath, 'w', -1,errors='ignore')
 inFile = open(inFilePath, 'r', -1, errors='ignore')
 string = ''.join([deleteUnnecessaryPatterns(line).rstrip() for line in inFile])

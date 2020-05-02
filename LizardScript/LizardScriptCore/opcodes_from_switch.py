@@ -9,7 +9,8 @@ enum_name = 'Opcodes'
 map_name = 'map_name'
 
 find_opcodes_name = regex.compile(r'(?<=\s*opcode::\s*)[^{};]+\b')
-regUnnecessaryPatterns = regex.compile("\n|/\*.*?\*/|#define.*?\n|//.*?\n|#include.*?\n",regex.DOTALL)
+regUnnecessaryPatterns = regex.compile(r'public\s*:?|private\s*:?|protected\s*:?|\n|/\*.*?\*/|#define.*?\n|//.*?\n|#include.*?\n|#line.*?\n|#pragma.*?\n'
+r'|#if.*?#endif|#error.*?\n|#undef.*?\n',regex.DOTALL)
 
 comma_enum, comma_map = '',''
 
