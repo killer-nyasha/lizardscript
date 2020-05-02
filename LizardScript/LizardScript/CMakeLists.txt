@@ -23,11 +23,11 @@ set(ROOT_NAMESPACE LizardScript)
 set_target_properties(${PROJECT_NAME} PROPERTIES
     VS_GLOBAL_KEYWORD "Win32Proj"
 )
-if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
+if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
     set_target_properties(${PROJECT_NAME} PROPERTIES
         INTERPROCEDURAL_OPTIMIZATION_RELEASE "TRUE"
     )
-elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x86")
+elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
     set_target_properties(${PROJECT_NAME} PROPERTIES
         INTERPROCEDURAL_OPTIMIZATION_RELEASE "TRUE"
     )
@@ -35,18 +35,7 @@ endif()
 ################################################################################
 # Compile definitions
 ################################################################################
-if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
-    target_compile_definitions(${PROJECT_NAME} PRIVATE
-        "$<$<CONFIG:Debug>:"
-            "_DEBUG"
-        ">"
-        "$<$<CONFIG:Release>:"
-            "NDEBUG"
-        ">"
-        "_CONSOLE;"
-        "_MBCS"
-    )
-elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x86")
+if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
     target_compile_definitions(${PROJECT_NAME} PRIVATE
         "$<$<CONFIG:Debug>:"
             "_DEBUG"
@@ -58,13 +47,24 @@ elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x86")
         "_CONSOLE;"
         "_MBCS"
     )
+elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
+    target_compile_definitions(${PROJECT_NAME} PRIVATE
+        "$<$<CONFIG:Debug>:"
+            "_DEBUG"
+        ">"
+        "$<$<CONFIG:Release>:"
+            "NDEBUG"
+        ">"
+        "_CONSOLE;"
+        "_MBCS"
+    )
 endif()
 
 ################################################################################
 # Compile and link options
 ################################################################################
 if(MSVC)
-    if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
+    if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
         target_compile_options(${PROJECT_NAME} PRIVATE
             $<$<CONFIG:Debug>:
                 ${DEFAULT_CXX_DEBUG_RUNTIME_LIBRARY}
@@ -81,7 +81,7 @@ if(MSVC)
             ${DEFAULT_CXX_EXCEPTION_HANDLING};
             /Y-
         )
-    elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x86")
+    elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
         target_compile_options(${PROJECT_NAME} PRIVATE
             $<$<CONFIG:Debug>:
                 ${DEFAULT_CXX_DEBUG_RUNTIME_LIBRARY}
@@ -99,7 +99,7 @@ if(MSVC)
             /Y-
         )
     endif()
-    if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
+    if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
         target_link_options(${PROJECT_NAME} PRIVATE
             $<$<CONFIG:Debug>:
                 /INCREMENTAL
@@ -112,7 +112,7 @@ if(MSVC)
             /DEBUG;
             /SUBSYSTEM:CONSOLE
         )
-    elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x86")
+    elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
         target_link_options(${PROJECT_NAME} PRIVATE
             $<$<CONFIG:Debug>:
                 /INCREMENTAL
