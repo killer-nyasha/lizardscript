@@ -25,6 +25,10 @@ void Runtime::run(const LsFunction& f)
 
 	using OFFSET_T = unsigned char;
 
+#define REGISTER(type, i) reinterpret_cast<type*>(&stack[esp + i])
+	//r == 0 ? *(type*)((char*)stackbase + CODEGET(short)) : *(type*)&(registers[r])
+#define CODEGET(type) *(type*)(&f.code[(eip += sizeof(type)) - sizeof(type)])
+
 	while (true)
 	{
 		LsCode code = CODEGET(LsCode);

@@ -42,6 +42,12 @@
     <Filter Include="asm">
       <UniqueIdentifier>{b161d1d2-acb7-412c-91b5-e5695fc0faf9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="lscpp">
+      <UniqueIdentifier>{eecad8b6-9e6d-432c-b59e-c825a174d1ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="function">
+      <UniqueIdentifier>{516a726d-de14-43ad-b6b5-5e1755525c57}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LizardScript.h">
@@ -143,6 +149,15 @@
     <ClInclude Include="LsTypedefs.h">
       <Filter>runtime</Filter>
     </ClInclude>
+    <ClInclude Include="LsCpp.hxx">
+      <Filter>lscpp</Filter>
+    </ClInclude>
+    <ClInclude Include="LsCpp.h">
+      <Filter>lscpp</Filter>
+    </ClInclude>
+    <ClInclude Include="LsFunction.h">
+      <Filter>function</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -174,6 +189,9 @@
     </ClCompile>
     <ClCompile Include="Runtime.cpp">
       <Filter>runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="LsCpp.cpp">
+      <Filter>lscpp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

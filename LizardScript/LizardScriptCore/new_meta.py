@@ -5,18 +5,18 @@ from os import system
 #-------------------------------------------------------------------------------
 
 # путь к входному файлу
-inFilePath = 'opcodes.h'
+inFilePath = 'RuntimeCases.i'
 # путь к выходному файлу
-outFilePath = 'output.h'
+outFilePath = 'LsCpp.hxx'
 
 # через | можно добавить новые ключевые слова
 # (если речь идет о простых словах без параметров, вроде rnfirst/rnsecond)
-simpleLsCppObjects = r'rnfirst|rnsecond'
-complexLsCppObjects = r'CODEGET([^{};]*)'
+simpleLsCppObjects = r'r1|r2'
+complexLsCppObjects = r'CODEGET([^{};]*)|REGISTER([^{};]*)'
 
 # скомпилированные регулярки (для улучшения производительности)
 regLsCppObjects = regex.compile(simpleLsCppObjects+r'|'+complexLsCppObjects)
-regOpcodes = regex.compile(r'case\s+opcode::')
+regOpcodes = regex.compile(r'case\s+LsAsm::')
 regUnnecessaryPatterns = regex.compile(r'public\s*:?|private\s*:?|protected\s*:?|\n|/\*.*?\*/|#define.*?\n|//.*?\n|#include.*?\n|#line.*?\n|#pragma.*?\n'
 r'|#if.*?#endif|#error.*?\n|#undef.*?\n',regex.DOTALL)
 #-------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ def shielding(string,caseBlockPos):
 def replaceSimpleLsCppObjects(string):
     objects = simpleLsCppObjects.split(r'|')
     for o in objects:
-        string = regex.sub(o,'LsCpp::'+o+r'()',string)
+        string = regex.sub(o,'this->'+o+r'()',string)
     return string
 
 # меняем сложные LsCppObjects, например:
@@ -49,7 +49,7 @@ def replaceComplexLsCppObjects(string):
     objects = complexLsCppObjects.split(r'|')
     for o in objects:
         for match in regex.finditer(o, string):
-            string = string.replace(match.group(0),'LsCpp::'+match.group(0))
+            string = string.replace(match.group(0),'this->'+match.group(0))
     return string
 
 # меняем ^^ на кавычки (так обозначаются кавычки, которые не нужно экранировать)
@@ -76,7 +76,7 @@ def isLsObject(position,lsObjects):
 
 # записываем в результат название опкода
 def writeOpcodeName(string,position,res):
-    res += 'opcode::'
+    res += 'LsAsm::'
     while string[position] != ':':
         res += string[position]
         position += 1

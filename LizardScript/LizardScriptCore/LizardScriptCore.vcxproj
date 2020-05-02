@@ -96,7 +96,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>cd $(ProjectDir) &amp;&amp; cl /P RuntimeCases.h &amp;&amp; python.exe opcodes_from_switch.py</Command>
+      <Command>cd $(ProjectDir) &amp;&amp; cl /P /C RuntimeCases.h &amp;&amp; python.exe opcodes_from_switch.py &amp; python.exe new_meta.py</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -113,7 +113,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>cd $(ProjectDir) &amp;&amp; cl /P RuntimeCases.h &amp;&amp; python.exe opcodes_from_switch.py</Command>
+      <Command>cd $(ProjectDir) &amp;&amp; cl /P /C RuntimeCases.h &amp;&amp; python.exe opcodes_from_switch.py &amp; python.exe new_meta.py</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -134,7 +134,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>cd $(ProjectDir) &amp;&amp; cl /P RuntimeCases.h &amp;&amp; python.exe opcodes_from_switch.py</Command>
+      <Command>cd $(ProjectDir) &amp;&amp; cl /P /C RuntimeCases.h &amp;&amp; python.exe opcodes_from_switch.py &amp; python.exe new_meta.py</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -155,7 +155,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>cd $(ProjectDir) &amp;&amp; cl /P RuntimeCases.h &amp;&amp; python.exe opcodes_from_switch.py</Command>
+      <Command>cd $(ProjectDir) &amp;&amp; cl /P /C RuntimeCases.h &amp;&amp; python.exe opcodes_from_switch.py &amp; python.exe new_meta.py</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -172,6 +172,9 @@
     <ClInclude Include="LizardScript.h" />
     <ClInclude Include="LizardScriptDefault.h" />
     <ClInclude Include="Logger.h" />
+    <ClInclude Include="LsCpp.h" />
+    <ClInclude Include="LsCpp.hxx" />
+    <ClInclude Include="LsFunction.h" />
     <ClInclude Include="LsTypedefs.h" />
     <ClInclude Include="metagen_init.h" />
     <ClInclude Include="metagen_system.h" />
@@ -199,6 +202,7 @@
     <ClCompile Include="Lexer.cpp" />
     <ClCompile Include="LizardScriptDefault.cpp" />
     <ClCompile Include="Logger.cpp" />
+    <ClCompile Include="LsCpp.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
