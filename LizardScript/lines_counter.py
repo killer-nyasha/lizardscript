@@ -77,4 +77,3 @@ if __name__ == "__main__":
     line_counter,dir_counter = get_path_line_count(current_dir, ret[0],ret[1], line_counter,dir_counter)
     print ('\n', 'gj!__________________', line_counter,  ' lines,')
     print('\n','_____________________',dir_counter, 'dirs in project!')
-    input()
