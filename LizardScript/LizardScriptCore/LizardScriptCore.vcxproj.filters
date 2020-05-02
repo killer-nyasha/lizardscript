@@ -39,6 +39,9 @@
     <Filter Include="runtime">
       <UniqueIdentifier>{6fedffe2-b0d4-4dac-b47d-c61c132adecd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="asm">
+      <UniqueIdentifier>{b161d1d2-acb7-412c-91b5-e5695fc0faf9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LizardScript.h">
@@ -131,6 +134,15 @@
     <ClInclude Include="RuntimeMacros.h">
       <Filter>runtime</Filter>
     </ClInclude>
+    <ClInclude Include="Opcodes.hxx">
+      <Filter>runtime</Filter>
+    </ClInclude>
+    <ClInclude Include="OpcodesText.cxx">
+      <Filter>runtime</Filter>
+    </ClInclude>
+    <ClInclude Include="LsTypedefs.h">
+      <Filter>runtime</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -163,5 +175,12 @@
     <ClCompile Include="Runtime.cpp">
       <Filter>runtime</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="new_meta.py" />
+    <None Include="opcodes_from_switch.py" />
+    <None Include="RuntimeCases.i">
+      <Filter>runtime</Filter>
+    </None>
   </ItemGroup>
 </Project>

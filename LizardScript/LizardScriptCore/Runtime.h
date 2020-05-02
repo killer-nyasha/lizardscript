@@ -7,7 +7,7 @@ namespace LizardScript
 
 	class LsFunction
 	{
-	public:
+	public: 
 		std::vector<unsigned char> code;
 	};
 
@@ -17,6 +17,6 @@ namespace LizardScript
 
 		unsigned char stack[1024 * 10];
 
-		void run(const LsFunction& f)
+		void run(const LsFunction& f);
 	};
 }

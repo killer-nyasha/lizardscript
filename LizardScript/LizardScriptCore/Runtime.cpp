@@ -1,8 +1,12 @@
 #include "pch.h"
 #include "Runtime.h"
+#include "LsTypedefs.h"
 #include "RuntimeMacros.h"
 
+#include "Opcodes.hxx"
+
 using namespace LizardScript;
+using namespace LsAsm;
 
 void Runtime::run(const LsFunction& f)
 {
@@ -20,19 +24,6 @@ void Runtime::run(const LsFunction& f)
 	size_t esp = 0;
 
 	using OFFSET_T = unsigned char;
-
-	using byte = unsigned char;
-	using uint = unsigned int;
-
-	using int8 = char;
-	using int16 = short;
-	using int32 = int;
-	using int64 = long long;
-
-	using uint8 = unsigned char;
-	using uint16 = unsigned short;
-	using uint32 = unsigned int;
-	using uint64 = unsigned long long;
 
 	while (true)
 	{

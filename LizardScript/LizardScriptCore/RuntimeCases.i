@@ -51,6 +51,21 @@
 
 
 #line 2 "RuntimeCases.h"
+#line 1 "c:\\work_2020\\lizardscript\\lizardscript\\lizardscriptcore\\LsTypedefs.h"
+#pragma once
 
-case add_int: { *stack[esp + r1]; = *stack[esp + r1]; + stack[esp + r2];;; break; }case sub_int: { *stack[esp + r1]; = *stack[esp + r1]; + stack[esp + r2];;; break; }case mul_int: { *stack[esp + r1]; = *stack[esp + r1]; + stack[esp + r2];;; break; }case div_int: { *stack[esp + r1]; = *stack[esp + r1]; + stack[esp + r2];;; break; }
-case cast_int_uint: { *stack[esp + r2]; = *stack[esp + r1];;; break; }
+
+
+
+
+
+
+
+
+
+
+
+#line 3 "RuntimeCases.h"
+
+case add_int: { *stack[esp + r1] = *stack[esp + r1] + stack[esp + r2]; break; }case sub_int: { *stack[esp + r1] = *stack[esp + r1] - stack[esp + r2]; break; }case mul_int: { *stack[esp + r1] = *stack[esp + r1] * stack[esp + r2]; break; }case div_int: { *stack[esp + r1] = *stack[esp + r1] / stack[esp + r2]; break; }
+case cast_int_uint: { *stack[esp + r2] = *stack[esp + r1]; break; }

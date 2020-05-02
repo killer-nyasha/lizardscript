@@ -96,7 +96,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>cd $(ProjectDir) &amp;&amp; cl /P RuntimeCases.h &amp;&amp; write RuntimeCases.i</Command>
+      <Command>cd $(ProjectDir) &amp;&amp; cl /P RuntimeCases.h &amp;&amp; python.exe opcodes_from_switch.py</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -113,7 +113,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>cd $(ProjectDir) &amp;&amp; cl /P RuntimeCases.h &amp;&amp; write RuntimeCases.i</Command>
+      <Command>cd $(ProjectDir) &amp;&amp; cl /P RuntimeCases.h &amp;&amp; python.exe opcodes_from_switch.py</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -134,7 +134,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>cd $(ProjectDir) &amp;&amp; cl /P RuntimeCases.h &amp;&amp; write RuntimeCases.i</Command>
+      <Command>cd $(ProjectDir) &amp;&amp; cl /P RuntimeCases.h &amp;&amp; python.exe opcodes_from_switch.py</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -155,7 +155,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>cd $(ProjectDir) &amp;&amp; cl /P RuntimeCases.h &amp;&amp; write RuntimeCases.i</Command>
+      <Command>cd $(ProjectDir) &amp;&amp; cl /P RuntimeCases.h &amp;&amp; python.exe opcodes_from_switch.py</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -172,10 +172,13 @@
     <ClInclude Include="LizardScript.h" />
     <ClInclude Include="LizardScriptDefault.h" />
     <ClInclude Include="Logger.h" />
+    <ClInclude Include="LsTypedefs.h" />
     <ClInclude Include="metagen_init.h" />
     <ClInclude Include="metagen_system.h" />
     <ClInclude Include="metagen_def.h" />
     <ClInclude Include="NonTypedStack.h" />
+    <ClInclude Include="Opcodes.hxx" />
+    <ClInclude Include="OpcodesText.cxx" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Pools.h" />
@@ -206,6 +209,11 @@
     <ClCompile Include="Print.cpp" />
     <ClCompile Include="Runtime.cpp" />
     <ClCompile Include="SyntaxCore.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="new_meta.py" />
+    <None Include="opcodes_from_switch.py" />
+    <None Include="RuntimeCases.i" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
