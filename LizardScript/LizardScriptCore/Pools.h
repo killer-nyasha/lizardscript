@@ -8,6 +8,7 @@
 #pragma once
 #include <stack>
 #include <functional>
+#include <iostream>
 
 #include "FastRemoving.h"
 #include "Exception.h"

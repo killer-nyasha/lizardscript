@@ -8,8 +8,8 @@ namespace_name = 'LsAsm'
 enum_name = 'Opcodes'
 map_name = 'map_name'
 
-find_opcodes_name = regex.compile(r'(?<=\s*opcode::\s*)[^{};]+\b')
-regUnnecessaryPatterns = regex.compile(r'public\s*:?|private\s*:?|protected\s*:?|\n|/\*.*?\*/|#define.*?\n|//.*?\n|#include.*?\n|#line.*?\n|#pragma.*?\n'
+find_opcodes_name = regex.compile(r'(?<=case ([\w]+::)?\s*)[^{};:]+\b(?!\s*::\s*)')
+regUnnecessaryPatterns = regex.compile(r'/\*.*?\*/|#define.*?\n|//.*?\n|#include.*?\n|#line.*?\n|#pragma.*?\n'
 r'|#if.*?#endif|#error.*?\n|#undef.*?\n',regex.DOTALL)
 
 comma_enum, comma_map = '',''
@@ -32,7 +32,7 @@ out_file1 = open(output_file1_name,'w')
 out_file2 = open(output_file2_name,'w')
 
 out_file1.write('namespace '+ namespace_name + '\n{\nenum ' + enum_name + '\n{\n')
-out_file2.write('#include "pch.h"\n#include <map>\nstd::map<const char*, int> '+ map_name +'\n{\n')
+out_file2.write('#include "pch.h"\n#include <map>\n#include "Opcodes.hxx"\nusing namespace LsAsm;\n\nstd::map<const char*, int> '+ map_name +'\n{\n')
 
 string = ''.join([deleteUnnecessaryPatterns(line) for line in in_file])
 

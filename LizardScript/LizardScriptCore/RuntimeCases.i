@@ -67,5 +67,5 @@
 
 #line 3 "RuntimeCases.h"
 
-case add_int: { *stack[esp + r1] = *stack[esp + r1] + stack[esp + r2]; break; }case sub_int: { *stack[esp + r1] = *stack[esp + r1] - stack[esp + r2]; break; }case mul_int: { *stack[esp + r1] = *stack[esp + r1] * stack[esp + r2]; break; }case div_int: { *stack[esp + r1] = *stack[esp + r1] / stack[esp + r2]; break; }
-case cast_int_uint: { *stack[esp + r1] = *stack[esp + r1]; break; }
+case add_int: { *reinterpret_cast<int*>(&stack[esp + r1]) = *reinterpret_cast<int*>(&stack[esp + r1]) + *reinterpret_cast<int*>(&stack[esp + r2]); break; }case sub_int: { *reinterpret_cast<int*>(&stack[esp + r1]) = *reinterpret_cast<int*>(&stack[esp + r1]) - *reinterpret_cast<int*>(&stack[esp + r2]); break; }case mul_int: { *reinterpret_cast<int*>(&stack[esp + r1]) = *reinterpret_cast<int*>(&stack[esp + r1]) * *reinterpret_cast<int*>(&stack[esp + r2]); break; }case div_int: { *reinterpret_cast<int*>(&stack[esp + r1]) = *reinterpret_cast<int*>(&stack[esp + r1]) / *reinterpret_cast<int*>(&stack[esp + r2]); break; }
+case cast_int_uint: { *reinterpret_cast<int*>(&stack[esp + r1]) = *reinterpret_cast<int*>(&stack[esp + r1]); break; }
