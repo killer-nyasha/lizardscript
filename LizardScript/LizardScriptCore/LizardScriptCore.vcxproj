@@ -172,6 +172,7 @@
     <ClInclude Include="LizardScript.h" />
     <ClInclude Include="LizardScriptDefault.h" />
     <ClInclude Include="Logger.h" />
+    <ClInclude Include="LsAsm.h" />
     <ClInclude Include="LsCpp.h" />
     <ClInclude Include="LsCpp.hxx" />
     <ClInclude Include="LsDisasm.h" />
@@ -182,6 +183,7 @@
     <ClInclude Include="metagen_def.h" />
     <ClInclude Include="NonTypedStack.h" />
     <ClInclude Include="Opcodes.hxx" />
+    <ClCompile Include="LsAsm.cpp" />
     <ClCompile Include="OpcodesText.cxx" />
     <ClInclude Include="OpcodesText.h" />
     <ClInclude Include="Parser.h" />

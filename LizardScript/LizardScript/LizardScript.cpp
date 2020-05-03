@@ -4,6 +4,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <iostream>
+#include <fstream>
 
 #include "../LizardScriptCore/LizardScript.h"
 
@@ -35,44 +36,91 @@ void print_ldata(LexerData& ldata)
     std::cout << "\n\n";
 }
 
-int main()
+int main(int argc, char** argv)
 {
     Default::init();
+
+    if (argc > 1)
+    {
+        size_t length;
+        char* buffer;
+
+        std::ifstream fs(argv[1], std::ios::binary);
+        fs.seekg(0, std::ios::end);
+        length = fs.tellg();
+        fs.seekg(0, std::ios::beg);
+        buffer = new char[length];
+        fs.read(buffer, length);
+        fs.close();
+
+        size_t len = strlen(argv[1]);
+        char* end3 = argv[1] + len - 3;
+        char* end4 = argv[1] + len - 4;
+
+        const char* _ls = ".ls";
+        const char* _lsa = ".lsa";
+        const char* _lsc = ".lsc";
+
+        if (strcmp(end3, _ls))
+        {
+            //ls
+        }
+        else if (strcmp(end4, _lsa))
+        {
+            //lsa
+            LsCpp lscpp;
+
+            LsAsm asm(lscpp);
+        }
+        else if (strcmp(end4, _lsc))
+        {
+            LsCpp lscpp;
+
+            //lsc
+            LsFunction f;
+            for (size_t i = 0; i < length; i++)
+                f.code.push_back(buffer[i]);
+
+            LsDisasm disasm(lscpp);
+            disasm.disasm(f);
+        }
+    }
+    else
+    {
+        //interactive mode??
+    }
+
+
     //-hello -- -(-world--world1)
     //-hello- --(-world--world1)-
-    auto ldata = runLexer(Default::syntaxCore, "[f 1](1,g(2,3))");
+    //auto ldata = runLexer(Default::syntaxCore, "[f 1](1,g(2,3))");
 
-    //for (auto& k : Default::syntaxCore.keywords)
-    //{
-    //    std::cout << (int)k->value[0] << k->value << "\n";
-    //}
+    //print_ldata(*ldata);
 
-    print_ldata(*ldata);
+    //runParser(*ldata);
 
-    runParser(*ldata);
+    //print_ldata(*ldata);
 
-    print_ldata(*ldata);
+    //LsCpp lscpp;
 
-    LsCpp lscpp;
+    //LsFunction f;
+    //f.code.push_back(0);
+    //f.code.push_back(0);
+    //f.code.push_back(0);
 
-    LsFunction f;
-    f.code.push_back(0);
-    f.code.push_back(0);
-    f.code.push_back(0);
+    //f.code.push_back(1);
+    //f.code.push_back(0);
+    //f.code.push_back(0);
+    //f.code.push_back(0);
 
-    f.code.push_back(1);
-    f.code.push_back(0);
-    f.code.push_back(0);
-    f.code.push_back(0);
+    //f.code.push_back(2);
+    //f.code.push_back(1);
+    //f.code.push_back(1);
 
-    f.code.push_back(2);
-    f.code.push_back(1);
-    f.code.push_back(1);
+    //lscpp.generate(f);
 
-    lscpp.generate(f);
-
-    LsDisasm disasm(lscpp);
-    disasm.disasm(f);
+    //LsDisasm disasm(lscpp);
+    //disasm.disasm(f);
 
     //auto f1 = nmakedel(f);
     //sample s;

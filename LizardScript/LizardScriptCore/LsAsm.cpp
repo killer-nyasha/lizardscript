@@ -1,53 +1,49 @@
 #include "pch.h"
-#include <initializer_list> 
+#include "LsAsm.h"
 
-#include "LizardScriptDefault.h"
+#include <vector>
 
-namespace LizardScript
+using namespace LizardScript;
+
+SyntaxCore LsAsm::createSyntaxCore()
 {
-	namespace Default
-	{
-		SyntaxCore syntaxCore;
+	SyntaxCore core;
+	core.textChars = { '_' };
+	core.breakChars = { '(', ')', '.', ';' };
 
-		SyntaxCore createSyntaxCore()
+	set_vector<std::unique_ptr<KeywordToken>, KeywordToken*>(core.simpleKeywords,
 		{
-			SyntaxCore core;
-			core.textChars = { '_' };
-			core.breakChars = { '(', ')', '.', ';' };
+			new KeywordToken("(", KeywordTokenType::LeftBracket),
+			new KeywordToken(")", KeywordTokenType::RightBracket),
+		});
 
-			set_vector<std::unique_ptr<KeywordToken>, KeywordToken*>(core.simpleKeywords,
-			{
-				new KeywordToken("(", KeywordTokenType::LeftBracket),
-				new KeywordToken(")", KeywordTokenType::RightBracket),
-			});
+	set_vector<std::unique_ptr<OperatorToken>, OperatorToken*>(core.prefixUnary,
+		{
+			new OperatorToken("-", KeywordTokenType::PrefixUnary, 70),
+		});
 
-			set_vector<std::unique_ptr<OperatorToken>, OperatorToken*>(core.prefixUnary,
-			{
-				new OperatorToken("-", KeywordTokenType::PrefixUnary, 70),
-			});
+	set_vector<std::unique_ptr<OperatorToken>, OperatorToken*>(core.postfixUnary,
+		{
+			new OperatorToken("-", KeywordTokenType::PostfixUnary, 60),
+			new OperatorToken("--", KeywordTokenType::PostfixUnary, 60),
+		});
 
-			set_vector<std::unique_ptr<OperatorToken>, OperatorToken*>(core.postfixUnary,
-			{
-				new OperatorToken("-", KeywordTokenType::PostfixUnary, 60),
-				new OperatorToken("--", KeywordTokenType::PostfixUnary, 60),
-			});
+	set_vector<std::unique_ptr<OperatorToken>, OperatorToken*>(core.binaryOperators,
+		{
+			new OperatorToken("=", KeywordTokenType::Binary, 20, Associativity::Right),
 
-			set_vector<std::unique_ptr<OperatorToken>, OperatorToken*>(core.binaryOperators,
-			{
-				new OperatorToken("=", KeywordTokenType::Binary, 20, Associativity::Right),
+			new OperatorToken(">", KeywordTokenType::Binary, 30),
+			new OperatorToken("<", KeywordTokenType::Binary, 30),
 
-				new OperatorToken(">", KeywordTokenType::Binary, 30),
-				new OperatorToken("<", KeywordTokenType::Binary, 30),
+			new OperatorToken("+", KeywordTokenType::Binary, 50),
+			new OperatorToken("-", KeywordTokenType::Binary, 50),
+			new OperatorToken("*", KeywordTokenType::Binary, 50),
+			new OperatorToken("/", KeywordTokenType::Binary, 50),
 
-				new OperatorToken("+", KeywordTokenType::Binary, 50),
-				new OperatorToken("-", KeywordTokenType::Binary, 50),
-				new OperatorToken("*", KeywordTokenType::Binary, 50),
-				new OperatorToken("/", KeywordTokenType::Binary, 50),
+			new OperatorToken("--", KeywordTokenType::Binary, 50),
+		});
 
-				new OperatorToken("--", KeywordTokenType::Binary, 50),
-			});
-
-			//new OperatorToken(".", KeywordTokenType::Binary, 100),
+	//new OperatorToken(".", KeywordTokenType::Binary, 100),
 //	new OperatorToken(",", KeywordTokenType::Binary, 10),
 
 //	new BracketToken(_T("("), true),
@@ -85,15 +81,7 @@ namespace LizardScript
 //Keyword(_T("class"), 0, Arity::None, SpecialKeywords::Class, KeywordFlags::ParserAsNonOp),
 
 
-			core.confirmChanges();
+	core.confirmChanges();
 
-			return core;
-		}
-
-		void init()
-		{
-			syntaxCore = createSyntaxCore();
-		}
-
-	}
+	return core;
 }

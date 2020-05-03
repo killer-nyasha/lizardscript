@@ -1,21 +1,24 @@
 #pragma once
 #include "LsCpp.h"
 
-class LsDisasm
+namespace LizardScript
 {
-	LsCpp& lscpp;
+	class LsDisasm
+	{
+		LsCpp& lscpp;
 
-public:
+	public:
 
-	//base class?
-	const LsFunction* f;
-	using OFFSET_T = unsigned char;
-	size_t eip = 0;
-	OFFSET_T _r1 = 0;
-	OFFSET_T _r2 = 0;
-	StringBuilder text;
+		//base class?
+		const LsFunction* f;
+		using OFFSET_T = unsigned char;
+		size_t eip = 0;
+		OFFSET_T _r1 = 0;
+		OFFSET_T _r2 = 0;
+		StringBuilder text;
 
-	LsDisasm(LsCpp& lscpp);
+		LsDisasm(LsCpp& lscpp);
 
-	void disasm(const LsFunction& _f);
-};
+		void disasm(const LsFunction& _f);
+	};
+}

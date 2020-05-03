@@ -16,3 +16,4 @@
 
 #include "LsCpp.h"
 #include "LsDisasm.h"
+#include "LsAsm.h"

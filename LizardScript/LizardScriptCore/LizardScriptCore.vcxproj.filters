@@ -39,9 +39,6 @@
     <Filter Include="runtime">
       <UniqueIdentifier>{6fedffe2-b0d4-4dac-b47d-c61c132adecd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="asm">
-      <UniqueIdentifier>{b161d1d2-acb7-412c-91b5-e5695fc0faf9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="lscpp">
       <UniqueIdentifier>{eecad8b6-9e6d-432c-b59e-c825a174d1ff}</UniqueIdentifier>
     </Filter>
@@ -53,6 +50,9 @@
     </Filter>
     <Filter Include="lsasm">
       <UniqueIdentifier>{c19181d8-3013-4ae6-946e-121b314b28eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scripts">
+      <UniqueIdentifier>{a0fff0b6-edc2-482d-afa2-ea4bfdf35d3d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -170,6 +170,9 @@
     <ClInclude Include="OpcodesText.h">
       <Filter>runtime</Filter>
     </ClInclude>
+    <ClInclude Include="LsAsm.h">
+      <Filter>lsasm</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -208,12 +211,19 @@
     <ClCompile Include="LsDisasm.cpp">
       <Filter>lsdisasm</Filter>
     </ClCompile>
+    <ClCompile Include="LsAsm.cpp">
+      <Filter>lsasm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="new_meta.py" />
-    <None Include="opcodes_from_switch.py" />
     <None Include="RuntimeCases.i">
       <Filter>runtime</Filter>
+    </None>
+    <None Include="new_meta.py">
+      <Filter>scripts</Filter>
+    </None>
+    <None Include="opcodes_from_switch.py">
+      <Filter>scripts</Filter>
     </None>
   </ItemGroup>
 </Project>

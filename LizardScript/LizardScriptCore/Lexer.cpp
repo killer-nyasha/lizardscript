@@ -23,50 +23,6 @@ Lexer::Lexer(const SyntaxCore& c, const TCHAR* t)
 	init();
 }
 
-//bool Lexer::addFromList(LexerList ll, const std::vector<KeywordToken*>& list, KeywordToken& pseudoKw)
-//{
-//	ALIAS(data->values, values);
-//	ALIAS(data->tokens, tokens);
-//
-//	int index = pSearch::binary<KeywordToken*>(list, &pseudoKw);
-//
-//	if (index != -1)
-//	{
-//		//add keyword
-//		KeywordToken* kw = list[index];
-//
-//		if (lastKeywordType == KeywordTokenType::Simple //or None??
-//			&& BracketToken::asBracket(kw) 
-//			&& BracketToken::asBracket(kw)->type == KeywordTokenType::LeftBracket)
-//		{
-//			tokens->push_back(reinterpret_cast<void*>(&callKw));
-//		}
-//
-//
-//		tokens->push_back(reinterpret_cast<void*>(kw));
-//		values->resize(lastValueIndex);
-//		lastKeywordType = kw->type;
-//		return true;
-//	}
-//	else
-//	{
-//		//add non-keyword
-//
-//#ifdef _DEBUG
-//		if (lastValueIndex >= data->minReserved() && lastValueIndex < data->maxReserved())
-//		{ }
-//		else throw Exception("too many tokens");
-//#endif	
-//
-//		tokens->push_back(reinterpret_cast<void*>(lastValueIndex));
-//		lastValueIndex = values->size();
-//
-//		lastKeywordType = KeywordTokenType::Simple;
-//
-//		return false;
-//	}
-//}
-
 void Lexer::newToken()
 {
 	ALIAS(data->values, values);

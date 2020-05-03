@@ -4,6 +4,8 @@
 
 #include <iostream>
 
+using namespace LizardScript;
+
 #define RUNTIME_REGISTER(type, i) reinterpret_cast<type*>(&stack[esp + i])
 #define RUNTIME_CODEGET(type) *(type*)(&f->code[(eip += sizeof(type)) - sizeof(type)])
 #define LSCPP_RUNTIME_CODEGET(type) *(type*)(&lscpp.f->code[(lscpp.eip += sizeof(type)) - sizeof(type)])

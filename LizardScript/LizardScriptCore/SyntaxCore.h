@@ -55,4 +55,11 @@ namespace LizardScript
 		//!you have to call this function after any changes in this SyntaxCore before using it in compiler
 		void confirmChanges();
 	};
+
+	template <typename T, typename F>
+	inline void set_vector(std::vector<T>& vector, std::initializer_list<F> f)
+	{
+		for (auto& a : f)
+			vector.push_back(T(a));
+	}
 }
