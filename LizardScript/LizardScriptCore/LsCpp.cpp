@@ -18,6 +18,18 @@ void append(LsCpp& lscpp, LsCppSpec* spec)
 	spec->append(lscpp);
 }
 
+
+void _inc_codeget_size(AbstractLsCppOpcode* opcode, const char* data)
+{
+	
+}
+
+void _inc_codeget_size(AbstractLsCppOpcode* opcode, LsCppSpec* spec)
+{
+	if (dynamic_cast<LsCpp::LsCppSpecCodeget*>(spec))
+		opcode->codeget_size += dynamic_cast<LsCpp::LsCppSpecCodeget*>(spec)->size;
+}
+
 template <typename... T>
 struct LsCppOpcodeT : public AbstractLsCppOpcode
 {
@@ -35,14 +47,20 @@ struct LsCppOpcodeT : public AbstractLsCppOpcode
 		char c[] = { (append(lscpp, std::get<S>(data)), '0')... };
 	}
 
-	void vforeach(LsCpp& lscpp)
+	virtual void print(LsCpp& lscpp) override
 	{
 		_vforeach(lscpp, std::make_index_sequence<sizeof...(T)>());
 	}
 
-	virtual void print(LsCpp& lscpp) override
+	template <size_t... S>
+	void _vforeach2(std::index_sequence<S...> s)
 	{
-		vforeach(lscpp);
+		char c[] = { (_inc_codeget_size(this, std::get<S>(data)), '0')... };
+	}
+
+	virtual void inc_codeget_size() override
+	{
+		_vforeach2(std::make_index_sequence<sizeof...(T)>());
 	}
 };
 
@@ -63,6 +81,7 @@ LsCpp::LsCpp()
 	for (auto* op : opcodes)
 	{
 		opcodes_table[op->opcode] = op;
+		op->inc_codeget_size();
 	}
 }
 

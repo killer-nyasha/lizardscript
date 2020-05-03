@@ -15,8 +15,7 @@ public:
 	OFFSET_T _r2 = 0;
 	StringBuilder text;
 
-	LsDisasm(LsCpp& lscpp) : lscpp(lscpp)
-	{ }
+	LsDisasm(LsCpp& lscpp);
 
 	void disasm(const LsFunction& _f);
 };

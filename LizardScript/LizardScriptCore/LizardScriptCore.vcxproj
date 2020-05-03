@@ -182,7 +182,7 @@
     <ClInclude Include="metagen_def.h" />
     <ClInclude Include="NonTypedStack.h" />
     <ClInclude Include="Opcodes.hxx" />
-    <ClInclude Include="OpcodesText.cxx" />
+    <ClCompile Include="OpcodesText.cxx" />
     <ClInclude Include="OpcodesText.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="pch.h" />

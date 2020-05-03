@@ -2,7 +2,7 @@
 #include <map>
 
 extern std::map<const char*, int> textToOpcode;
-extern const char* opcodeToText[256];
+extern const char* opcodeToText[];
 
 inline void fillOpcodeToText()
 {

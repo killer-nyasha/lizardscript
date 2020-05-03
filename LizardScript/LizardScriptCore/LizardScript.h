@@ -15,3 +15,4 @@
 #include "LizardScriptDefault.h"
 
 #include "LsCpp.h"
+#include "LsDisasm.h"

@@ -8,6 +8,8 @@ struct AbstractLsCppOpcode
 {
 	LsCode opcode;
 	virtual void print(LsCpp& lscpp) = 0;
+	size_t codeget_size = 0;	
+	virtual void inc_codeget_size() = 0;
 };
 
 struct LsCppSpec
