@@ -12,7 +12,7 @@ outFilePath = 'LsCpp.hxx'
 # через | можно добавить новые ключевые слова
 # (если речь идет о простых словах без параметров, вроде rnfirst/rnsecond)
 simpleLsCppObjects = r'r1|r2'
-complexLsCppObjects = r'CODEGET\([^{};=+\-*\/]*\)|REGISTER\([^{};=+\-*\/]*\)'
+complexLsCppObjects = r'CODEGET([^{};]*)|REGISTER([^{};]*)'
 
 # скомпилированные регулярки (для улучшения производительности)
 regLsCppObjects = regex.compile(simpleLsCppObjects+r'|'+complexLsCppObjects)
@@ -40,7 +40,7 @@ def shielding(string,caseBlockPos):
 def replaceSimpleLsCppObjects(string):
     objects = simpleLsCppObjects.split(r'|')
     for o in objects:
-        string = regex.sub(o,'this->'+o+r'()',string)
+        string = regex.sub(o,''+o+r'()',string) #пусть на всякий случай будет место, чтоб добавить пространство имён
     return string
 
 # меняем сложные LsCppObjects, например:
@@ -49,7 +49,7 @@ def replaceComplexLsCppObjects(string):
     objects = complexLsCppObjects.split(r'|')
     for o in objects:
         for match in regex.finditer(o, string):
-            string = string.replace(match.group(0),'this->'+match.group(0))
+            string = string.replace(match.group(0),''+match.group(0)) #пусть на всякий случай будет место, чтоб добавить пространство имён
     return string
 
 # меняем ^^ на кавычки (так обозначаются кавычки, которые не нужно экранировать)
@@ -85,8 +85,8 @@ def writeOpcodeName(string,position,res):
 # функция для форматирования строки (экранирование кавычек,
 # добавления пространств имен у LsCppObjects и т.д.
 def stringFormatting(string,caseBlockPos):
-    string = replaceSimpleLsCppObjects(string) 
-    #string = replaceComplexLsCppObjects(string)
+    string = replaceSimpleLsCppObjects(string)
+    string = replaceComplexLsCppObjects(string)
     string = shielding(string,caseBlockPos)
     string = replaceQuotes(string)
     return string
@@ -122,11 +122,11 @@ def genCode(string, position):
     res,position = writeOpcodeName(string,position,res)
     position += string[position:].find('{') + 1
     if position == 0: raise Exception('input string error, can\'t find \'{\' symbol in case command')
-    res+=',^^{'
+    res+=', {^^{'
     # здесь начинается блок case, кавычки должны экранироваться
     caseBlockPos = len(res)
     res = writeCaseBlock(string,position,res,lsObjectsPositions)
-    res += '}^^)\n'
+    res += '}^^})\n'
     return stringFormatting(res,caseBlockPos)
 
 # main

@@ -56,8 +56,8 @@ LsCpp::LsCpp()
 {
 	opcodes =
 	{
-		//LsCppOpcode(LsAsm::add_int, "{ *",REGISTER(int, this->r1())," = *",REGISTER(int, this->r1())," + *",REGISTER(int, this->r2()),"; break; }")
-		#include "LsCpp.hxx"
+		LsCppOpcode(LsAsm::add_int, "{ *",REGISTER(int, this->r1())," = *",REGISTER(int, this->r1())," + *",REGISTER(int, this->r2()),"; break; }")
+		//#include "LsCpp.hxx"
 	};
 
 	for (auto* op : opcodes)
