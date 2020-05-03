@@ -13,3 +13,5 @@
 #include "i_parser.h"
 #include "stringptr.h"
 #include "LizardScriptDefault.h"
+
+#include "LsCpp.h"

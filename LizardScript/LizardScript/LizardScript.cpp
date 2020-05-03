@@ -53,6 +53,16 @@ int main()
 
     print_ldata(*ldata);
 
+    LsCpp lscpp;
+
+    LsFunction f;
+    f.code.push_back(0);
+    f.code.push_back(1);
+    f.code.push_back(2);
+    f.code.push_back(3);
+
+    lscpp.generate(f);
+
     //auto f1 = nmakedel(f);
     //sample s;
     //auto f2 = nmakedel(&s, &sample::f);
