@@ -42,3 +42,9 @@ CASE_ST_OPERATOR3(T, /, div)\
 
 #define CASE_CAST(T1, T2)\
 case LsAsm::cast_##T1##_##T2: { OPCODE_CAST(T1, T2); break; } 
+
+#define OPCODE_PUSH(T)\
+*REGISTER(T, r1) = CODEGET(T)
+
+#define CASE_PUSH(T)\
+case LsAsm::push_##T: { OPCODE_PUSH(T); break; }

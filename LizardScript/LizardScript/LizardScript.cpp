@@ -56,9 +56,15 @@ int main()
     LsCpp lscpp;
 
     LsFunction f;
+    f.code.push_back(0);
+    f.code.push_back(0);
+    f.code.push_back(0);
+
     f.code.push_back(1);
     f.code.push_back(0);
     f.code.push_back(0);
+    f.code.push_back(0);
+
     f.code.push_back(2);
     f.code.push_back(1);
     f.code.push_back(1);

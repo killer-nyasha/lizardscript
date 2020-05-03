@@ -23,11 +23,24 @@ void LsDisasm::disasm(const LsFunction& _f)
 		_r1 = RUNTIME_CODEGET(OFFSET_T);
 		_r2 = RUNTIME_CODEGET(OFFSET_T);
 
-		text << opcodeToText[code] << "\t";
+		text << opcodeToText[code];
+
+		size_t length = strlen(opcodeToText[code]);
+		for (size_t i = 0; i < 12 - length; i++)
+			text << " ";
+
 		text << "[" << _r1 << "], [" << _r2 << "]";
 
 		size_t cgs = lscpp.opcodes_table[code]->codeget_size;
-		eip += cgs;
+		//eip += cgs;
+
+		if (cgs != 0)
+		{
+			//text << " ";
+			for (size_t i = 0; i < cgs; i++)
+				text << ", " << RUNTIME_CODEGET(unsigned char);
+		}
+
 		//пока нет вывода результатов CODEGET
 		//а ещё ведь могут быть строки
 
