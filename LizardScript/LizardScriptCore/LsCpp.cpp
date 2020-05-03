@@ -5,8 +5,8 @@
 #include "LsCpp.h"
 #include "Opcodes.hxx"
 
-#define REGISTER(T, i) _register<T>(i)
-#define CODEGET(T) _codeget<T>()
+#define REGISTER(T, i) new LsCppSpecRegister(#T, i)
+#define CODEGET(T) new LsCppSpecCodeget(#T, sizeof(T))
 
 void append(LsCpp& lscpp, const char* data)
 {
@@ -27,21 +27,7 @@ struct LsCppOpcodeT : public AbstractLsCppOpcode
 	{
 		this->opcode = opcode;
 		data = std::make_tuple(args...);
-		//FORVARIADIC(std::cout << data);
 	}
-
-	//template <size_t i>
-	//void _append()
-	//{
-	//	append(lscpp, std::get<i>(data));
-	//}
-
-	//template <size_t i>
-	//void append(std::integer_sequence<i> seq, LsCpp& lscpp)
-	//{
-	//	FORVARIADIC(_append<i>());
-	//}
-	//
 
 	template <size_t... S>
 	void _vforeach(LsCpp& lscpp, std::index_sequence<S...> s)
@@ -70,17 +56,45 @@ LsCpp::LsCpp()
 {
 	opcodes =
 	{
-		LsCppOpcode(LsAsm::add_int, "{ *",this->REGISTER(int, this->r1())," = *",REGISTER(int, this->r1())," + *",REGISTER(int, this->r2()),"; break; }")
+		LsCppOpcode(LsAsm::add_int, "{ *",REGISTER(int, this->r1())," = *",REGISTER(int, this->r1())," + *",REGISTER(int, this->r2()),"; break; }")
 		//#include "LsCpp.hxx"
 	};
-}
 
-void LsCpp::generate(const LsFunction& f)
-{
 	for (auto* op : opcodes)
 	{
-		op->print(*this);
+		opcodes_table[op->opcode] = op;
+	}
+}
+
+#define RUNTIME_REGISTER(type, i) reinterpret_cast<type*>(&stack[esp + i])
+#define RUNTIME_CODEGET(type) *(type*)(&f->code[(eip += sizeof(type)) - sizeof(type)])
+#define LSCPP_RUNTIME_CODEGET(type) *(type*)(&lscpp.f->code[(lscpp.eip += sizeof(type)) - sizeof(type)])
+
+void LsCpp::LsCppSpecCodeget::append(LsCpp& lscpp)
+{
+	lscpp.text << "FROM_BINARY(";
+
+	for (size_t i = 0; i < size; i++)
+	{
+		if (i != 0)
+			lscpp.text << ", ";
+		lscpp.text << LSCPP_RUNTIME_CODEGET(unsigned char);
 	}
 
-	std::cout << text.data;
+	lscpp.text << ")";
+}
+
+void LsCpp::generate(const LsFunction& _f)
+{
+	f = &_f;
+
+	while (true)
+	{
+		LsCode code = RUNTIME_CODEGET(LsCode);
+		_r1 = RUNTIME_CODEGET(OFFSET_T);
+		_r2 = RUNTIME_CODEGET(OFFSET_T);
+
+		opcodes_table[code]->print(*this);
+	}
+
 }

@@ -40,7 +40,7 @@ def shielding(string,caseBlockPos):
 def replaceSimpleLsCppObjects(string):
     objects = simpleLsCppObjects.split(r'|')
     for o in objects:
-        string = regex.sub(o,'this->'+o+r'()',string)
+        string = regex.sub(o,''+o+r'()',string) #пусть на всякий случай будет место, чтоб добавить пространство имён
     return string
 
 # меняем сложные LsCppObjects, например:
@@ -49,7 +49,7 @@ def replaceComplexLsCppObjects(string):
     objects = complexLsCppObjects.split(r'|')
     for o in objects:
         for match in regex.finditer(o, string):
-            string = string.replace(match.group(0),'this->'+match.group(0))
+            string = string.replace(match.group(0),''+match.group(0)) #пусть на всякий случай будет место, чтоб добавить пространство имён
     return string
 
 # меняем ^^ на кавычки (так обозначаются кавычки, которые не нужно экранировать)

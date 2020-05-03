@@ -20,8 +20,16 @@ class LsCpp
 private:
 
 	std::vector<AbstractLsCppOpcode*> opcodes;
+	AbstractLsCppOpcode* opcodes_table[256];
+
+	using OFFSET_T = unsigned char;
+	size_t eip = 0;
+	OFFSET_T _r1 = 0;
+	OFFSET_T _r2 = 0;
 
 public:
+
+	const LsFunction* f;
 
 	StringBuilder text;
 
@@ -31,7 +39,7 @@ public:
 	{
 		virtual void append(LsCpp& lscpp) override
 		{
-			lscpp.text << "1";
+			lscpp.text << lscpp._r1;
 		}
 	};
 
@@ -39,45 +47,43 @@ public:
 	{
 		virtual void append(LsCpp& lscpp) override
 		{
-			lscpp.text << "1";
+			lscpp.text << lscpp._r2;
 		}
 	};
 
 	struct LsCppSpecRegister : public LsCppSpec
 	{
-		LsCppSpecRegister(LsCppSpec* rnum)
+		LsCppSpec* rnum;
+		const char* type;
+
+		LsCppSpecRegister(const char* type, LsCppSpec* rnum) : type(type), rnum(rnum)
 		{
 
 		}
 
 		virtual void append(LsCpp& lscpp) override
 		{
-			lscpp.text << "r";
+			lscpp.text << "REGISTER(" << type << ", ";
+			rnum->append(lscpp); 
+			lscpp.text << ")";
 		}
 	};
 
 	struct LsCppSpecCodeget : public LsCppSpec
 	{
-		virtual void append(LsCpp& lscpp) override
+		const char* type;
+		size_t size;
+
+		LsCppSpecCodeget(const char* type, size_t size) : type(type), size(size)
 		{
-			lscpp.text << "c";
+
 		}
+
+		virtual void append(LsCpp& lscpp) override;
 	};
 
 	LsCppSpec* r1() { return new LsCppSpecR1(); }
 	LsCppSpec* r2() { return new LsCppSpecR2(); }
 
 	LsCpp();
-
-	template <typename T>
-	LsCppSpec* _register(LsCppSpec* rnum) 
-	{
-		return new LsCppSpecRegister(rnum);
-	}
-
-	template <typename T>
-	LsCppSpec* _codeget()
-	{
-		return new LsCppSpecCodeget();
-	}
 };
