@@ -88,13 +88,16 @@ void LsCpp::generate(const LsFunction& _f)
 {
 	f = &_f;
 
-	while (true)
+	while (eip < f->code.size())
 	{
 		LsCode code = RUNTIME_CODEGET(LsCode);
 		_r1 = RUNTIME_CODEGET(OFFSET_T);
 		_r2 = RUNTIME_CODEGET(OFFSET_T);
 
 		opcodes_table[code]->print(*this);
+		text << "\n";
 	}
+
+	std::cout << text.data;
 
 }

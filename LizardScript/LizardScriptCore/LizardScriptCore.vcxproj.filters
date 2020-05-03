@@ -48,6 +48,9 @@
     <Filter Include="function">
       <UniqueIdentifier>{516a726d-de14-43ad-b6b5-5e1755525c57}</UniqueIdentifier>
     </Filter>
+    <Filter Include="lsdisasm">
+      <UniqueIdentifier>{0d5ee66e-e72b-4d61-af52-cc4e85b847d3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LizardScript.h">
@@ -158,6 +161,12 @@
     <ClInclude Include="LsFunction.h">
       <Filter>function</Filter>
     </ClInclude>
+    <ClInclude Include="LsDisasm.h">
+      <Filter>lsdisasm</Filter>
+    </ClInclude>
+    <ClInclude Include="OpcodesText.h">
+      <Filter>runtime</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -192,6 +201,9 @@
     </ClCompile>
     <ClCompile Include="LsCpp.cpp">
       <Filter>lscpp</Filter>
+    </ClCompile>
+    <ClCompile Include="LsDisasm.cpp">
+      <Filter>lsdisasm</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

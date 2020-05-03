@@ -6,7 +6,7 @@ output_file2_name = 'OpcodesText.cxx'
 
 namespace_name = 'LsAsm'
 enum_name = 'Opcodes'
-map_name = 'map_name'
+map_name = 'textToOpcode'
 
 find_opcodes_name = regex.compile(r'(?<=case ([\w]+::)?\s*)[^{};:]+\b(?!\s*::\s*)')
 regUnnecessaryPatterns = regex.compile(r'/\*.*?\*/|#define.*?\n|//.*?\n|#include.*?\n|#line.*?\n|#pragma.*?\n'
@@ -32,7 +32,7 @@ out_file1 = open(output_file1_name,'w')
 out_file2 = open(output_file2_name,'w')
 
 out_file1.write('namespace '+ namespace_name + '\n{\nenum ' + enum_name + '\n{\n')
-out_file2.write('#include "pch.h"\n#include <map>\n#include "Opcodes.hxx"\nusing namespace LsAsm;\nstd::map<const char*, int> '+ map_name +'\n{\n')
+out_file2.write('#include "pch.h"\n#include "OpcodesText.h"\n#include "Opcodes.hxx"\nusing namespace LsAsm;\nconst char* opcodeToText[256];\nstd::map<const char*, int> '+ map_name +'\n{\n')
 
 string = ''.join([deleteUnnecessaryPatterns(line) for line in in_file])
 

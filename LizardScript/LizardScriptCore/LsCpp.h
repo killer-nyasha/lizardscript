@@ -20,17 +20,17 @@ class LsCpp
 private:
 
 	std::vector<AbstractLsCppOpcode*> opcodes;
-	AbstractLsCppOpcode* opcodes_table[256];
 
+public:
+
+	AbstractLsCppOpcode* opcodes_table[256];
+	
+	//base class?
+	const LsFunction* f;
 	using OFFSET_T = unsigned char;
 	size_t eip = 0;
 	OFFSET_T _r1 = 0;
 	OFFSET_T _r2 = 0;
-
-public:
-
-	const LsFunction* f;
-
 	StringBuilder text;
 
 	void generate(const LsFunction& f);
