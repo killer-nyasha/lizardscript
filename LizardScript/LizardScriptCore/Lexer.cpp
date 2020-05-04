@@ -17,10 +17,14 @@ void Lexer::init()
 	data->tokens->resize(0);
 }
 
-Lexer::Lexer(const SyntaxCore& c, const TCHAR* t)
+Lexer::Lexer(const SyntaxCore& c, const TCHAR* t, size_t length)
 	: core(c), text(t)
 {
 	init();
+
+	if (length != 0)
+		textLength = length;
+	else textLength = _tcslen(text);
 }
 
 void Lexer::newToken()
@@ -185,7 +189,7 @@ PoolPointer<LexerData> Lexer::run()
 	ALIAS(data->values, values);
 	ALIAS(data->tokens, tokens);
 
-	/*size_t*/ textLength = _tcslen(text);
+	/*size_t*/ 
 	size_t i = 0;
 	while (i < textLength)
 	{

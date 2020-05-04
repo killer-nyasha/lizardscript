@@ -4,8 +4,8 @@
 
 namespace LizardScript
 {
-	PoolPointer<LexerData> runLexer(const SyntaxCore& core, const TCHAR* text)
+	PoolPointer<LexerData> runLexer(const SyntaxCore& core, const TCHAR* text, size_t length)
 	{			
-		return std::move(Lexer(core, text).run()); 
+		return std::move(Lexer(core, text, length).run()); 
 	}
 }

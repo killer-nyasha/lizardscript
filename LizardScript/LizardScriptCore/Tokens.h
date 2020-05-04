@@ -78,48 +78,6 @@ namespace LizardScript
 		}
 	}
 
-	//!"list A" - token types which we can meet right after a binary operator.
-	//!"list B" - token types which we can meet right after some value.
-	//enum class LexerList
-	//{
-	//	A,
-	//	B,
-	//};
-	
-	////!"list A" - token types which we can meet right after a binary operator.
-	////!\returns is this type a part of "list A"
-	//inline bool kwtype_listA(KeywordTokenType type)
-	//{
-	//	return type == KeywordTokenType::Simple
-	//		|| type == KeywordTokenType::Unary
-	//		|| type == KeywordTokenType::LeftBracket;
-	//}
-
-	////!"list B" - token types which we can meet right after a unary operator (or simple value??).
-	////!\returns is this type a part of "list B"
-	//inline bool kwtype_listB(KeywordTokenType type)
-	//{
-	//	return type == KeywordTokenType::Binary
-	//		|| type == KeywordTokenType::LeftBracket
-	//		|| type == KeywordTokenType::RightBracket;
-	//}
-
-	////!\returns is after this type can be a type from "list A"
-	//inline bool kwtype_before_listA(KeywordTokenType type)
-	//{
-	//	return type == KeywordTokenType::Unary
-	//		|| type == KeywordTokenType::Binary
-	//		|| type == KeywordTokenType::LeftBracket;
-	//}
-
-	////!\returns is after this type can be a type from "list B"
-	//inline bool kwtype_before_listB(KeywordTokenType type)
-	//{
-	//	return type == KeywordTokenType::Simple
-	//		|| type == KeywordTokenType::Unary
-	//		|| type == KeywordTokenType::RightBracket;
-	//}
-
 	//!Base class for any token
 	//\warning children can be converted to KeywordToken by reinterpret_cast
 	//!\warning field signature must be first (offset 0). you mustn't change the signature, otherwise parser won't interpret object as a KeywordToken
@@ -135,6 +93,8 @@ namespace LizardScript
 
 		KeywordTokenType type = KeywordTokenType::Simple;
 		ParserFlags parserFlags = ParserFlags::None;
+
+		void* customData = nullptr;
 
 		KeywordToken(const TCHAR* cvalue)
 		{
@@ -217,26 +177,6 @@ namespace LizardScript
 				type == KeywordTokenType::Binary;
 		}
 	};
-
-	//!Token of bracket. Any keyword which has KeywordTokenType::LeftBracket or KeywordTokenType::RightBracket must be derived from this class.
-	//class BracketToken : public KeywordToken
-	//{
-	//public:
-	//	BracketToken(const TCHAR* cvalue, bool isLeft) : KeywordToken(cvalue)
-	//	{
-	//		type = isLeft ? KeywordTokenType::LeftBracket : KeywordTokenType::RightBracket;
-	//	}
-
-	//	static BracketToken* asBracket(KeywordToken* kw)
-	//	{
-	//		return reinterpret_cast<BracketToken*>(kw);
-	//	}
-
-	//	static const BracketToken* asBracket(const KeywordToken* kw)
-	//	{
-	//		return reinterpret_cast<const BracketToken*>(kw);
-	//	}
-	//};
 
 	//!Token of operator. Any keyword which has KeywordTokenType::Unary or KeywordTokenType::Binary must be derived from this class.
 	class OperatorToken : public KeywordToken

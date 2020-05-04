@@ -32,13 +32,13 @@ out_file1 = open(output_file1_name,'w')
 out_file2 = open(output_file2_name,'w')
 
 out_file1.write('namespace '+ namespace_name + '\n{\nenum ' + enum_name + '\n{\n')
-out_file2.write('#include "pch.h"\n#include "OpcodesText.h"\n#include "Opcodes.hxx"\nusing namespace LsAsm;\nconst char* opcodeToText[256];\nstd::map<const char*, int> '+ map_name +'\n{\n')
+out_file2.write('#include "pch.h"\n#include "OpcodesText.h"\n#include "Opcodes.hxx"\nusing namespace LsAsm;\nconst char* opcodeToText[256];\nbool opcodes_initialized = false;\nstd::map<const char*, int, cmp_str> '+ map_name +'\n{\n')
 
 string = ''.join([deleteUnnecessaryPatterns(line) for line in in_file])
 
 for match in regex.finditer(find_opcodes_name, string):
     write_enum(out_file1, match[0].rstrip())
-    write_in_map(out_file2,match[0].rstrip())
+    write_in_map(out_file2, match[0].rstrip())
 
 out_file2.write('};\n')
 out_file1.write('};\n}\n')

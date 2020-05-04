@@ -45,12 +45,15 @@ int main(int argc, char** argv)
         size_t length;
         char* buffer;
 
-        std::ifstream fs(argv[1], std::ios::binary);
+        std::ifstream fs(argv[1]/*, std::ios::binary*/);
         fs.seekg(0, std::ios::end);
         length = fs.tellg();
         fs.seekg(0, std::ios::beg);
-        buffer = new char[length];
+
+        buffer = new char[length];//0-terminator
         fs.read(buffer, length);
+        //length++;//
+        //buffer[length] = 0;//
         fs.close();
 
         size_t len = strlen(argv[1]);
@@ -61,18 +64,37 @@ int main(int argc, char** argv)
         const char* _lsa = ".lsa";
         const char* _lsc = ".lsc";
 
-        if (strcmp(end3, _ls))
+        if (strcmp(end3, _ls) == 0)
         {
             //ls
+
+            std::cout << "not implemented\n";
+            system("pause");
         }
-        else if (strcmp(end4, _lsa))
+        else if (strcmp(end4, _lsa) == 0)
         {
             //lsa
             LsCpp lscpp;
 
-            LsAsm asm(lscpp);
+            LsAsm lsasm;
+            LsFunction f = lsasm.assemble(buffer, length);
+
+            Runtime r;
+            r.run(f);
+
+            char* out_name = new char[len];
+            strcpy(out_name, argv[1]);
+            out_name[len - 1] = 'c';
+
+            std::ofstream out(out_name, std::ios::binary);
+
+            out.write((const char*)&f.code[0], f.code.size());
+
+            out.close();
+
+            system("pause");
         }
-        else if (strcmp(end4, _lsc))
+        else if (strcmp(end4, _lsc) == 0)
         {
             LsCpp lscpp;
 
@@ -83,6 +105,11 @@ int main(int argc, char** argv)
 
             LsDisasm disasm(lscpp);
             disasm.disasm(f);
+
+            Runtime r;
+            r.run(f);
+
+            system("pause");
         }
     }
     else

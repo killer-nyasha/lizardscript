@@ -1,7 +1,10 @@
 #include "pch.h"
+#include <iostream>
+
 #include "Runtime.h"
 #include "LsTypedefs.h"
 #include "RuntimeMacros.h"
+#include "Exception.h"
 
 #include "Opcodes.hxx"
 
@@ -38,6 +41,12 @@ void Runtime::run(const LsFunction& f)
 		switch (code)
 		{
 #include "RuntimeCases.i"
+
+		default:
+			throw Exception();
 		}
 	}
+
+end:;
+
 }

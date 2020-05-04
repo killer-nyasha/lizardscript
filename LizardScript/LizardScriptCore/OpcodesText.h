@@ -1,13 +1,24 @@
 #pragma once
 #include <map>
 
-extern std::map<const char*, int> textToOpcode;
+struct cmp_str
+{
+	bool operator()(char const* a, char const* b) const
+	{
+		return std::strcmp(a, b) < 0;
+	}
+};
+
+extern std::map<const char*, int, cmp_str> textToOpcode;
 extern const char* opcodeToText[];
+extern bool opcodes_initialized;
 
 inline void fillOpcodeToText()
 {
-	for (auto& pair : textToOpcode)
+	if (!opcodes_initialized)
 	{
-		opcodeToText[pair.second] = pair.first;
+		opcodes_initialized = true;
+		for (auto& pair : textToOpcode)
+			opcodeToText[pair.second] = pair.first;
 	}
 }

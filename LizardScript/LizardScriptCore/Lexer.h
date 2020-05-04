@@ -87,7 +87,7 @@ namespace LizardScript
 
 	public:
 
-		Lexer(const SyntaxCore& c, const TCHAR* t);
+		Lexer(const SyntaxCore& c, const TCHAR* t, size_t length = 0);
 
 		PoolPointer<LexerData> run();
 

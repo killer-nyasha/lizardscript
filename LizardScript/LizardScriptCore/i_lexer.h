@@ -81,5 +81,5 @@ namespace LizardScript
 	//!\returns pointer to LexerData object. you have to free it manually
 	//!\param[in] core SyntaxCore
 	//!\param[in] text Source code on LizardScript
-	PoolPointer<LexerData> runLexer(const SyntaxCore& core, const TCHAR* text);
+	PoolPointer<LexerData> runLexer(const SyntaxCore& core, const TCHAR* text, size_t length = 0);
 }

@@ -48,3 +48,6 @@ case LsAsm::cast_##T1##_##T2: { OPCODE_CAST(T1, T2); break; }
 
 #define CASE_PUSH(T)\
 case LsAsm::push_##T: { OPCODE_PUSH(T); break; }
+
+#define CASE_CUSTOM(name, ...)\
+case LsAsm::name: { __VA_ARGS__; break; };

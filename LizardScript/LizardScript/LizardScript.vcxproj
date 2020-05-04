@@ -163,6 +163,11 @@
   <ItemGroup>
     <Image Include="..\..\..\..\Users\issst\Documents\10.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="test.ls" />
+    <None Include="test.lsa" />
+    <None Include="test.lsc" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
