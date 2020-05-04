@@ -83,6 +83,8 @@ LsFunction LsAsm::assemble(const TCHAR* text, size_t length)
 				{
 					f.code.push_back(textToOpcode[kwtoken->value]);
 				}
+				else throw Exception("unknown instruction ", kwtoken->value);
+
 				//std::cout << kwtoken->value << std::endl;
 			}
 		}

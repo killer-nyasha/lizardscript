@@ -38,7 +38,7 @@ CASE_ST_OPERATOR3(T, *, mul)\
 CASE_ST_OPERATOR3(T, /, div)\
 
 #define OPCODE_CAST(T1, T2)\
-*REGISTER(T1, r1) = *REGISTER(T1, r1)
+*REGISTER(T2, r1) = *REGISTER(T1, r1)
 
 #define CASE_CAST(T1, T2)\
 case LsAsm::cast_##T1##_##T2: { OPCODE_CAST(T1, T2); break; } 
