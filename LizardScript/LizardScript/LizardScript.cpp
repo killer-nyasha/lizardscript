@@ -45,15 +45,14 @@ int main(int argc, char** argv)
         size_t length;
         char* buffer;
 
+        //где-то нужно читать бинарный файл, а где-то текстовый
         std::ifstream fs(argv[1]/*, std::ios::binary*/);
         fs.seekg(0, std::ios::end);
         length = fs.tellg();
         fs.seekg(0, std::ios::beg);
 
-        buffer = new char[length];//0-terminator
+        buffer = new char[length];
         fs.read(buffer, length);
-        //length++;//
-        //buffer[length] = 0;//
         fs.close();
 
         size_t len = strlen(argv[1]);
@@ -129,22 +128,6 @@ int main(int argc, char** argv)
     //print_ldata(*ldata);
 
     //LsCpp lscpp;
-
-    //LsFunction f;
-    //f.code.push_back(0);
-    //f.code.push_back(0);
-    //f.code.push_back(0);
-
-    //f.code.push_back(1);
-    //f.code.push_back(0);
-    //f.code.push_back(0);
-    //f.code.push_back(0);
-
-    //f.code.push_back(2);
-    //f.code.push_back(1);
-    //f.code.push_back(1);
-
-    //lscpp.generate(f);
 
     //LsDisasm disasm(lscpp);
     //disasm.disasm(f);

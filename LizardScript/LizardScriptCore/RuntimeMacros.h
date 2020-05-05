@@ -6,7 +6,7 @@
 
 			//int = int / float;
 #define OPCODE_OPERATOR3(T1, T2, TR, OPERATOR)\
-*REGISTER(TR, r1) = *REGISTER(T1, r1) OPERATOR *REGISTER(T1, r2)
+*REGISTER(TR, r1) = *REGISTER(T1, r1) OPERATOR *REGISTER(T2, r2)
 
 			//int += int;
 #define OPCODE_ST_OPERATOR2(T, OPERATOR)\
@@ -38,7 +38,7 @@ CASE_ST_OPERATOR3(T, *, mul)\
 CASE_ST_OPERATOR3(T, /, div)\
 
 #define OPCODE_CAST(T1, T2)\
-*REGISTER(T2, r1) = *REGISTER(T1, r1)
+*REGISTER(T1, r1) = *REGISTER(T2, r2)
 
 #define CASE_CAST(T1, T2)\
 case LsAsm::cast_##T1##_##T2: { OPCODE_CAST(T1, T2); break; } 

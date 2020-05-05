@@ -1,7 +1,7 @@
 #include "pch.h"
 #include <vector>
 #include <memory>
-#include <cstdlib>
+#include <stdlib.h>
 #include <iostream>
 
 #include "LsAsm.h"
@@ -26,6 +26,10 @@ SyntaxCore LsAsm::createSyntaxCore()
 	core.simpleKeywords.push_back(std::unique_ptr<KeywordToken>(new KeywordToken(",", KeywordTokenType::Binary)));
 	core.simpleKeywords.push_back(std::unique_ptr<KeywordToken>(new KeywordToken("[", KeywordTokenType::PrefixUnary)));
 	core.simpleKeywords.push_back(std::unique_ptr<KeywordToken>(new KeywordToken("]", KeywordTokenType::PostfixUnary)));
+
+	auto* kw1 = new KeywordToken("label", KeywordTokenType::Simple);
+	kw1->customData = (void*)2;
+	core.simpleKeywords.push_back(std::unique_ptr<KeywordToken>(kw1));
 
 	//set_vector<std::unique_ptr<KeywordToken>, KeywordToken*>(core.simpleKeywords,
 	//	{
@@ -68,6 +72,8 @@ LsFunction LsAsm::assemble(const TCHAR* text, size_t length)
 {
 	LsFunction f;
 
+	std::map<TCHAR*, size_t, cmp_str> labels;
+
 	auto _lexerData = runLexer(core, text, length);
 	auto& lexerData = *_lexerData;
 
@@ -77,7 +83,7 @@ LsFunction LsAsm::assemble(const TCHAR* text, size_t length)
 
 		if (lexerData.tryGetKeyword(i, kwtoken))
 		{
-			if (kwtoken->customData != 0)
+			if (kwtoken->customData == (void*)1)
 			{
 				if (textToOpcode.find(kwtoken->value) != textToOpcode.end())
 				{
@@ -87,15 +93,43 @@ LsFunction LsAsm::assemble(const TCHAR* text, size_t length)
 
 				//std::cout << kwtoken->value << std::endl;
 			}
+			else if (kwtoken->customData == (void*)2)
+			{
+				if (kwtoken->value[0] == 'l')
+				{
+					TCHAR* t; size_t tIndex;
+
+					i++;
+
+					if (lexerData.tryGetValue(i, t, &tIndex))
+						labels.insert(std::make_pair(t, f.code.size()));
+					else throw Exception();
+				}
+			}
 		}
 		else
 		{
 			TCHAR* t; size_t tIndex;
 			if (lexerData.tryGetValue(i, t, &tIndex))
 			{
-				int value = std::atoi(t);
-				f.code.push_back(value);
+				if (labels.find(t) != labels.end())
+				{
+					int s = labels[t];
+					for (size_t i = 0; i < sizeof(s); i++)
+						f.code.push_back(((char*)&s)[i]);
+				}
+				else
+				{
+					TCHAR* end;
+					int value = strtoll(t, &end, 10);
+
+					if (end == t)
+						throw Exception();
+
+					f.code.push_back(value);
+				}
 			}
+			else throw Exception();
 		}
 	}
 

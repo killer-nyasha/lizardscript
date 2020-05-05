@@ -15,6 +15,7 @@
 *.cxx
 *.hxx
 *.i
+*.lsc
 
 # User-specific files
 *.suo

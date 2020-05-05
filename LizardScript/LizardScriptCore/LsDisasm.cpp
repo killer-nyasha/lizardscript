@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "LsDisasm.h"
 #include "OpcodesText.h"
+#include "Exception.h"
 
 #include <iostream>
 
@@ -28,7 +29,11 @@ void LsDisasm::disasm(const LsFunction& _f)
 		text << opcodeToText[code];
 
 		size_t length = strlen(opcodeToText[code]);
-		for (size_t i = 0; i < 12 - length; i++)
+
+		if (length >= 16)
+			throw Exception();
+
+		for (size_t i = 0; i < 16 - length; i++)
 			text << " ";
 
 		text << "[" << _r1 << "], [" << _r2 << "]";

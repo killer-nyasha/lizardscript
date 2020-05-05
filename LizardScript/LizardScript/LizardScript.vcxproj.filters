@@ -21,8 +21,8 @@
     <Image Include="..\..\..\..\Users\issst\Documents\10.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="test.ls" />
     <None Include="test.lsa" />
     <None Include="test.lsc" />
+    <None Include="print_float_0_1.lsa" />
   </ItemGroup>
 </Project>
