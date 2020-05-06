@@ -201,7 +201,7 @@ LsCpp::LsCpp()
 	}
 }
 
-void LsCpp::generate(const LsFunction& _f)
+std::string LsCpp::generate(const LsFunction& _f)
 {
 	f = &_f;
 
@@ -220,6 +220,6 @@ void LsCpp::generate(const LsFunction& _f)
 
 	//std::cout << "end0\n";
 
-	std::cout << text.data;
-
+	//std::cout << text.data;
+	return text.data;
 }

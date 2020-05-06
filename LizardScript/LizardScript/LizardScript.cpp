@@ -81,56 +81,70 @@ int main(int argc, char** argv)
             LsAsm lsasm;
             LsFunction f = lsasm.assemble(file.data, file.size);
 
-            char* out_name = new char[len];
-            strcpy(out_name, argv[1]);
-            out_name[len - 1] = 'c';
+            if (argc > 2 && strcmp(argv[2], "/lscpp") == 0)
+            { 
+                LsCpp lscpp;
+                std::string text = lscpp.generate(f);
 
-            std::ofstream out(out_name, std::ios::binary);
-            if (out.is_open())
-            {
-                out.write((const char*)&f.code[0], f.code.size());
-                out.close();
-            }
-            else throw Exception("Cannot write to file");
+                char* out_name = new char[len];
+                strcpy(out_name, argv[1]);
+                out_name[len - 1] = 'x';
+                out_name[len - 2] = 'x';
+                out_name[len - 3] = 'c';
 
-            if (argc > 2)
-                if (strcmp(argv[2], "/lscpp") == 0)
+                std::ofstream out(out_name);
+                if (out.is_open())
                 {
-                    LsCpp lscpp;
-                    lscpp.generate(f);    //std::cout << "end1\n";
+                    out.write((const char*)&text[0], text.size());
+                    out.close();
                 }
+                else throw Exception("Cannot write to file");
+            }
+            else
+            {
+                char* out_name = new char[len];
+                strcpy(out_name, argv[1]);
+                out_name[len - 1] = 'c';
+
+                std::ofstream out(out_name, std::ios::binary);
+                if (out.is_open())
+                {
+                    out.write((const char*)&f.code[0], f.code.size());
+                    out.close();
+                }
+                else throw Exception("Cannot write to file");
+
+                Runtime r;
+                r.run(f);
+            }
 
             //std::cout << "end2\n";
 
-
-            Runtime r;
-            r.run(f);
-
-            system("pause");
+            //system("pause");
         }
         else if (strcmp(end4, _lsc) == 0)
         {
             Buffer file = open_file(argv[1], true);
-
-            LsCpp lscpp;
 
             //lsc
             LsFunction f;
             for (size_t i = 0; i < file.size; i++)
                 f.code.push_back(file.data[i]);
 
-            if (argc > 2)
-                if (strcmp(argv[2], "/disasm") == 0)
-                {
-                    LsDisasm disasm(lscpp);
-                    disasm.disasm(f);
-                }
+            if (argc > 2 && strcmp(argv[2], "/disasm") == 0)
+            {
+                LsCpp lscpp;
+                LsDisasm disasm(lscpp);
+                disasm.disasm(f);
+            }
+            else
+            {
+                Runtime r;
+                r.run(f);
+            }
 
 
-            Runtime r;
-            r.run(f);
-
-            system("pause");
+            //system("pause");
         }
     }
     else

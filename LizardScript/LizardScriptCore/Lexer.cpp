@@ -40,7 +40,6 @@ void Lexer::newToken()
 	ALIAS(data->values, values);
 	ALIAS(data->tokens, tokens);
 
-
 	if (values->size() != lastValueIndex)
 		//if we add something new
 	{

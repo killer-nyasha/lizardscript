@@ -48,7 +48,7 @@ public:
 	size_t eip = 0;
 	StringBuilder text;
 
-	void generate(const LsFunction& f);
+	std::string generate(const LsFunction& f);
 
 	LsCpp();
 };

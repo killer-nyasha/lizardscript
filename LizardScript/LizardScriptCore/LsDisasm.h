@@ -19,6 +19,6 @@ namespace LizardScript
 
 		LsDisasm(LsCpp& lscpp);
 
-		void disasm(const LsFunction& _f);
+		std::string disasm(const LsFunction& _f);
 	};
 }

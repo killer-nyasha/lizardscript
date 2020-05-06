@@ -167,7 +167,6 @@
     <None Include="print_float_0_1.lsa" />
     <None Include="spin_benchmark.lsa" />
     <None Include="test.lsa" />
-    <None Include="test.lsc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

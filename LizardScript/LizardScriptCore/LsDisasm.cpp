@@ -16,7 +16,7 @@ LsDisasm::LsDisasm(LsCpp& lscpp) : lscpp(lscpp)
 	fillOpcodeToText();
 }
 
-void LsDisasm::disasm(const LsFunction& _f)
+std::string LsDisasm::disasm(const LsFunction& _f)
 {
 	f = &_f;
 
@@ -55,5 +55,5 @@ void LsDisasm::disasm(const LsFunction& _f)
 		text << "\n";
 	}
 
-	std::cout << text.data;
+	return std::move(text.data);
 }

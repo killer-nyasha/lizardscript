@@ -22,4 +22,5 @@ label l1
 	out_float	0,0
 jmp 0,0 l1
 
+wait
 ret		0,0
