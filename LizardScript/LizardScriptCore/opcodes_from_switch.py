@@ -24,7 +24,7 @@ def write_enum(out, opcode_name):
 
 def write_in_map(out, opcode_name):
     global comma_map
-    out.write(comma_map + '{"' + opcode_name + '", ' + opcode_name + '}\n')
+    out.write(comma_map + '{"' + opcode_name + '", ' + 'LsAsm::' + opcode_name + '}\n')
     comma_map = ','
 
 in_file = open(input_file_name,'r')
