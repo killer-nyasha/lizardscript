@@ -53,6 +53,20 @@ CASE_ST_OPERATOR3(T, -, sub)\
 CASE_ST_OPERATOR3(T, *, mul)\
 CASE_ST_OPERATOR3(T, /, div)\
 
+#define MULTICASE_ST_COMPARISON(T)\
+CASE_ST_OPERATOR3(T, >, more)\
+CASE_ST_OPERATOR3(T, <, less)\
+CASE_ST_OPERATOR3(T, >=, more_eq)\
+CASE_ST_OPERATOR3(T, <=, less_eq)\
+CASE_ST_OPERATOR3(T, ==, eq)\
+CASE_ST_OPERATOR3(T, !=, not_eq)
+
+#define MULTICASE_ST_LOGIC(T)\
+CASE_ST_OPERATOR3(T, &, and)\
+CASE_ST_OPERATOR3(T, |, or)\
+CASE_ST_OPERATOR3(T, ^, xor)\
+CASE_ST_OPERATOR2(T, = ~, not)
+
 #define CASE_CAST(T1, T2)\
 case LsAsm::cast_##T1##_##T2: { OPCODE_CAST(T1, T2); break; } 
 
