@@ -78,18 +78,18 @@ public:
 	template <typename T>
 	void push(const T& value)
 	{
-		if (!check(value))
-		{
-			capacity *= 2;
-			realloc(data, capacity);
-		}
-
-		TypeInfo info = TYPEINFO(T);
-		*reinterpret_cast<T*>(data[size]) = value;
-		size += info.size();
-		*reinterpret_cast<TypeInfo*>(data[size]) = info;
-		size += sizeof(TypeInfo);
-		count++;
+//		if (!check(value))
+//		{
+//			capacity *= 2;
+//			realloc(data, capacity);
+//		}
+//
+//		TypeInfo info = TYPEINFO(T);
+//		*reinterpret_cast<T*>(data[size]) = value;
+//		size += info.size();
+//		*reinterpret_cast<TypeInfo*>(data[size]) = info;
+//		size += sizeof(TypeInfo);
+//		count++;
 	}
 
 	//!\warning Dynamic instanse become invalid when you use push

@@ -33,7 +33,7 @@ namespace LizardScript
 	};
 
 	//!type of token
-	enum class KeywordTokenType
+	enum class KeywordTokenType: int
 	{
 		//!returns some value. for example, 'this'
 		Simple,

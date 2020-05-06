@@ -1,4 +1,4 @@
-﻿/*!
+/*!
 \file Pools.h
 \brief 1000 ways to use ObjectPool pattern for any case
 \author killer-nyasha
@@ -11,6 +11,7 @@
 
 #include "FastRemoving.h"
 #include "Exception.h"
+#include <iostream>
 
 //!pool which operates with fixed-size blocks of memory
 template <typename T, size_t capacity, size_t elemSize, bool linkedList>
@@ -42,7 +43,7 @@ public:
 				return nextPool->alloc();
 			}
 			else
-				throw std::exception("MemoryPool overflow");
+				throw Exception("MemoryPool overflow");
 		}
 		else
 		{
@@ -88,16 +89,16 @@ public:
 	static std::stack<T*> objects;
 
 	//!does nothing
-	template <typename T>
-	static void clear(T* object) { }
+	template <typename C>
+	static void clear(C* object) { }
 
 	//!clears vector after reuse
-	template <typename T>
+	template <typename C>
 	static void clear(std::vector<T>* object) { object->clear(); }
 
 	//!clears stack after reuse
-	template <typename T>
-	static void clear(std::stack<T>* object) { while (objects.size() > 0) objects.pop(); }
+	template <typename C>
+	static void clear(std::stack<C>* object) { while (objects.size() > 0) objects.pop(); }
 
 	//!get object from pool or create (in heap) with default constructor
 	//!\warning it returns a pointer so you must return it to pool manually
@@ -154,7 +155,7 @@ public:
 	PoolPointer& operator=(PoolPointer&& ptr)
 	{
 		this->~PoolPointer();
-		this->PoolPointer::PoolPointer(std::forward<PoolPointer<T>>(ptr));
+		*this = PoolPointer(std::forward<PoolPointer<T>>(ptr));
 		return *this;
 	}
 
