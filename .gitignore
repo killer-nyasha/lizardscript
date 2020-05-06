@@ -14,7 +14,7 @@
 *.tmp
 *.cxx
 *.hxx
-*.i
+# *.i
 *.lsc
 
 # User-specific files
