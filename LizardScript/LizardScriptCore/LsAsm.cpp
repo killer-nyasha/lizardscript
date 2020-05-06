@@ -71,7 +71,6 @@ SyntaxCore LsAsm::createSyntaxCore()
 LsFunction LsAsm::assemble(const TCHAR* text, size_t length)
 {
 	LsFunction f;
-
 	std::map<TCHAR*, size_t, cmp_str> labels;
 
 	auto _lexerData = runLexer(core, text, length);
@@ -89,9 +88,7 @@ LsFunction LsAsm::assemble(const TCHAR* text, size_t length)
 				{
 					f.code.push_back(textToOpcode[kwtoken->value]);
 				}
-				else throw Exception("unknown instruction ", kwtoken->value);
-
-				//std::cout << kwtoken->value << std::endl;
+				else throw Exception("Unknown instruction ", kwtoken->value);
 			}
 			else if (kwtoken->customData == (void*)2)
 			{
@@ -103,7 +100,7 @@ LsFunction LsAsm::assemble(const TCHAR* text, size_t length)
 
 					if (lexerData.tryGetValue(i, t, &tIndex))
 						labels.insert(std::make_pair(t, f.code.size()));
-					else throw Exception();
+					else throw Exception("An odd label name at ", i, "/", lexerData.tokens->size());
 				}
 			}
 		}
@@ -121,17 +118,20 @@ LsFunction LsAsm::assemble(const TCHAR* text, size_t length)
 				else
 				{
 					TCHAR* end;
-					int value = strtoll(t, &end, 10);
+					LsInternalAddr value = strtoll(t, &end, 10);
 
 					if (end == t)
-						throw Exception();
+						throw Exception("Cannot parse token ", t, " at ", i, "/", lexerData.tokens->size());
 
 					f.code.push_back(value);
 				}
 			}
-			else throw Exception();
+			else throw Exception("An odd token at ", i, "/", lexerData.tokens->size());
 		}
 	}
+
+	//for (auto& l : labels)
+	//	std::cout << l.first << l.second;
 
 	return f;
 }

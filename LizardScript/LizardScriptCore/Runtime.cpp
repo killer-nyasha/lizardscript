@@ -23,7 +23,7 @@ void Runtime::run(const LsFunction& f)
 	//short frame mode - r1 и r2 по 1 байту, максимум 256 адресуемых байт на кадр стека и объект
 	//long frame mode - r1 и r2 по 2 байта, до 65536 байт на кадр или объект
 
-	size_t eip = 0;
+	LsInternalAddr eip = 0;
 	size_t esp = 0;
 
 	using OFFSET_T = unsigned char;
@@ -31,20 +31,23 @@ void Runtime::run(const LsFunction& f)
 #define REGISTER(type, i) reinterpret_cast<type*>(&stack[esp + i]) /*(std::cout << (int)i << ": " << *reinterpret_cast<type*>(&stack[esp + i]) << std::endl, reinterpret_cast<type*>(&stack[esp + i]))*/ 
 	
 	//r == 0 ? *(type*)((char*)stackbase + CODEGET(short)) : *(type*)&(registers[r])
-#define CODEGET(type) *(type*)(&f.code[(eip += sizeof(type)) - sizeof(type)])
+#define CODEGET(type, name) type& name = *(type*)(&f.code[(eip += sizeof(type)) - sizeof(type)])
+#define CODE(name) name
+
+#define JMP(new_eip) eip = new_eip;
 
 	while (true)
 	{
-		LsCode code = CODEGET(LsCode);
-		OFFSET_T r1 = CODEGET(OFFSET_T);
-		OFFSET_T r2 = CODEGET(OFFSET_T);
+		CODEGET(LsCode, code);
+		//CODEGET(OFFSET_T, r1);
+		//CODEGET(OFFSET_T, r2);
 
 		switch (code)
 		{
 #include "RuntimeCases.i"
 
 		default:
-			throw Exception();
+			throw Exception("Unknown opcode ", code, " at ", eip);
 		}
 	}
 

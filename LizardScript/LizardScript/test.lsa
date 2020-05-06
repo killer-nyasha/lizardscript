@@ -3,32 +3,33 @@
 //==============================================
 
 //счётчик
-push_int 0,0 0,0,0,0
+push_int 0 0,0,0,0
 
 //шаг
-push_int 4,4 1,0,0,0
+push_int 4 1,0,0,0
 
 //цель
-push_int 8,8 1,0,0,0
-push_int 12,12 10,0,0,0
+push_int 8 1,0,0,0
+push_int 12 10,0,0,0
 mul_int 8,12
 mul_int 8,12
 mul_int 8,12
 mul_int 8,12
 mul_int 8,12
 mul_int 8,12
-mul_int 8,12
-mul_int 8,12
-mul_int 8,12
+//mul_int 8,12
+//mul_int 8,12
+//mul_int 8,12
 
 //наш цикл
 label l1
 	add_int 0,4
 	mov_int 16,0
-cmp 16,8
-jf 16,16 l1
+	//out_int 0
+cmp_int 16,8
+jf 16 l1
 
 //выводим результат
-out_int	0,0
+out_int	0
 
-ret		0,0
+ret

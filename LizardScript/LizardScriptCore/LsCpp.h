@@ -1,4 +1,7 @@
 #pragma once
+#include <map>
+
+#include "OpcodesText.h"
 #include "LsFunction.h"
 #include "StringBuilder.h"
 
@@ -14,7 +17,17 @@ struct AbstractLsCppOpcode
 
 struct LsCppSpec
 {
-	virtual void append(LsCpp& lscpp) = 0;
+	//virtual void append(LsCpp& lscpp) = 0;
+};
+
+struct LsCppVariable
+{
+	const char* type;
+	//const char* name;
+	//std::vector<unsigned char> data;
+
+	unsigned char data[32];
+	size_t data_size = 0;
 };
 
 class LsCpp
@@ -25,67 +38,17 @@ private:
 
 public:
 
+	std::map<const char*, LsCppVariable, cmp_str> variables;
+
 	AbstractLsCppOpcode* opcodes_table[256];
 	
 	//base class?
 	const LsFunction* f;
 	using OFFSET_T = unsigned char;
 	size_t eip = 0;
-	OFFSET_T _r1 = 0;
-	OFFSET_T _r2 = 0;
 	StringBuilder text;
 
 	void generate(const LsFunction& f);
-
-	struct LsCppSpecR1 : public LsCppSpec
-	{
-		virtual void append(LsCpp& lscpp) override
-		{
-			lscpp.text << lscpp._r1;
-		}
-	};
-
-	struct LsCppSpecR2 : public LsCppSpec
-	{
-		virtual void append(LsCpp& lscpp) override
-		{
-			lscpp.text << lscpp._r2;
-		}
-	};
-
-	struct LsCppSpecRegister : public LsCppSpec
-	{
-		LsCppSpec* rnum;
-		const char* type;
-
-		LsCppSpecRegister(const char* type, LsCppSpec* rnum) : type(type), rnum(rnum)
-		{
-
-		}
-
-		virtual void append(LsCpp& lscpp) override
-		{
-			lscpp.text << "REGISTER(" << type << ", ";
-			rnum->append(lscpp); 
-			lscpp.text << ")";
-		}
-	};
-
-	struct LsCppSpecCodeget : public LsCppSpec
-	{
-		const char* type;
-		size_t size;
-
-		LsCppSpecCodeget(const char* type, size_t size) : type(type), size(size)
-		{
-
-		}
-
-		virtual void append(LsCpp& lscpp) override;
-	};
-
-	LsCppSpec* r1() { return new LsCppSpecR1(); }
-	LsCppSpec* r2() { return new LsCppSpecR2(); }
 
 	LsCpp();
 };

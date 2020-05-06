@@ -2,6 +2,7 @@
 #include <vector>
 
 using LsCode = unsigned char;
+using LsInternalAddr = unsigned int;
 
 class LsFunction
 {

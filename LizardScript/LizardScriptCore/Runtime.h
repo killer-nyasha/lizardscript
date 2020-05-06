@@ -7,7 +7,7 @@ namespace LizardScript
 	{
 	public:
 
-		unsigned char stack[1024 * 10];
+		unsigned char* stack = new unsigned char[1024 * 10];
 
 		void run(const LsFunction& f);
 

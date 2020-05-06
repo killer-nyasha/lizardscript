@@ -12,7 +12,7 @@ outFilePath = 'LsCpp.hxx'
 # через | можно добавить новые ключевые слова
 # (если речь идет о простых словах без параметров, вроде rnfirst/rnsecond)
 simpleLsCppObjects = r'r1|r2'
-complexLsCppObjects = r'CODEGET\([^{};=+\-*\/]*\)|REGISTER\([^{};=+\-*\/]*\)'
+complexLsCppObjects = r'JMP\([^{};=+\-*\/]*\)|CODEGET\([^{};=+\-*\/]*\)|REGISTER\([^{};=+\-*\/]*\)'
 
 # скомпилированные регулярки (для улучшения производительности)
 regLsCppObjects = regex.compile(simpleLsCppObjects+r'|'+complexLsCppObjects)

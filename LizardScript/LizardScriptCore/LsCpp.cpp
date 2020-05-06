@@ -5,17 +5,132 @@
 #include "LsCpp.h"
 #include "Opcodes.hxx"
 
-#define REGISTER(T, i) new LsCppSpecRegister(#T, i)
-#define CODEGET(T) new LsCppSpecCodeget(#T, sizeof(T))
+//cmp_str
+#include "OpcodesText.h"
+
+#define REGISTER(T, i) LsCppSpecRegister(#T, i)
+
+#define CODEGET(T, N) LsCppSpecCodeget(#T, sizeof(T), #N)
+#define CODE(N) LsCppSpecCode(#N)
+
+#define JMP(a) LsCppSpecJmp(a)
+
+#define RUNTIME_REGISTER(type, i) reinterpret_cast<type*>(&stack[esp + i])
+#define RUNTIME_CODEGET(type) *(type*)(&f->code[(eip += sizeof(type)) - sizeof(type)])
+#define LSCPP_RUNTIME_CODEGET(type) *(type*)(&lscpp.f->code[(lscpp.eip += sizeof(type)) - sizeof(type)])
+
+struct LsCppSpecCodeget : public LsCppSpec
+{
+	const char* type;
+	size_t size;
+	const char* name;
+
+	LsCppSpecCodeget() { }
+
+	LsCppSpecCodeget(const char* type, size_t size, const char* name) : type(type), size(size), name(name)
+	{
+
+	}
+
+	void append(LsCpp& lscpp)
+	{
+		auto& variables = lscpp.variables;
+
+		if (variables.find(name) == variables.end())
+			variables.insert(std::make_pair(name, LsCppVariable()));
+
+		auto& var = variables[name];
+
+		var.type = type;
+		var.data_size = 0;// .clear();
+
+		for (size_t i = 0; i < size; i++)
+			var.data[var.data_size++] = (LSCPP_RUNTIME_CODEGET(unsigned char));
+
+		lscpp.text << type << " " << name << " = FROM_BINARY<" << var.type << ">(";
+		for (size_t i = 0; i < var.data_size; i++)
+		{
+			if (i != 0)
+				lscpp.text << ", ";
+			lscpp.text << var.data[i];
+		}
+		lscpp.text << ")";
+	}
+};
+
+struct LsCppSpecCode : public LsCppSpec
+{
+	const char* name;
+
+	LsCppSpecCode() { }
+
+	LsCppSpecCode(const char* name) : name(name)
+	{
+
+	}
+
+	void append(LsCpp& lscpp)
+	{
+		//auto& var = variables[name];
+
+		lscpp.text << "CODE(" << name << ")";
+
+	}
+};
+
+struct LsCppSpecRegister : public LsCppSpec
+{
+	LsCppSpecCode rnum;
+	const char* type;
+
+	LsCppSpecRegister() { }
+
+	LsCppSpecRegister(const char* type, LsCppSpecCode rnum) : type(type), rnum(rnum)
+	{
+
+	}
+
+	void append(LsCpp& lscpp)
+	{
+		lscpp.text << "REGISTER(" << type << ", ";
+		rnum.append(lscpp);
+		lscpp.text << ")";
+	}
+};
+
+struct LsCppSpecJmp : public LsCppSpec
+{
+	//size_t addr;
+	LsCppSpecCode code;
+
+	//LsCppSpecJmp(size_t addr) : addr(addr)
+	//{
+
+	//}
+
+	LsCppSpecJmp() { }
+
+	LsCppSpecJmp(LsCppSpecCode code) : code(code)
+	{
+		
+	}
+
+	void append(LsCpp& lscpp)
+	{
+		//не уверен в этом моменте
+		lscpp.text << "goto lsaddr_" << *(LsInternalAddr*)&lscpp.variables[code.name].data[0] << ";";
+	}
+};
 
 void append(LsCpp& lscpp, const char* data)
 {
 	lscpp.text << data;
 }
 
-void append(LsCpp& lscpp, LsCppSpec* spec)
+template <typename TS>
+void append(LsCpp& lscpp, TS& spec)
 {
-	spec->append(lscpp);
+	spec.append(lscpp);
 }
 
 
@@ -24,10 +139,11 @@ void _inc_codeget_size(AbstractLsCppOpcode* opcode, const char* data)
 	
 }
 
-void _inc_codeget_size(AbstractLsCppOpcode* opcode, LsCppSpec* spec)
+template <typename TS>
+void _inc_codeget_size(AbstractLsCppOpcode* opcode, TS& spec)
 {
-	if (dynamic_cast<LsCpp::LsCppSpecCodeget*>(spec))
-		opcode->codeget_size += dynamic_cast<LsCpp::LsCppSpecCodeget*>(spec)->size;
+	//if (dynamic_cast<LsCppSpecCodeget*>(spec))
+		opcode->codeget_size += reinterpret_cast<LsCppSpecCodeget*>(&spec)->size;
 }
 
 template <typename... T>
@@ -85,37 +201,24 @@ LsCpp::LsCpp()
 	}
 }
 
-#define RUNTIME_REGISTER(type, i) reinterpret_cast<type*>(&stack[esp + i])
-#define RUNTIME_CODEGET(type) *(type*)(&f->code[(eip += sizeof(type)) - sizeof(type)])
-#define LSCPP_RUNTIME_CODEGET(type) *(type*)(&lscpp.f->code[(lscpp.eip += sizeof(type)) - sizeof(type)])
-
-void LsCpp::LsCppSpecCodeget::append(LsCpp& lscpp)
-{
-	lscpp.text << "FROM_BINARY(";
-
-	for (size_t i = 0; i < size; i++)
-	{
-		if (i != 0)
-			lscpp.text << ", ";
-		lscpp.text << LSCPP_RUNTIME_CODEGET(unsigned char);
-	}
-
-	lscpp.text << ")";
-}
-
 void LsCpp::generate(const LsFunction& _f)
 {
 	f = &_f;
 
 	while (eip < f->code.size())
 	{
+		text << "lsaddr_" << eip << ":;\n";
+
 		LsCode code = RUNTIME_CODEGET(LsCode);
-		_r1 = RUNTIME_CODEGET(OFFSET_T);
-		_r2 = RUNTIME_CODEGET(OFFSET_T);
 
 		opcodes_table[code]->print(*this);
 		text << "\n";
+
+		//std::cout << text.data;
+		//text.data.clear();
 	}
+
+	//std::cout << "end0\n";
 
 	std::cout << text.data;
 

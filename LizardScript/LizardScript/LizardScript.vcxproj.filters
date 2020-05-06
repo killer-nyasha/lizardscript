@@ -24,5 +24,6 @@
     <None Include="test.lsa" />
     <None Include="test.lsc" />
     <None Include="print_float_0_1.lsa" />
+    <None Include="spin_benchmark.lsa" />
   </ItemGroup>
 </Project>

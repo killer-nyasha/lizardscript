@@ -23,38 +23,41 @@ struct sample
 
 using namespace LizardScript;
 
-void print_ldata(LexerData& ldata)
+struct Buffer
 {
-    for (size_t i = 0; i < ldata.tokens->size(); i++)
-    {
-        KeywordToken* kw;
-        if (ldata.tryGetKeyword(i, kw))
-            std::cout << kwtypes_str(kw->type) << "";
+    size_t size;
+    char* data;
+};
 
-        std::cout << ldata.text_at(i) << "    ";
-    }
-    std::cout << "\n\n";
+Buffer open_file(const char* name, bool binary)
+{
+    Buffer ret;
+
+    std::ifstream fs = binary ? std::ifstream(name, std::ios::binary) : std::ifstream(name);
+    fs.seekg(0, std::ios::end);
+    ret.size = fs.tellg();
+    fs.seekg(0, std::ios::beg);
+
+    ret.data = new char[ret.size];
+
+    memset(ret.data, 0, ret.size);
+
+    fs.read(ret.data, ret.size);
+    fs.close();
+
+    //std::cout << ret.size << "\t" << ret.data;
+
+    return ret;
 }
 
 int main(int argc, char** argv)
 {
     Default::init();
 
+    try
+    {
     if (argc > 1)
     {
-        size_t length;
-        char* buffer;
-
-        //где-то нужно читать бинарный файл, а где-то текстовый
-        std::ifstream fs(argv[1]/*, std::ios::binary*/);
-        fs.seekg(0, std::ios::end);
-        length = fs.tellg();
-        fs.seekg(0, std::ios::beg);
-
-        buffer = new char[length];
-        fs.read(buffer, length);
-        fs.close();
-
         size_t len = strlen(argv[1]);
         char* end3 = argv[1] + len - 3;
         char* end4 = argv[1] + len - 4;
@@ -72,38 +75,57 @@ int main(int argc, char** argv)
         }
         else if (strcmp(end4, _lsa) == 0)
         {
+            Buffer file = open_file(argv[1], false);
+
             //lsa
-            LsCpp lscpp;
-
             LsAsm lsasm;
-            LsFunction f = lsasm.assemble(buffer, length);
-
-            Runtime r;
-            r.run(f);
+            LsFunction f = lsasm.assemble(file.data, file.size);
 
             char* out_name = new char[len];
             strcpy(out_name, argv[1]);
             out_name[len - 1] = 'c';
 
             std::ofstream out(out_name, std::ios::binary);
+            if (out.is_open())
+            {
+                out.write((const char*)&f.code[0], f.code.size());
+                out.close();
+            }
+            else throw Exception("Cannot write to file");
 
-            out.write((const char*)&f.code[0], f.code.size());
+            if (argc > 2)
+                if (strcmp(argv[2], "/lscpp") == 0)
+                {
+                    LsCpp lscpp;
+                    lscpp.generate(f);    //std::cout << "end1\n";
+                }
 
-            out.close();
+            //std::cout << "end2\n";
+
+
+            Runtime r;
+            r.run(f);
 
             system("pause");
         }
         else if (strcmp(end4, _lsc) == 0)
         {
+            Buffer file = open_file(argv[1], true);
+
             LsCpp lscpp;
 
             //lsc
             LsFunction f;
-            for (size_t i = 0; i < length; i++)
-                f.code.push_back(buffer[i]);
+            for (size_t i = 0; i < file.size; i++)
+                f.code.push_back(file.data[i]);
 
-            LsDisasm disasm(lscpp);
-            disasm.disasm(f);
+            if (argc > 2)
+                if (strcmp(argv[2], "/disasm") == 0)
+                {
+                    LsDisasm disasm(lscpp);
+                    disasm.disasm(f);
+                }
+
 
             Runtime r;
             r.run(f);
@@ -115,7 +137,11 @@ int main(int argc, char** argv)
     {
         //interactive mode??
     }
-
+    }
+    catch (Exception ex)
+    {
+        std::cout << "Exception: " << ex.text << std::endl;
+    }
 
     //-hello -- -(-world--world1)
     //-hello- --(-world--world1)-

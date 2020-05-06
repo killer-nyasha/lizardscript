@@ -6,6 +6,8 @@
 #include "SyntaxCore.h"
 #include "Exception.h"
 
+#include <iostream>
+
 using namespace LizardScript;
 
 KeywordToken Lexer::stringKw = KeywordToken("__string__");
@@ -25,6 +27,12 @@ Lexer::Lexer(const SyntaxCore& c, const TCHAR* t, size_t length)
 	if (length != 0)
 		textLength = length;
 	else textLength = _tcslen(text);
+
+	//std::cout << length << "\t" << text;
+	//std::cout << "\n\n";
+	//for (size_t i = 0; i < textLength; i++)
+	//	std::cout << text[i];
+	//std::cout << "\n\n";
 }
 
 void Lexer::newToken()
@@ -32,11 +40,14 @@ void Lexer::newToken()
 	ALIAS(data->values, values);
 	ALIAS(data->tokens, tokens);
 
+
 	if (values->size() != lastValueIndex)
-		//if we added something new
+		//if we add something new
 	{
 		values->push_back(0);//null-terminator for current token
 		TCHAR* kwtext = &(*values)[lastValueIndex];
+
+		//std::cout << "...\t" << kwtext << "\n";
 
 		//if (charIsTextChar((*values)[lastValueIndex]))
 		{
@@ -184,6 +195,19 @@ void Lexer::processQuotes(size_t& i)
 	}
 }
 
+void print_ldata(LexerData& ldata)
+{
+	for (size_t i = 0; i < ldata.tokens->size(); i++)
+	{
+		KeywordToken* kw;
+		if (ldata.tryGetKeyword(i, kw))
+			std::cout << kwtypes_str(kw->type) << "";
+
+		std::cout << ldata.text_at(i) << "    ";
+	}
+	std::cout << "\n\n";
+}
+
 PoolPointer<LexerData> Lexer::run()
 {
 	ALIAS(data->values, values);
@@ -205,7 +229,8 @@ PoolPointer<LexerData> Lexer::run()
 			if (Search::binary(core.breakChars, text[i]) != -1 || Search::binary(core.breakChars, text[i - 1]) != -1 || charIsTextChar(text[i - 1]) != charIsTextChar(text[i]))
 			{
 				hasSpacesPost = false;
-				newToken();
+				newToken();		//std::cout << "ntoken\t" << i << "\n";
+
 			}
 		}
 		else
@@ -214,12 +239,15 @@ PoolPointer<LexerData> Lexer::run()
 			i++;
 
 			hasSpacesPost = true;
-			newToken();
+			newToken();		//std::cout << "ntoken\t" << i << "\n";
+
 		}
 	}
 
 	hasSpacesPost = true;
 	newToken();
+
+	//print_ldata(*data);
 
 	return std::move(data);
 }
