@@ -2,25 +2,25 @@
 //Вывести на печать float с шагом 0.1 от 0 до бесконечности
 //==============================================
 
-push_int 16,16 1,0,0,0
-push_int 20,20 10,0,0,0
+push_int 16, 1,0,0,0
+push_int 20, 10,0,0,0
 
 cast_float_int 16,16
-out_float	16,16		//1.0
+out_float	16		//1.0
 
 cast_float_int 20,20
-out_float	20,20		//10.0
+out_float	20		//10.0
 
 div_float 16,20
-out_float	16,16		//0.1
+out_float	16		//0.1
 
-push_int 0,0 0,0,0,0
+push_int 0 0,0,0,0
 
 //наш цикл
 label l1
 	add_float 0,16
-	out_float	0,0
-jmp 0,0 l1
+	out_float	0
+jmp l1
 
 wait
-ret		0,0
+ret
