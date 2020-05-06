@@ -17,6 +17,7 @@ struct AbstractLsCppOpcode
 
 struct LsCppSpec
 {
+	virtual void dummy() { }
 	//virtual void append(LsCpp& lscpp) = 0;
 };
 

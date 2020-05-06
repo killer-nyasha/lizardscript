@@ -135,7 +135,8 @@ int main(int argc, char** argv)
             {
                 LsCpp lscpp;
                 LsDisasm disasm(lscpp);
-                disasm.disasm(f);
+                std::cout << disasm.disasm(f);
+                system("pause");
             }
             else
             {

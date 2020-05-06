@@ -142,8 +142,8 @@ void _inc_codeget_size(AbstractLsCppOpcode* opcode, const char* data)
 template <typename TS>
 void _inc_codeget_size(AbstractLsCppOpcode* opcode, TS& spec)
 {
-	//if (dynamic_cast<LsCppSpecCodeget*>(spec))
-		opcode->codeget_size += reinterpret_cast<LsCppSpecCodeget*>(&spec)->size;
+	if (dynamic_cast<LsCppSpecCodeget*>(&spec))
+		opcode->codeget_size += dynamic_cast<LsCppSpecCodeget*>(&spec)->size;
 }
 
 template <typename... T>

@@ -13,8 +13,8 @@ namespace LizardScript
 		const LsFunction* f;
 		using OFFSET_T = unsigned char;
 		size_t eip = 0;
-		OFFSET_T _r1 = 0;
-		OFFSET_T _r2 = 0;
+		//OFFSET_T _r1 = 0;
+		//OFFSET_T _r2 = 0;
 		StringBuilder text;
 
 		LsDisasm(LsCpp& lscpp);
