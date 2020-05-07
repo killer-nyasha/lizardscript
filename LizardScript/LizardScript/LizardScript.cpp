@@ -59,6 +59,8 @@ Buffer open_file(const char* name, bool binary)
 }
 
 const char* hr = "**************************************************";
+const char* build_time = __TIME__;
+const char* version = "0.1.3.1 ";
 
 int main(int argc, char** argv)
 {
