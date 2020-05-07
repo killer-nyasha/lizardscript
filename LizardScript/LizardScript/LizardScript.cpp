@@ -58,6 +58,8 @@ Buffer open_file(const char* name, bool binary)
     return ret;
 }
 
+const char* hr = "**************************************************";
+
 int main(int argc, char** argv)
 {
     Default::init();
