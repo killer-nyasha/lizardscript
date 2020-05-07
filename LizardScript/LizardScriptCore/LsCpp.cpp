@@ -10,6 +10,8 @@
 //cmp_str
 #include "OpcodesText.h"
 
+#include "LsTypedefs.h"
+
 #define REGISTER(T, i) LsCppSpecRegister(#T, i)
 
 #define CODEGET(T, N) LsCppSpecCodeget(#T, sizeof(T), #N)

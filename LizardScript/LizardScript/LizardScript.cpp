@@ -14,8 +14,6 @@
 
 #include "../LizardScriptCore/LizardScript.h"
 
-
-
 int f(int x)
 {
     return x * x;
@@ -83,7 +81,7 @@ int main(int argc, char** argv)
             //ls
 
             std::cout << "not implemented\n";
-            system("pause");
+            crossplatform_pause();
         }
         else if (strcmp(end4, _lsa) == 0)
         {
@@ -155,7 +153,7 @@ int main(int argc, char** argv)
 
             //std::cout << "end2\n";
 
-            //system("pause");
+            //crossplatform_pause();
         }
         else if (strcmp(end4, _lsc) == 0)
         {
@@ -171,7 +169,7 @@ int main(int argc, char** argv)
                 LsCpp lscpp;
                 LsDisasm disasm(lscpp);
                 std::cout << disasm.disasm(f);
-                system("pause");
+                crossplatform_pause();
             }
             else
             {
@@ -180,7 +178,7 @@ int main(int argc, char** argv)
             }
 
 
-            //system("pause");
+            //crossplatform_pause();
         }
     }
     else

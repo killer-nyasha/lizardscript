@@ -6,3 +6,5 @@
 #define JMP(new_eip) goto lsaddr_##new_eip;
 
 #define break
+
+#include "LsTypedefs.h"

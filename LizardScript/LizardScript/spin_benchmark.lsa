@@ -26,7 +26,7 @@ label l1
 	add_int 0,4
 	mov_int 16,0
 	//out_int 0
-cmp_int 16,8
+eq_int 16,8
 jf 16 l1
 
 //выводим результат
