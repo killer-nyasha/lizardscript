@@ -3,7 +3,7 @@
 
 #include "Logger.h"
 
-Logger logger("ls_log.txt");
+Logger logger("ls_log.log");
 
 Logger::Logger(const std::string& filename) : filename(filename)
 {

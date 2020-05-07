@@ -6,7 +6,15 @@
 #include <iostream>
 #include <fstream>
 
+#ifdef _WIN32
+#include <Windows.h>
+#else
+#include <unistd.h>
+#endif
+
 #include "../LizardScriptCore/LizardScript.h"
+
+
 
 int f(int x)
 {
@@ -86,11 +94,8 @@ int main(int argc, char** argv)
                 LsCpp lscpp;
                 std::string text = lscpp.generate(f);
 
-                char* out_name = new char[len];
-                strcpy(out_name, argv[1]);
-                out_name[len - 1] = 'x';
-                out_name[len - 2] = 'x';
-                out_name[len - 3] = 'c';
+                std::string out_name = argv[1];
+                stringReplace(out_name, ".lsa", ".cxx");
 
                 std::ofstream out(out_name);
                 if (out.is_open())
@@ -99,12 +104,27 @@ int main(int argc, char** argv)
                     out.close();
                 }
                 else throw Exception("Cannot write to file");
+
+                LsCppCompilerCall lscppc;
+
+                char buffer[1024];
+                size_t bufsize = 1024;
+#ifdef _WIN32
+                GetModuleFileName(GetModuleHandle("LizardScript.exe"), buffer, bufsize);
+#else
+
+                size_t actualSize = readlink("/proc/self/exe", buffer, bufsize);
+                buffer[actualSize + 1] = 0;
+
+#endif
+                lscppc.read(buffer);
+
+                lscppc.call(out_name);
             }
             else
             {
-                char* out_name = new char[len];
-                strcpy(out_name, argv[1]);
-                out_name[len - 1] = 'c';
+                std::string out_name = argv[1];
+                stringReplace(out_name, ".lsa", ".lsc");
 
                 std::ofstream out(out_name, std::ios::binary);
                 if (out.is_open())

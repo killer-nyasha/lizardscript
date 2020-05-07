@@ -175,6 +175,7 @@
     <ClInclude Include="LsAsm.h" />
     <ClInclude Include="LsCpp.h" />
     <ClInclude Include="LsCpp.hxx" />
+    <ClInclude Include="LsCppExternal.h" />
     <ClInclude Include="LsDisasm.h" />
     <ClInclude Include="LsFunction.h" />
     <ClInclude Include="LsTypedefs.h" />

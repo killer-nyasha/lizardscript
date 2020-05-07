@@ -149,9 +149,6 @@
     <ClInclude Include="Opcodes.hxx">
       <Filter>runtime</Filter>
     </ClInclude>
-    <ClInclude Include="OpcodesText.cxx">
-      <Filter>runtime</Filter>
-    </ClInclude>
     <ClInclude Include="LsTypedefs.h">
       <Filter>runtime</Filter>
     </ClInclude>
@@ -172,6 +169,9 @@
     </ClInclude>
     <ClInclude Include="LsAsm.h">
       <Filter>lsasm</Filter>
+    </ClInclude>
+    <ClInclude Include="LsCppExternal.h">
+      <Filter>external</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -213,6 +213,9 @@
     </ClCompile>
     <ClCompile Include="LsAsm.cpp">
       <Filter>lsasm</Filter>
+    </ClCompile>
+    <ClCompile Include="OpcodesText.cxx">
+      <Filter>pch</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

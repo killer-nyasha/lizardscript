@@ -49,7 +49,7 @@ struct LsCppSpecCodeget : public LsCppSpec
 		for (size_t i = 0; i < size; i++)
 			var.data[var.data_size++] = (LSCPP_RUNTIME_CODEGET(unsigned char));
 
-		lscpp.text << type << " " << name << " = FROM_BINARY<" << var.type << ">(";
+		lscpp.text << type << " " << name << " = FROM_BINARY<" << var.type << ">::get(";
 		for (size_t i = 0; i < var.data_size; i++)
 		{
 			if (i != 0)
@@ -205,6 +205,13 @@ LsCpp::LsCpp()
 
 std::string LsCpp::generate(const LsFunction& _f)
 {
+	text << "#include <iostream>\n#include <pch.h>\n#include <LsCppExternal.h>\n#pragma comment(lib, \"LizardScriptCore.lib\")\n";
+	text << "void main() {\n";
+	text << "unsigned char* stack = new unsigned char[1024 * 10];\n";
+	text << "LsInternalAddr eip = 0;\n";
+	text << "size_t esp = 0;\n";
+
+
 	f = &_f;
 
 	while (eip < f->code.size())
@@ -219,6 +226,8 @@ std::string LsCpp::generate(const LsFunction& _f)
 		//std::cout << text.data;
 		//text.data.clear();
 	}
+
+	text << "end:;}";
 
 	//std::cout << "end0\n";
 

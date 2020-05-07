@@ -168,6 +168,9 @@
     <None Include="spin_benchmark.lsa" />
     <None Include="test.lsa" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="LsCppSettings_example.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
