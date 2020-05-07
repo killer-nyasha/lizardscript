@@ -78,7 +78,7 @@ struct LsCppCompilerCall
 		stringReplace(new_compiler_call_string, "$LS_CORE_SRC_DIR", path_to_lizard_script_core_src);
 
 		std::cout << new_compiler_call_string.c_str();
-		system((std::string("\"") + new_compiler_call_string + "\"").c_str());
+		system(new_compiler_call_string.c_str());
 
 		std::string output_path = input_path;
 		stringReplace(output_path, ".cxx", executable_extension);
