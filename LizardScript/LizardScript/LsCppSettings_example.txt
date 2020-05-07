@@ -1,4 +1,4 @@
 "C:\WORK_2020\lizardscript\LizardScript\x64\Release\"
 "C:\WORK_2020\lizardscript\LizardScript\LizardScriptCore"
-""C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat" & cl $INPUT_FILE /EHsc /O2 /I $LS_CORE_SRC_DIR /link /LIBPATH:$LS_CORE_LIB_DIR"
+"cd $INPUT_DIR & "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat" & cl $INPUT_FILE /EHsc /O2 /I $LS_CORE_SRC_DIR /link /LIBPATH:$LS_CORE_LIB_DIR"
 .exe

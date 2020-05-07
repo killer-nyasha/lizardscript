@@ -209,7 +209,7 @@ std::string LsCpp::generate(const LsFunction& _f)
 {
 	text << "#include <iostream>\n#include <pch.h>\n#include <LsCppExternal.h>\n#pragma comment(lib, \"LizardScriptCore.lib\")\n";
 	text << "int main() {\n";
-	text << "unsigned char* stack = new unsigned char[1024 * 10];\n";
+	text << "unsigned char* stack[1024 * 10];\n";
 	text << "LsInternalAddr eip = 0;\n";
 	text << "size_t esp = 0;\n";
 

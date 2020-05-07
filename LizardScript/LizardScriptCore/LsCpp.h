@@ -54,7 +54,7 @@ struct LsCppCompilerCall
 		std::ifstream fs(path_to_exe);
 
 		if (!fs.is_open())
-			throw Exception("Cannot read LsCpp setting file");
+			throw Exception("Cannot read LsCpp settings file (LsCppSettings.txt in a folder with LizardScript executable)");
 
 		std::getline(fs, path_to_lizard_script_core_lib);
 		std::getline(fs, path_to_lizard_script_core_src);
