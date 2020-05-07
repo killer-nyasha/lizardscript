@@ -12,9 +12,17 @@ class LsCpp;
 
 inline void stringReplace(std::string& input, const std::string& ext1, const std::string& ext2)
 {
-	auto iter1 = input.find(ext1, 0);
-	auto iter2 = iter1 + ext1.length();
-	input.replace(iter1, iter2 - iter1, ext2);
+	while (true)
+	{
+		auto iter1 = input.find(ext1, 0);
+
+		if (iter1 == std::string::npos)
+			break;
+
+		auto iter2 = iter1 + ext1.length();
+		input.replace(iter1, iter2 - iter1, ext2);
+
+	}
 }
 
 inline void dirFromFile(std::string& input)
@@ -64,20 +72,16 @@ struct LsCppCompilerCall
 		if (input_dir.empty())
 			throw Exception("LsCpp needs full path as an argument to call a C++ compiler");
 
-		stringReplace(new_compiler_call_string, "#INPUT_FILE", input_path);
-		stringReplace(new_compiler_call_string, "#INPUT_DIR", input_dir);
-		stringReplace(new_compiler_call_string, "#LS_CORE_LIB_DIR", path_to_lizard_script_core_lib);
-		stringReplace(new_compiler_call_string, "#LS_CORE_SRC_DIR", path_to_lizard_script_core_src);
-
-		//system(path_to_lizard_script_core_lib.c_str());
+		stringReplace(new_compiler_call_string, "$INPUT_FILE", input_path);
+		stringReplace(new_compiler_call_string, "$INPUT_DIR", input_dir);
+		stringReplace(new_compiler_call_string, "$LS_CORE_LIB_DIR", path_to_lizard_script_core_lib);
+		stringReplace(new_compiler_call_string, "$LS_CORE_SRC_DIR", path_to_lizard_script_core_src);
 
 		std::cout << new_compiler_call_string.c_str();
 		system((std::string("\"") + new_compiler_call_string + "\"").c_str());
 
 		std::string output_path = input_path;
 		stringReplace(output_path, ".cxx", executable_extension);
-
-		//output_path.replace(output_path.end() - 4, output_path.end(), executable_extension);
 
 		system(output_path.c_str());
 	}

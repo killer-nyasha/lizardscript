@@ -94,7 +94,17 @@ int main(int argc, char** argv)
                 LsCpp lscpp;
                 std::string text = lscpp.generate(f);
 
-                std::string out_name = argv[1];
+                char buffer[1024];
+                size_t bufsize = 1024;
+
+#ifdef _WIN32 
+                _fullpath(buffer, argv[1], bufsize);
+#else
+                realpath(argv[1], buffer);
+#endif
+
+                std::string out_name = buffer;
+
                 stringReplace(out_name, ".lsa", ".cxx");
 
                 std::ofstream out(out_name);
@@ -107,8 +117,6 @@ int main(int argc, char** argv)
 
                 LsCppCompilerCall lscppc;
 
-                char buffer[1024];
-                size_t bufsize = 1024;
 #ifdef _WIN32
                 GetModuleFileName(GetModuleHandle("LizardScript.exe"), buffer, bufsize);
 #else
@@ -118,6 +126,7 @@ int main(int argc, char** argv)
 
 #endif
                 lscppc.read(buffer);
+
 
                 lscppc.call(out_name);
             }
