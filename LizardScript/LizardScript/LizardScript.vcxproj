@@ -166,6 +166,7 @@
   <ItemGroup>
     <None Include="print_float_0_1.lsa" />
     <None Include="spin_benchmark.lsa" />
+    <None Include="spin_benchmark64.lsa" />
     <None Include="test.lsa" />
   </ItemGroup>
   <ItemGroup>

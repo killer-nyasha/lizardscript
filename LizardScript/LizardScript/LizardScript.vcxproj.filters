@@ -24,6 +24,7 @@
     <None Include="test.lsa" />
     <None Include="print_float_0_1.lsa" />
     <None Include="spin_benchmark.lsa" />
+    <None Include="spin_benchmark64.lsa" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="LsCppSettings_example.txt" />
