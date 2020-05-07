@@ -125,10 +125,12 @@ int main(int argc, char** argv)
                 buffer[actualSize + 1] = 0;
 
 #endif
-                lscppc.read(buffer);
 
-
-                lscppc.call(out_name);
+                if (argc > 3 && strcmp(argv[2], "/runcpp") == 0)
+                {
+                    lscppc.read(buffer);
+                    lscppc.call(out_name);
+                }
             }
             else
             {
