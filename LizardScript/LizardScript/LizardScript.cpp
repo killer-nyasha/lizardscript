@@ -89,7 +89,7 @@ int main(int argc, char** argv)
             LsAsm lsasm;
             LsFunction f = lsasm.assemble(file.data, file.size);
 
-            if (argc > 2 && strcmp(argv[2], "/lscpp") == 0)
+            if (argc > 2 && (strcmp(argv[2], "/lscpp") == 0))
             { 
                 LsCpp lscpp;
                 std::string text = lscpp.generate(f);
@@ -126,7 +126,7 @@ int main(int argc, char** argv)
 
 #endif
 
-                if (argc > 3 && strcmp(argv[2], "/runcpp") == 0)
+                if (argc > 3 && (strcmp(argv[3], "/runcpp") == 0))
                 {
                     lscppc.read(buffer);
                     lscppc.call(out_name);

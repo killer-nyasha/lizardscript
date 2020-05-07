@@ -6,6 +6,8 @@
 \date 26.02.2020
 */
 #pragma once
+#include "pch.h"
+
 #include "Delegate.h"
 #include "NonTypedStack.h"
 #include "VectorsTuple.h"
