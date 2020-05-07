@@ -1,0 +1,3 @@
+"/Users/TwoDollarsEsq/Developer/Pets/lizardscript/LizardScript/LizardScript/LizardScriptCore.a"
+"/Users/TwoDollarsEsq/Developer/Pets/lizardscript/LizardScript/LizardScriptCore"
+clang++ --std=c++14 $INPUT_FILE -o test $LS_CORE_LIB_DIR -O2 -I $LS_CORE_SRC_DIR
