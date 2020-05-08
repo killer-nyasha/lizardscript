@@ -17,6 +17,6 @@ namespace LizardScript
 			core = createSyntaxCore();
 		}
 
-		LsFunction assemble(const TCHAR* text, size_t length = 0);
+		LsFunction compile(const TCHAR* text, size_t length = 0);
 	};
 }

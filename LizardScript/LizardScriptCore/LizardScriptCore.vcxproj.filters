@@ -173,6 +173,9 @@
     <ClInclude Include="LsCppExternal.h">
       <Filter>external</Filter>
     </ClInclude>
+    <ClInclude Include="LsCompiler.h">
+      <Filter>compiler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -216,6 +219,9 @@
     </ClCompile>
     <ClCompile Include="OpcodesText.cxx">
       <Filter>pch</Filter>
+    </ClCompile>
+    <ClCompile Include="LsCompiler.cpp">
+      <Filter>compiler</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

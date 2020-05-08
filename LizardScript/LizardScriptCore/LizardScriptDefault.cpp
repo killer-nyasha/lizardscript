@@ -2,37 +2,38 @@
 #include <initializer_list> 
 
 #include "LizardScriptDefault.h"
+#include "SyntaxCore.h"
 
 namespace LizardScript
 {
 	namespace Default
 	{
-		SyntaxCore syntaxCore;
+		SyntaxCore* syntaxCore;
 
-		SyntaxCore createSyntaxCore()
+		SyntaxCore* createSyntaxCore()
 		{
-			SyntaxCore core;
-			core.textChars = { '_' };
-			core.breakChars = { '(', ')', '.', ';' };
+			SyntaxCore* core = new SyntaxCore();
+			core->textChars = { '_' };
+			core->breakChars = { '(', ')', '.', ';' };
 
-			set_vector<std::unique_ptr<KeywordToken>, KeywordToken*>(core.simpleKeywords,
+			set_vector<std::unique_ptr<KeywordToken>, KeywordToken*>(core->simpleKeywords,
 			{
 				new KeywordToken("(", KeywordTokenType::LeftBracket),
 				new KeywordToken(")", KeywordTokenType::RightBracket),
 			});
 
-			set_vector<std::unique_ptr<OperatorToken>, OperatorToken*>(core.prefixUnary,
+			set_vector<std::unique_ptr<OperatorToken>, OperatorToken*>(core->prefixUnary,
 			{
 				new OperatorToken("-", KeywordTokenType::PrefixUnary, 70),
 			});
 
-			set_vector<std::unique_ptr<OperatorToken>, OperatorToken*>(core.postfixUnary,
+			set_vector<std::unique_ptr<OperatorToken>, OperatorToken*>(core->postfixUnary,
 			{
 				new OperatorToken("-", KeywordTokenType::PostfixUnary, 60),
 				new OperatorToken("--", KeywordTokenType::PostfixUnary, 60),
 			});
 
-			set_vector<std::unique_ptr<OperatorToken>, OperatorToken*>(core.binaryOperators,
+			set_vector<std::unique_ptr<OperatorToken>, OperatorToken*>(core->binaryOperators,
 			{
 				new OperatorToken("=", KeywordTokenType::Binary, 20, Associativity::Right),
 
@@ -85,7 +86,7 @@ namespace LizardScript
 //Keyword(_T("class"), 0, Arity::None, SpecialKeywords::Class, KeywordFlags::ParserAsNonOp),
 
 
-			core.confirmChanges();
+			core->confirmChanges();
 
 			return core;
 		}

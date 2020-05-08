@@ -31,44 +31,12 @@ SyntaxCore LsAsm::createSyntaxCore()
 	kw1->customData = (void*)2;
 	core.simpleKeywords.push_back(std::unique_ptr<KeywordToken>(kw1));
 
-	//set_vector<std::unique_ptr<KeywordToken>, KeywordToken*>(core.simpleKeywords,
-	//	{
-	//		new KeywordToken("(", KeywordTokenType::LeftBracket),
-	//		new KeywordToken(")", KeywordTokenType::RightBracket),
-	//	});
-
-	//set_vector<std::unique_ptr<OperatorToken>, OperatorToken*>(core.prefixUnary,
-	//	{
-	//		new OperatorToken("-", KeywordTokenType::PrefixUnary, 70),
-	//	});
-
-	//set_vector<std::unique_ptr<OperatorToken>, OperatorToken*>(core.postfixUnary,
-	//	{
-	//		new OperatorToken("-", KeywordTokenType::PostfixUnary, 60),
-	//		new OperatorToken("--", KeywordTokenType::PostfixUnary, 60),
-	//	});
-
-	//set_vector<std::unique_ptr<OperatorToken>, OperatorToken*>(core.binaryOperators,
-	//	{
-	//		new OperatorToken("=", KeywordTokenType::Binary, 20, Associativity::Right),
-
-	//		new OperatorToken(">", KeywordTokenType::Binary, 30),
-	//		new OperatorToken("<", KeywordTokenType::Binary, 30),
-
-	//		new OperatorToken("+", KeywordTokenType::Binary, 50),
-	//		new OperatorToken("-", KeywordTokenType::Binary, 50),
-	//		new OperatorToken("*", KeywordTokenType::Binary, 50),
-	//		new OperatorToken("/", KeywordTokenType::Binary, 50),
-
-	//		new OperatorToken("--", KeywordTokenType::Binary, 50),
-	//	});
-
 	core.confirmChanges();
 
 	return core;
 }
 
-LsFunction LsAsm::assemble(const TCHAR* text, size_t length)
+LsFunction LsAsm::compile(const TCHAR* text, size_t length)
 {
 	LsFunction f;
 	std::map<TCHAR*, size_t, cmp_str> labels;
