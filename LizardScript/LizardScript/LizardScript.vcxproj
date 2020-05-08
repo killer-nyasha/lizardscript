@@ -164,6 +164,7 @@
     <Image Include="..\..\..\..\Users\issst\Documents\10.ico" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="lstest.ls" />
     <None Include="print_float_0_1.lsa" />
     <None Include="spin_benchmark.lsa" />
     <None Include="spin_benchmark64.lsa" />

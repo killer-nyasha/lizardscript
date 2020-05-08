@@ -58,7 +58,7 @@ Buffer open_file(const char* name, bool binary)
 
 const char* hr = "**************************************************";
 const char* build_time = __TIME__;
-const char* version = "0.1.3.1 ";
+const char* version = "0.1.3.2";
 
 int main(int argc, char** argv)
 {
@@ -79,8 +79,12 @@ int main(int argc, char** argv)
         if (strcmp(end3, _ls) == 0)
         {
             //ls
+            Buffer file = open_file(argv[1], false);
 
-            std::cout << "not implemented\n";
+            LsCompiler lsc;
+            LsFunction f = lsc.compile(file.data, file.size);
+
+            //std::cout << "not implemented\n";
             crossplatform_pause();
         }
         else if (strcmp(end4, _lsa) == 0)
@@ -89,7 +93,7 @@ int main(int argc, char** argv)
 
             //lsa
             LsAsm lsasm;
-            LsFunction f = lsasm.assemble(file.data, file.size);
+            LsFunction f = lsasm.compile(file.data, file.size);
 
             if (argc > 2 && (strcmp(argv[2], "/lscpp") == 0))
             { 
@@ -150,10 +154,6 @@ int main(int argc, char** argv)
                 Runtime r;
                 r.run(f);
             }
-
-            //std::cout << "end2\n";
-
-            //crossplatform_pause();
         }
         else if (strcmp(end4, _lsc) == 0)
         {
@@ -176,9 +176,6 @@ int main(int argc, char** argv)
                 Runtime r;
                 r.run(f);
             }
-
-
-            //crossplatform_pause();
         }
     }
     else
@@ -190,21 +187,6 @@ int main(int argc, char** argv)
     {
         std::cout << "Exception: " << ex.text << std::endl;
     }
-
-    //-hello -- -(-world--world1)
-    //-hello- --(-world--world1)-
-    //auto ldata = runLexer(Default::syntaxCore, "[f 1](1,g(2,3))");
-
-    //print_ldata(*ldata);
-
-    //runParser(*ldata);
-
-    //print_ldata(*ldata);
-
-    //LsCpp lscpp;
-
-    //LsDisasm disasm(lscpp);
-    //disasm.disasm(f);
 
     //auto f1 = nmakedel(f);
     //sample s;

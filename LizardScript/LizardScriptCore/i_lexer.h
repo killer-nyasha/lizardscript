@@ -8,6 +8,7 @@ Someday I'll make builder pattern for it, but now we don't have to use different
 */
 #pragma once
 #include <vector>
+#include <iostream>
 
 #include "SyntaxCore.h"//?
 #include "crossplatform_tchar.h"
@@ -73,6 +74,19 @@ namespace LizardScript
 				return true;
 			}
 			else return false;
+		}
+
+		void print()
+		{
+			for (size_t i = 0; i < tokens->size(); i++)
+			{
+				KeywordToken* kw;
+				if (tryGetKeyword(i, kw))
+					std::cout << kwtypes_str(kw->type) << "";
+
+				std::cout << text_at(i) << "    ";
+			}
+			std::cout << "\n\n";
 		}
 	};
 

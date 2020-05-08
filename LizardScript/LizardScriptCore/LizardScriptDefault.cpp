@@ -22,6 +22,10 @@ namespace LizardScript
 				new KeywordToken(")", KeywordTokenType::RightBracket),
 			});
 
+			auto* kwEndLine = new KeywordToken(";", KeywordTokenType::Simple);
+			kwEndLine->parserFlags = ParserFlags::EndLine;
+			core->simpleKeywords.push_back(std::unique_ptr<KeywordToken>(kwEndLine));
+
 			set_vector<std::unique_ptr<OperatorToken>, OperatorToken*>(core->prefixUnary,
 			{
 				new OperatorToken("-", KeywordTokenType::PrefixUnary, 70),

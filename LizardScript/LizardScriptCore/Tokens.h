@@ -168,9 +168,6 @@ namespace LizardScript
 			return stream;
 		}
 
-		//bool listA() { return kwtype_listA(type); }
-		//bool listB() { return kwtype_listB(type); }
-
 		bool is_operator()
 		{
 			return type == KeywordTokenType::PrefixUnary || type == KeywordTokenType::PostfixUnary ||

@@ -194,19 +194,6 @@ void Lexer::processQuotes(size_t& i)
 	}
 }
 
-void print_ldata(LexerData& ldata)
-{
-	for (size_t i = 0; i < ldata.tokens->size(); i++)
-	{
-		KeywordToken* kw;
-		if (ldata.tryGetKeyword(i, kw))
-			std::cout << kwtypes_str(kw->type) << "";
-
-		std::cout << ldata.text_at(i) << "    ";
-	}
-	std::cout << "\n\n";
-}
-
 PoolPointer<LexerData> Lexer::run()
 {
 	ALIAS(data->values, values);

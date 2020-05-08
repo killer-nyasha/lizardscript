@@ -184,6 +184,7 @@
     <ClInclude Include="metagen_system.h" />
     <ClInclude Include="metagen_def.h" />
     <ClInclude Include="NonTypedStack.h" />
+    <ClInclude Include="NonTypedStack2.h" />
     <ClInclude Include="Opcodes.hxx" />
     <ClCompile Include="LsAsm.cpp" />
     <ClCompile Include="LsCompiler.cpp" />

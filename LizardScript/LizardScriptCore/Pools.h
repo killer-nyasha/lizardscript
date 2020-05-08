@@ -155,7 +155,8 @@ public:
 	PoolPointer& operator=(PoolPointer&& ptr)
 	{
 		this->~PoolPointer();
-		*this = PoolPointer(std::forward<PoolPointer<T>>(ptr));
+		//*this = 
+		new (this) PoolPointer(std::forward<PoolPointer<T>>(ptr));
 		return *this;
 	}
 

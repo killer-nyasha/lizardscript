@@ -176,6 +176,9 @@
     <ClInclude Include="LsCompiler.h">
       <Filter>compiler</Filter>
     </ClInclude>
+    <ClInclude Include="NonTypedStack2.h">
+      <Filter>system\containers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
