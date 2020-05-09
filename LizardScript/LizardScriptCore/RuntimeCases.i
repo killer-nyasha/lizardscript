@@ -80,6 +80,8 @@
 #line 2 "RuntimeCases.h"
 //#include "LsTypedefs.h"
 
+case LsAsm::nop: { ;; break; };
+
 case LsAsm::push_int: { CODEGET(OFFSET_T, R1);CODEGET(int, P_VALUE);*REGISTER(int, CODE(R1)) = CODE(P_VALUE);; break; }
 case LsAsm::push_int64: { CODEGET(OFFSET_T, R1);CODEGET(int64, P_VALUE);*REGISTER(int64, CODE(R1)) = CODE(P_VALUE);; break; }
 

@@ -1,6 +1,8 @@
 #pragma once
 #include <map>
 
+#include "LsFunction.h"
+
 struct cmp_str
 {
 	bool operator()(char const* a, char const* b) const
@@ -9,7 +11,7 @@ struct cmp_str
 	}
 };
 
-extern std::map<const char*, int, cmp_str> textToOpcode;
+extern std::map<const char*, LsCode, cmp_str> textToOpcode;
 extern const char* opcodeToText[];
 extern bool opcodes_initialized;
 

@@ -1,6 +1,8 @@
 #include "RuntimeMacros.h"
 //#include "LsTypedefs.h"
 
+CASE_CUSTOM(nop, ;)
+
 CASE_PUSH(int)
 CASE_PUSH(int64)
 

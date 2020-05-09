@@ -32,7 +32,7 @@ out_file1 = open(output_file1_name,'w')
 out_file2 = open(output_file2_name,'w')
 
 out_file1.write('namespace '+ namespace_name + '\n{\nenum ' + enum_name + '\n{\n')
-out_file2.write('#include "pch.h"\n#include "OpcodesText.h"\n#include "Opcodes.hxx"\nusing namespace LsAsm;\nconst char* opcodeToText[256];\nbool opcodes_initialized = false;\nstd::map<const char*, int, cmp_str> '+ map_name +'\n{\n')
+out_file2.write('#include "pch.h"\n#include "OpcodesText.h"\n#include "Opcodes.hxx"\nusing namespace LsAsm;\nconst char* opcodeToText[256];\nbool opcodes_initialized = false;\nstd::map<const char*, LsCode, cmp_str> '+ map_name +'\n{\n')
 
 string = ''.join([deleteUnnecessaryPatterns(line) for line in in_file])
 
