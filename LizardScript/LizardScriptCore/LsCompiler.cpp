@@ -6,6 +6,7 @@
 #include "Opcodes.hxx"
 #include "OpcodesText.h"
 #include "NonTypedStack2.h"
+#include "Runtime.h"
 
 using namespace LizardScript;
 
@@ -13,7 +14,6 @@ char operator_name[512];
 
 class OperatorsForType
 {
-	//we are in a .cpp file!
 	static std::map<const char*, const char*, cmp_str> st_operators;
 
 public:
@@ -75,15 +75,21 @@ std::map<const char*, const char*, cmp_str> OperatorsForType::st_operators =
 	{ "<", "less" },
 	{ ">=", "more_eq" },
 	{ "<=", "less_eq" },
+	{ "=", "mov" },
 };
+
 
 LsFunction LsCompiler::compile(const TCHAR* text, size_t length)
 {
 	fillOpcodeToText();
 
-	OperatorsForType("int64");
+	OperatorsForType operators_int64("int64");
 
 	LsFunction f;
+
+	Runtime runtime;
+
+	LsFunction fTemp;
 
 	auto _lexerData = runLexer(core, text, length);
 	auto& lexerData = *_lexerData;
@@ -92,7 +98,7 @@ LsFunction LsCompiler::compile(const TCHAR* text, size_t length)
 	runParser(lexerData);
 	lexerData.print();
 
-	NonTypedStack2 stack;
+	NonTypedStack2 tempStack;
 
 	for (size_t i = 0; i < lexerData.tokens->size(); i++)
 	{
@@ -106,9 +112,38 @@ LsFunction LsCompiler::compile(const TCHAR* text, size_t length)
 
 				if (operatorToken->type == KeywordTokenType::Binary)
 				{
-					//if (operatorToken->value == )
+					if (operators_int64.operators.find(operatorToken->value) != operators_int64.operators.end())
+					{
+						LsCode opcode = operators_int64.operators[operatorToken->value];
+						
+						TempValue val1 = tempStack.pop();
+						TempValue val2 = tempStack.pop();
 
-					//textToOpcode[];
+						//compile-teme evaluate
+						if (val1.compileTime && val2.compileTime)
+						{
+							//HARDCODED FOR INT64!!!
+							runtime.setLocal<int64>(0, val1.d.value);
+							runtime.setLocal<int64>(8, val2.d.value);
+
+							fTemp.code.push_back(opcode);
+							fTemp.push_back((OFFSET_T)0);
+							fTemp.push_back((OFFSET_T)8);
+							fTemp.code.push_back(LsAsm::ret);
+
+
+							runtime.run(fTemp);
+							fTemp.code.clear();
+
+							TempValue retVal = val1;
+							retVal.d.value = runtime.getLocal<int64>(0);
+
+							tempStack.push(retVal.d.value);
+						}
+
+						//f.code.push_back(opcode);
+					}
+					else throw Exception("Cannot find operator ", operatorToken->value, " for ", "int64");
 
 				}
 				else if (operatorToken->type == KeywordTokenType::PrefixUnary ||
@@ -129,7 +164,7 @@ LsFunction LsCompiler::compile(const TCHAR* text, size_t length)
 
 				if (end != t)
 				{
-					stack.push(value);
+					tempStack.push(value);
 				}
 				else
 				{

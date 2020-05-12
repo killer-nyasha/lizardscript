@@ -11,10 +11,16 @@ namespace LizardScript
 
 		void run(const LsFunction& f);
 
-		//template <typename type>
-		//auto _register(size_t esp, size_t i) { return reinterpret_cast<type*>(&stack[esp + i]); }
-		
-		//template <typename type>
-		//auto _codeget(const LsFunction& f, size_t& eip) { return *(type*)(&f.code[(eip += sizeof(type)) - sizeof(type)]); }
+		template <typename T>
+		T& getLocal(size_t index)
+		{
+			return *reinterpret_cast<T*>(&stack[index]);
+		}
+
+		template <typename T>
+		void setLocal(size_t index, T& elem)
+		{
+			*reinterpret_cast<T*>(&stack[index]) = elem;
+		}
 	};
 }

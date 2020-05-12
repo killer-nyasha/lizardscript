@@ -124,8 +124,6 @@ struct LsCppVariable
 	size_t data_size = 0;
 };
 
-using OFFSET_T = unsigned char;
-
 class LsCpp
 {
 private:

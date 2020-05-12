@@ -75,3 +75,5 @@ case LsAsm::push_##T: { OPCODE_PUSH(T); break; }
 
 #define CASE_CUSTOM(name, ...)\
 case LsAsm::name: { __VA_ARGS__; break; };
+
+#define CASE_ALIAS(name) case LsAsm::name:

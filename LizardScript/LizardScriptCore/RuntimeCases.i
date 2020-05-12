@@ -77,11 +77,14 @@
 
 
 
+
+
 #line 2 "RuntimeCases.h"
 //#include "LsTypedefs.h"
 
 case LsAsm::nop: { ;; break; };
 
+case LsAsm::push_float:
 case LsAsm::push_int: { CODEGET(OFFSET_T, R1);CODEGET(int, P_VALUE);*REGISTER(int, CODE(R1)) = CODE(P_VALUE);; break; }
 case LsAsm::push_int64: { CODEGET(OFFSET_T, R1);CODEGET(int64, P_VALUE);*REGISTER(int64, CODE(R1)) = CODE(P_VALUE);; break; }
 
@@ -105,9 +108,10 @@ case LsAsm::cast_int_int64: { CODEGET(OFFSET_T, R1);CODEGET(OFFSET_T, R2);*REGIS
 case LsAsm::cast_int64_int: { CODEGET(OFFSET_T, R1);CODEGET(OFFSET_T, R2);*REGISTER(int64, CODE(R1)) = *REGISTER(int, CODE(R2)); break; }
 
 //DEPRECATED
+case LsAsm::mov_float:
 case LsAsm::mov_int: { CODEGET(OFFSET_T, R1);CODEGET(OFFSET_T, R2);*REGISTER(int, CODE(R1)) = *REGISTER(int, CODE(R2)); break; }
 case LsAsm::mov_int64: { CODEGET(OFFSET_T, R1);CODEGET(OFFSET_T, R2);*REGISTER(int64, CODE(R1)) = *REGISTER(int64, CODE(R2)); break; }
-case LsAsm::mov_float: { CODEGET(OFFSET_T, R1);CODEGET(OFFSET_T, R2);*REGISTER(float, CODE(R1)) = *REGISTER(float, CODE(R2)); break; }
+//CASE_ST_OPERATOR2(float, =, mov)
 
 case LsAsm::jmp: { CODEGET(int, new_eip); JMP(CODE(new_eip)); break; };
 case LsAsm::jt: { CODEGET(OFFSET_T, R1); CODEGET(LsInternalAddr, P_ADDRESS); if (*REGISTER(int, CODE(R1)) != 0) JMP(CODE(P_ADDRESS)); break; };

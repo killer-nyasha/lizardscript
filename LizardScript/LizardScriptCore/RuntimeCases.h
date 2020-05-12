@@ -3,6 +3,7 @@
 
 CASE_CUSTOM(nop, ;)
 
+CASE_ALIAS(push_float)
 CASE_PUSH(int)
 CASE_PUSH(int64)
 
@@ -26,9 +27,10 @@ CASE_CAST(int, int64)
 CASE_CAST(int64, int)
 
 //DEPRECATED
+CASE_ALIAS(mov_float)
 CASE_ST_OPERATOR2(int, =, mov)
 CASE_ST_OPERATOR2(int64, =, mov)
-CASE_ST_OPERATOR2(float, =, mov)
+//CASE_ST_OPERATOR2(float, =, mov)
 
 CASE_CUSTOM(jmp, CODEGET(int, new_eip); JMP(CODE(new_eip)))
 CASE_CUSTOM(jt, CODEGET(OFFSET_T, R1); CODEGET(LsInternalAddr, P_ADDRESS); if (*REGISTER(int, CODE(R1)) != 0) JMP(CODE(P_ADDRESS)))

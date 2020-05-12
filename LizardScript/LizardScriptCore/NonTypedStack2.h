@@ -31,15 +31,40 @@ Dynamic makeDynamic(const T& arg)
 	return dyn;
 }
 
+struct TempValue
+{
+	Dynamic d;
+	bool compileTime;
+
+	TempValue(const Dynamic& d, bool compileTime = true) 
+		: d(d), compileTime(compileTime)
+	{
+
+	}
+};
+
+struct LocalVariable
+{
+	TCHAR* name;
+	Dynamic variable;
+};
+
 class NonTypedStack2
 {
 private:
-	std::stack<Dynamic> data;
+	std::stack<TempValue> data;
 
 public:
 	template <typename T>
 	void push(const T& value)
 	{
-		data.push(makeDynamic(value));
+		data.push(TempValue(makeDynamic(value)));
+	}
+
+	TempValue pop()
+	{
+		TempValue t = data.top();
+		data.pop();
+		return t;
 	}
 };
