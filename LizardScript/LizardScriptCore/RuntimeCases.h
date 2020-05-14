@@ -42,6 +42,6 @@ CASE_CUSTOM(wait, crossplatform_pause())
 CASE_OUT(int)
 CASE_OUT(float)
 CASE_OUT(int64)
-CASE_CUSTOM(out_stdstring, CODEGET(OFFSET_T, R1); std::cout << **REGISTER(stdstring*, CODE(R1)) << std::endl)
+CASE_CUSTOM(out_stdstring, CODEGET(OFFSET_T, R1); std::cout << *REGISTER(stdstring*, CODE(R1)) << std::endl)
 
 CASE_CUSTOM(ret, goto end)

@@ -109,6 +109,12 @@ namespace LizardScript
 #endif
 		}
 
+		KeywordToken& setCustom(void* custom)
+		{
+			customData = custom;
+			return *this;
+		}
+
 		KeywordToken(const TCHAR* cvalue, KeywordTokenType type, CompilerFlags compilerFlags = CompilerFlags::None) : KeywordToken(cvalue)
 		{
 			this->type = type;

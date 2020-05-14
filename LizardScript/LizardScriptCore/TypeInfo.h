@@ -39,7 +39,7 @@ public:
 	}
 
 	//!get size of this type instanse or size of a pointer if it's a pointer
-	int size()
+	size_t size() const
 	{
 		return ptr == 0 ? byValueSize : sizeof(void*);
 	}

@@ -28,11 +28,13 @@ namespace LizardScript
 		std::map<TypeInfo, OpcodesMap> map_postfix;
 
 		void addBinaryMap(OperatorsMap& m, const TCHAR* text1, TypeInfo info1);
+		void addPrefixMap(OperatorsMap& m, const TCHAR* text1, TypeInfo info1);
+		void addPostfixMap(OperatorsMap& m, const TCHAR* text1, TypeInfo info1);
 
 	public:
 		LsCompiler(SyntaxCore& core);
 
-		LsCompiler() : core(Default::getSyntaxCore())
+		LsCompiler() : LsCompiler(Default::getSyntaxCore())
 		{
 
 		}

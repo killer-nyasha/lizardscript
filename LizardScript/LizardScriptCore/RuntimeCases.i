@@ -99,7 +99,7 @@ case LsAsm::push_float:
 case LsAsm::push_int: { CODEGET(OFFSET_T, R1);CODEGET(int, P_VALUE);*REGISTER(int, CODE(R1)) = CODE(P_VALUE);; break; }
 case LsAsm::push_int64: { CODEGET(OFFSET_T, R1);CODEGET(int64, P_VALUE);*REGISTER(int64, CODE(R1)) = CODE(P_VALUE);; break; }
 
-case LsAsm::pushstr_stdstring: { CODEGET(OFFSET_T, R1);CODEGETSTR(P_VALUE);*REGISTER(stdstring*, CODE(R1)) = new stdstring(CODE(P_VALUE));; break; }
+case LsAsm::pushstr_stdstring: { CODEGET(OFFSET_T, R1);CODEGETSTR(P_VALUE);new (REGISTER(stdstring, CODE(R1))) stdstring(CODE(P_VALUE));; break; }
 
 case LsAsm::add_stdstring: { CODEGET(OFFSET_T, R1);CODEGET(OFFSET_T, R2);*REGISTER(stdstring, CODE(R1)) = *REGISTER(stdstring, CODE(R1)) + *REGISTER(stdstring, CODE(R2)); break; }
 
@@ -134,6 +134,6 @@ case LsAsm::wait: { crossplatform_pause(); break; };
 case LsAsm::out_int: { CODEGET(OFFSET_T, R1); std::cout << *REGISTER(int, CODE(R1)) << std::endl; break; }
 case LsAsm::out_float: { CODEGET(OFFSET_T, R1); std::cout << *REGISTER(float, CODE(R1)) << std::endl; break; }
 case LsAsm::out_int64: { CODEGET(OFFSET_T, R1); std::cout << *REGISTER(int64, CODE(R1)) << std::endl; break; }
-case LsAsm::out_stdstring: { CODEGET(OFFSET_T, R1); std::cout << **REGISTER(stdstring*, CODE(R1)) << std::endl; break; };
+case LsAsm::out_stdstring: { CODEGET(OFFSET_T, R1); std::cout << *REGISTER(stdstring*, CODE(R1)) << std::endl; break; };
 
 case LsAsm::ret: { goto end; break; };

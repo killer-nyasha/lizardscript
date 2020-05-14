@@ -47,7 +47,10 @@ OpcodesMap Operators::forType(OperatorsMap& st_operators, const char* type1, con
 
 		if (textToOpcode[operator_name] != 0)
 			retMap.insert(std::make_pair(pair.first, (LsCode)textToOpcode[operator_name]));
+		else throw Exception("Can't find an opcode for ", operator_name);
 	}
+
+	return std::move(retMap);
 }
 
 OperatorsMap s_map_int64_binary =
@@ -67,9 +70,13 @@ OperatorsMap s_map_int64_binary =
 
 OperatorsMap s_map_tchar_binary =
 {
-	{ ".", "test_operator\n" },
+	{ ".", "add" },
 };
 
+OperatorsMap s_map_tchar_prefix =
+{
+	{ "print", "out" },
+};
 
 struct FunctionCall
 {
@@ -79,15 +86,30 @@ struct FunctionCall
 void LsCompiler::addBinaryMap(OperatorsMap& m, const TCHAR* text1, TypeInfo info1)
 {
 	auto newMap = Operators::forType(m, text1);
-	map_binary.insert(std::make_pair(info1, newMap));
+	map_binary.insert(std::make_pair(info1, std::move(newMap)));
 }
+
+void LsCompiler::addPrefixMap(OperatorsMap& m, const TCHAR* text1, TypeInfo info1)
+{
+	auto newMap = Operators::forType(m, text1);
+	map_prefix.insert(std::make_pair(info1, std::move(newMap)));
+}
+
+void LsCompiler::addPostfixMap(OperatorsMap& m, const TCHAR* text1, TypeInfo info1)
+{
+	auto newMap = Operators::forType(m, text1);
+	map_postfix.insert(std::make_pair(info1, std::move(newMap)));
+}
+
 
 LsCompiler::LsCompiler(SyntaxCore& core) : core(core)
 {
 	fillOpcodeToText();
 
 	addBinaryMap(s_map_int64_binary, "int64", typeInfo<int64>());
-	addBinaryMap(s_map_tchar_binary, "string", typeInfo<std::string>());
+	addBinaryMap(s_map_tchar_binary, "stdstring", typeInfo<std::string>());
+
+	addPrefixMap(s_map_tchar_prefix, "stdstring", typeInfo<std::string>());
 }
 
 LsFunction LsCompiler::compile(const TCHAR* text, size_t length)
@@ -145,39 +167,41 @@ LsFunction LsCompiler::compile(const TCHAR* text, size_t length)
 							if (val1.compileTime && val2.compileTime)
 							{
 								//HARDCODED FOR INT64!!!
-								runtime.setLocal<int64>(0, val1.d.value);
-								runtime.setLocal<int64>(8, val2.d.value);
+
+								runtime.setLocal(0, val1.d);
+								runtime.setLocal(64, val2.d);
 
 								fTemp.code.push_back(opcode);
 								fTemp.push_back((OFFSET_T)0);
-								fTemp.push_back((OFFSET_T)8);
+								fTemp.push_back((OFFSET_T)64);
 								fTemp.code.push_back(LsAsm::ret);
-
 
 								runtime.run(fTemp);
 								fTemp.code.clear();
 
 								TempValue retVal = val1;
-								retVal.d.value = runtime.getLocal<int64>(0);
+								retVal.d = runtime.getLocalSt<int64>(0);
 
-								tempStack.push(retVal.d.value);
+								tempStack.push(retVal.d);
 							}
+							else throw Exception("Runtime evaluation isn't implemented");
 
 							//f.code.push_back(opcode);
 						}
-						else throw Exception("Cannot find operator ", operatorToken->value, " for ", "int64");
+						else throw Exception("Cannot find operator ", operatorToken->value, " for ", val1.d.type.to_string());
 
 					}
 					else
 					{
-						throw Exception("cast operators aren't implemented");
+						throw Exception("Cast operators aren't implemented");
 					}
 
 				}
 				else if (operatorToken->type == KeywordTokenType::PrefixUnary ||
 					operatorToken->type == KeywordTokenType::PostfixUnary)
 				{
-
+					//do something
+					throw Exception("Unary operators aren't implemented");
 				}
 			}
 			else if (kwtoken->type == KeywordTokenType::LeftBracket)
@@ -190,7 +214,7 @@ LsFunction LsCompiler::compile(const TCHAR* text, size_t length)
 				//if (br)
 				//{
 					//CALL FUNCTION
-				int k = 1;
+				//int k = 1;
 				//}
 			}
 		}
@@ -209,8 +233,8 @@ LsFunction LsCompiler::compile(const TCHAR* text, size_t length)
 				}
 				else
 				{
-					//не удалось распарсить
-					tempStack.push(new std::string(t));
+					//не удалось распарсить - пока считаем строкой?
+					tempStack.push(std::string(t));
 				}
 
 			}

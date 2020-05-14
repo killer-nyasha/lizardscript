@@ -3,34 +3,25 @@
 //==============================================
 
 //счётчик
-push_int 0 0,0,0,0
+push_int (ofs 0) (int 0)
 
 //шаг
-push_int 4 1,0,0,0
+push_int (ofs 4) (int 1)
 
 //цель
-push_int 8 1,0,0,0
-push_int 12 10,0,0,0
-mul_int 8,12
-mul_int 8,12
-mul_int 8,12
-mul_int 8,12
-mul_int 8,12
-mul_int 8,12
-//mul_int 8,12
-//mul_int 8,12
-//mul_int 8,12
+push_int (ofs 8) (int 1)
+push_int (ofs 12) (int 1000000)
 
 //наш цикл
 label l1
-	add_int 0,4
-	mov_int 16,0
+	add_int (ofs 0) (ofs 4)
+	mov_int (ofs 16) (ofs 0)
 	//out_int 0
-eq_int 16,8
-jf 16 l1
+eq_int (ofs 16), (ofs 8)
+jf (ofs 16) l1
 
 //выводим результат
-out_int	0
+out_int	(ofs 0)
 
 wait
 ret

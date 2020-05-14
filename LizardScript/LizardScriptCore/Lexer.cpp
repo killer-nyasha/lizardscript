@@ -182,8 +182,13 @@ void Lexer::processQuotes(size_t& i)
 	{
 		i++; newToken();
 
-		values->push_back('$');
-		newToken();
+		//this can be optimized!
+		//size_t length = _tcslen(stringKw.value);
+		//for (size_t i = 0; i < length; i++)
+		//	values->push_back(stringKw.value[i]);
+		//newToken();
+		tokens->push_back((void*)&stringKw);
+
 
 		while (text[i] != '\"' && i < textLength)
 			values->push_back(text[i++]);

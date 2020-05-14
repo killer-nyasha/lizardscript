@@ -26,8 +26,10 @@
     <None Include="spin_benchmark.lsa" />
     <None Include="spin_benchmark64.lsa" />
     <None Include="lstest.ls" />
+    <None Include="test_string.lsa" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="LsCppSettings_example.txt" />
+    <Text Include="LsCppSettingsExample(Mac).txt" />
   </ItemGroup>
 </Project>

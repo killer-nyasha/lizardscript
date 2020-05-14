@@ -25,8 +25,6 @@ std::string LsDisasm::disasm(const LsFunction& _f)
 		text << "//" << eip << ":\n";
 
 		LsCode code = RUNTIME_CODEGET(LsCode);
-		//_r1 = RUNTIME_CODEGET(OFFSET_T);
-		//_r2 = RUNTIME_CODEGET(OFFSET_T);
 
 		text << opcodeToText[code];
 
@@ -38,14 +36,10 @@ std::string LsDisasm::disasm(const LsFunction& _f)
 		for (size_t i = 0; i < 16 - length; i++)
 			text << " ";
 
-		//text << "[" << _r1 << "], [" << _r2 << "]";
-
 		size_t cgs = lscpp.opcodes_table[code]->codeget_size;
-		//eip += cgs;
 
 		if (cgs != 0)
 		{
-			//text << " ";
 			for (size_t i = 0; i < cgs; i++)
 			{
 				if (i != 0)
@@ -54,10 +48,6 @@ std::string LsDisasm::disasm(const LsFunction& _f)
 			}
 		}
 
-		//пока нет вывода результатов CODEGET
-		//а ещё ведь могут быть строки
-
-		//lscpp.opcodes_table[code]->print(*this);
 		text << "\n";
 	}
 

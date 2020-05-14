@@ -1,5 +1,6 @@
 #pragma once
 #include "LsFunction.h"
+#include "NonTypedStack2.h"
 
 namespace LizardScript
 {
@@ -12,15 +13,23 @@ namespace LizardScript
 		void run(const LsFunction& f);
 
 		template <typename T>
-		T& getLocal(size_t index)
+		T& getLocalSt(size_t index)
 		{
 			return *reinterpret_cast<T*>(&stack[index]);
 		}
 
 		template <typename T>
-		void setLocal(size_t index, T& elem)
+		void setLocalSt(size_t index, T& elem)
 		{
 			*reinterpret_cast<T*>(&stack[index]) = elem;
+		}
+
+		void setLocal(size_t index, const Dynamic& elem)
+		{
+			if (elem.byPtr())
+				memcpy(&stack[index], *(void**)&elem.value, elem.type.size());
+			else
+				memcpy(&stack[index], (void*)&elem.value, elem.type.size());
 		}
 	};
 }

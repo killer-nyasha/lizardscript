@@ -1,4 +1,4 @@
-pushstr_stdstring 0, 53,53,53,53,0 
-out_stdstring 0
+pushstr_stdstring (ofs 0), "Hello world" 
+out_stdstring (ofs 0)
 wait
 ret

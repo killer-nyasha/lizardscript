@@ -2,24 +2,24 @@
 //Вывести на печать float с шагом 0.1 от 0 до бесконечности
 //==============================================
 
-push_int 16, 1,0,0,0
-push_int 20, 10,0,0,0
+push_int ofs 16, int 1
+push_int ofs 20, int 10
 
-cast_float_int 16,16
-out_float	16		//1.0
+cast_float_int ofs 16, ofs 16
+out_float	ofs 16		//1.0
 
-cast_float_int 20,20
-out_float	20		//10.0
+cast_float_int ofs 20, ofs 20
+out_float	ofs 20		//10.0
 
-div_float 16,20
-out_float	16		//0.1
+div_float ofs 16, ofs 20
+out_float	ofs 16		//0.1
 
-push_int 0 0,0,0,0
+push_int ofs 0 int 0
 
 //наш цикл
 label l1
-	add_float 0,16
-	out_float	0
+	add_float ofs 0, ofs 16
+	out_float	ofs 0
 jmp l1
 
 wait

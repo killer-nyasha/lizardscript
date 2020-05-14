@@ -18,20 +18,32 @@
 struct Dynamic
 {
 	TypeInfo type;
-	int64 value;
+	char value[16];
 
 	Dynamic() { }
+
+	template <typename T>
+	Dynamic(const T& arg)
+	{
+		if (sizeof(arg) <= sizeof(value))
+		{
+			memcpy(&value, &arg, sizeof(arg));
+		}
+		else
+		{
+			T* pArg = new T(std::move(arg));
+			memcpy(&value, &pArg, sizeof(pArg));
+		}
+		type = typeInfo<T>();
+	}
+
+	bool byPtr() const
+	{
+		return type.size() > sizeof(value);
+	}
 };
 
-template <typename T>
-Dynamic makeDynamic(const T& arg)
-{
-	Dynamic dyn;
-	static_assert(sizeof(arg) <= sizeof(dyn.value), "Argument is too big, it must be in the heap");
-	memcpy(&dyn.value, &arg, sizeof(arg));
-	dyn.type = typeInfo<T>();
-	return dyn;
-}
+
 
 struct TempValue
 {
@@ -60,7 +72,7 @@ public:
 	template <typename T>
 	void push(const T& value)
 	{
-		data->push(TempValue(makeDynamic(value)));
+		data->push(TempValue(value));
 	}
 
 	TempValue pop()
