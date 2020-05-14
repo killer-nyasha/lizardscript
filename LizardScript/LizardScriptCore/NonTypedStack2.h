@@ -45,7 +45,7 @@ struct TempValue
 
 struct LocalVariable
 {
-	TCHAR* name;
+	const TCHAR* name;
 	Dynamic variable;
 };
 

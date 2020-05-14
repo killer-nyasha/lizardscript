@@ -22,8 +22,9 @@ namespace LizardScript
 			const OperatorToken* otherOperator = reinterpret_cast<const OperatorToken*>(parserStack->top());
 
 			if (operatorToken->associativity == Associativity::Left)
-				return (operatorToken->priority < otherOperator->priority);
-			else return operatorToken->priority <= otherOperator->priority;
+				return (operatorToken->priority <= otherOperator->priority);
+			else 
+				return operatorToken->priority < otherOperator->priority;
 		}
 			
 		return false;
