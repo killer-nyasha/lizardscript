@@ -10,8 +10,8 @@
 
 using namespace LizardScript;
 
-KeywordToken Lexer::stringKw = KeywordToken("__string__", KeywordTokenType::Simple, CompilerFlags::Call);
-OperatorToken Lexer::callKw = OperatorToken("__call__", KeywordTokenType::Simple, 100, Associativity::Left, CompilerFlags::Call);
+KeywordToken Lexer::stringKw = KeywordToken("__string__", KeywordTokenType::Simple, CompilerFlags::String);
+OperatorToken Lexer::callKw = OperatorToken("__call__", KeywordTokenType::PrefixUnary, 90, Associativity::Left, CompilerFlags::Call);
 
 void Lexer::init()
 {
@@ -55,8 +55,6 @@ void Lexer::newToken()
 			if (index != -1)
 			{
 				KeywordToken* kw = &*core.simpleKeywords[index];
-				tokens->push_back(reinterpret_cast<void*>(kw));
-				values->resize(lastValueIndex);
 
 				if (kwtext[0] == '(')
 				{
@@ -68,6 +66,9 @@ void Lexer::newToken()
 				}
 				else if (kwtext[0] == ')')
 					hasSpacesPost = false;
+
+				tokens->push_back(reinterpret_cast<void*>(kw));
+				values->resize(lastValueIndex);
 
 				lastKeywordType = kw->type;
 				hasSpacesPre = hasSpacesPost;
