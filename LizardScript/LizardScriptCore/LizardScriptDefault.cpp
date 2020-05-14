@@ -50,6 +50,8 @@ namespace LizardScript
 				new OperatorToken("/", KeywordTokenType::Binary, 50),
 
 				new OperatorToken("--", KeywordTokenType::Binary, 50),
+
+				new OperatorToken(".", KeywordTokenType::Binary, 100),
 			});
 
 			//new OperatorToken(".", KeywordTokenType::Binary, 100),

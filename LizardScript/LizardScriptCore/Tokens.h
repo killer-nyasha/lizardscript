@@ -18,13 +18,6 @@ namespace LizardScript
 		EndLine
 	};
 
-	////!unary or binary. ternary operators can be realized via binary
-	//enum class Arity
-	//{
-	//	Unary,
-	//	Binary
-	//};
-
 	//!now parser doesn't support non-associative operators
 	enum class Associativity
 	{
@@ -54,7 +47,14 @@ namespace LizardScript
 		RightBracket,
 
 		//!some custom actions
-		Override
+		//Override
+	};
+
+	enum class CompilerFlags
+	{
+		None,
+		String,
+		Call,
 	};
 
 	inline TCHAR kwtypes_str(KeywordTokenType t)
@@ -93,6 +93,7 @@ namespace LizardScript
 
 		KeywordTokenType type = KeywordTokenType::Simple;
 		ParserFlags parserFlags = ParserFlags::None;
+		CompilerFlags compilerFlags = CompilerFlags::None;
 
 		void* customData = nullptr;
 
@@ -102,9 +103,10 @@ namespace LizardScript
 			_tcsncpy(value, cvalue, sizeof(value)/sizeof(TCHAR));
 		}
 
-		KeywordToken(const TCHAR* cvalue, KeywordTokenType type) : KeywordToken(cvalue)
+		KeywordToken(const TCHAR* cvalue, KeywordTokenType type, CompilerFlags compilerFlags = CompilerFlags::None) : KeywordToken(cvalue)
 		{
 			this->type = type;
+			this->compilerFlags = compilerFlags;
 		}
 
 		//!\warning may be dangerous
@@ -182,8 +184,8 @@ namespace LizardScript
 		Associativity associativity;
 		int priority;
 
-		OperatorToken(const TCHAR* cvalue, KeywordTokenType type, int priority, Associativity associativity = Associativity::Left)
-			: KeywordToken(cvalue), priority(priority), associativity(associativity)
+		OperatorToken(const TCHAR* cvalue, KeywordTokenType type, int priority, Associativity associativity = Associativity::Left, CompilerFlags compilerFlags = CompilerFlags::None)
+			: KeywordToken(cvalue, type, compilerFlags), priority(priority), associativity(associativity)
 		{
 			this->type = type;// arity == Arity::Unary ? KeywordTokenType::Unary : KeywordTokenType::Binary;
 		}

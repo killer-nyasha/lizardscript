@@ -10,8 +10,8 @@
 
 using namespace LizardScript;
 
-KeywordToken Lexer::stringKw = KeywordToken("__string__");
-OperatorToken Lexer::callKw = OperatorToken("__call__", KeywordTokenType::Simple, 100);
+KeywordToken Lexer::stringKw = KeywordToken("__string__", KeywordTokenType::Simple, CompilerFlags::Call);
+OperatorToken Lexer::callKw = OperatorToken("__call__", KeywordTokenType::Simple, 100, Associativity::Left, CompilerFlags::Call);
 
 void Lexer::init()
 {

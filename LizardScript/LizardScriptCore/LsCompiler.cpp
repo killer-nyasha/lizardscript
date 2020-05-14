@@ -78,6 +78,10 @@ std::map<const char*, const char*, cmp_str> OperatorsForType::st_operators =
 	{ "=", "mov" },
 };
 
+struct FunctionCall
+{
+	const TCHAR* name;
+};
 
 LsFunction LsCompiler::compile(const TCHAR* text, size_t length)
 {
@@ -100,6 +104,8 @@ LsFunction LsCompiler::compile(const TCHAR* text, size_t length)
 
 	NonTypedStack2 tempStack;
 
+	std::stack<FunctionCall> bracketsActions;
+
 	for (size_t i = 0; i < lexerData.tokens->size(); i++)
 	{
 		KeywordToken* kwtoken;
@@ -110,7 +116,13 @@ LsFunction LsCompiler::compile(const TCHAR* text, size_t length)
 			{
 				OperatorToken* operatorToken = OperatorToken::asOperator(kwtoken);
 
-				if (operatorToken->type == KeywordTokenType::Binary)
+				if (operatorToken->compilerFlags != CompilerFlags::None)
+					if (operatorToken->compilerFlags == CompilerFlags::Call)
+					{
+						//bracketsActions.pop();
+						//bracketsActions.push(true);
+					}
+				else if (operatorToken->type == KeywordTokenType::Binary)
 				{
 					if (operators_int64.operators.find(operatorToken->value) != operators_int64.operators.end())
 					{
@@ -151,6 +163,19 @@ LsFunction LsCompiler::compile(const TCHAR* text, size_t length)
 				{
 
 				}
+			}
+			else if (kwtoken->type == KeywordTokenType::LeftBracket)
+			{
+				//bracketsActions.push(false);
+			}
+			else if (kwtoken->type == KeywordTokenType::RightBracket)
+			{
+				//auto br = bracketsActions.top();
+				//if (br)
+				//{
+					//CALL FUNCTION
+					
+				//}
 			}
 		}
 		else
