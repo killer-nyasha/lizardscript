@@ -122,11 +122,9 @@ case LsAsm::cast_float_int64: { CODEGET(OFFSET_T, R1);CODEGET(OFFSET_T, R2);*REG
 case LsAsm::cast_int_int64: { CODEGET(OFFSET_T, R1);CODEGET(OFFSET_T, R2);*REGISTER(int, CODE(R1)) = *REGISTER(int64, CODE(R2)); break; }
 case LsAsm::cast_int64_int: { CODEGET(OFFSET_T, R1);CODEGET(OFFSET_T, R2);*REGISTER(int64, CODE(R1)) = *REGISTER(int, CODE(R2)); break; }
 
-//DEPRECATED
 case LsAsm::mov_float:
 case LsAsm::mov_int: { CODEGET(OFFSET_T, R1);CODEGET(OFFSET_T, R2);*REGISTER(int, CODE(R1)) = *REGISTER(int, CODE(R2)); break; }
 case LsAsm::mov_int64: { CODEGET(OFFSET_T, R1);CODEGET(OFFSET_T, R2);*REGISTER(int64, CODE(R1)) = *REGISTER(int64, CODE(R2)); break; }
-//CASE_ST_OPERATOR2(float, =, mov)
 
 case LsAsm::jmp: { CODEGET(int, new_eip); JMP(CODE(new_eip)); break; };
 case LsAsm::jt: { CODEGET(OFFSET_T, R1); CODEGET(LsInternalAddr, P_ADDRESS); if (*REGISTER(int, CODE(R1)) != 0) JMP(CODE(P_ADDRESS)); break; };
@@ -137,6 +135,5 @@ case LsAsm::out_int: { CODEGET(OFFSET_T, R1); std::cout << *REGISTER(int, CODE(R
 case LsAsm::out_float: { CODEGET(OFFSET_T, R1); std::cout << *REGISTER(float, CODE(R1)) << std::endl; break; }
 case LsAsm::out_int64: { CODEGET(OFFSET_T, R1); std::cout << *REGISTER(int64, CODE(R1)) << std::endl; break; }
 case LsAsm::out_stdstring: { CODEGET(OFFSET_T, R1); std::cout << **REGISTER(stdstring*, CODE(R1)) << std::endl; break; };
-
 
 case LsAsm::ret: { goto end; break; };

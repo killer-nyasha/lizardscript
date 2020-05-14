@@ -14,6 +14,7 @@
 
 #define REGISTER(T, i) LsCppSpecRegister(#T, i)
 
+#define CODEGETSTR(N) LsCppSpecCodegetStr("const char*", #N)
 #define CODEGET(T, N) LsCppSpecCodeget(#T, sizeof(T), #N)
 #define CODE(N) LsCppSpecCode(#N)
 
@@ -22,6 +23,7 @@
 #define RUNTIME_REGISTER(type, i) reinterpret_cast<type*>(&stack[esp + i])
 #define RUNTIME_CODEGET(type) *(type*)(&f->code[(eip += sizeof(type)) - sizeof(type)])
 #define LSCPP_RUNTIME_CODEGET(type) *(type*)(&lscpp.f->code[(lscpp.eip += sizeof(type)) - sizeof(type)])
+#define LSCPP_RUNTIME_CODEGETSTR(name) char* name = (char*)(&lscpp.f->code[lscpp.eip]); lscpp.eip += strlen(name);
 
 struct LsCppSpecCodeget : public LsCppSpec
 {
@@ -61,6 +63,47 @@ struct LsCppSpecCodeget : public LsCppSpec
 		lscpp.text << ")";
 	}
 };
+
+struct LsCppSpecCodegetStr : public LsCppSpec
+{
+	const char* type;
+	const char* name;
+
+	LsCppSpecCodegetStr() { }
+
+	LsCppSpecCodegetStr(const char* type, const char* name) : type(type), name(name)
+	{
+
+	}
+
+	void append(LsCpp& lscpp)
+	{
+		auto& variables = lscpp.variables;
+
+		if (variables.find(name) == variables.end())
+			variables.insert(std::make_pair(name, LsCppVariable()));
+
+		auto& var = variables[name];
+
+		var.type = type;
+		var.data_size = 0;// .clear();
+
+		LSCPP_RUNTIME_CODEGETSTR(text);
+
+		//for (size_t i = 0; i < size; i++)
+		//	var.data[var.data_size++] = (LSCPP_RUNTIME_CODEGET(unsigned char));
+
+		lscpp.text << type << " " << name << " = \"";
+		//for (size_t i = 0; i < var.data_size; i++)
+		//{
+			//if (i != 0)
+			//	lscpp.text << ", ";
+			lscpp.text << text;
+		//}
+		lscpp.text << "\"";
+	}
+};
+
 
 struct LsCppSpecCode : public LsCppSpec
 {
