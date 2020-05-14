@@ -31,7 +31,18 @@
 
 
 
+
+
+
+
+
 //int = float
+
+
+
+
+
+
 
 
 
@@ -88,6 +99,10 @@ case LsAsm::push_float:
 case LsAsm::push_int: { CODEGET(OFFSET_T, R1);CODEGET(int, P_VALUE);*REGISTER(int, CODE(R1)) = CODE(P_VALUE);; break; }
 case LsAsm::push_int64: { CODEGET(OFFSET_T, R1);CODEGET(int64, P_VALUE);*REGISTER(int64, CODE(R1)) = CODE(P_VALUE);; break; }
 
+case LsAsm::pushstr_stdstring: { CODEGET(OFFSET_T, R1);CODEGETSTR(P_VALUE);*REGISTER(stdstring*, CODE(R1)) = new stdstring(CODE(P_VALUE));; break; }
+
+case LsAsm::add_stdstring: { CODEGET(OFFSET_T, R1);CODEGET(OFFSET_T, R2);*REGISTER(stdstring, CODE(R1)) = *REGISTER(stdstring, CODE(R1)) + *REGISTER(stdstring, CODE(R2)); break; }
+
 case LsAsm::add_int: { CODEGET(OFFSET_T, R1);CODEGET(OFFSET_T, R2);*REGISTER(int, CODE(R1)) = *REGISTER(int, CODE(R1)) + *REGISTER(int, CODE(R2)); break; }case LsAsm::sub_int: { CODEGET(OFFSET_T, R1);CODEGET(OFFSET_T, R2);*REGISTER(int, CODE(R1)) = *REGISTER(int, CODE(R1)) - *REGISTER(int, CODE(R2)); break; }case LsAsm::mul_int: { CODEGET(OFFSET_T, R1);CODEGET(OFFSET_T, R2);*REGISTER(int, CODE(R1)) = *REGISTER(int, CODE(R1)) * *REGISTER(int, CODE(R2)); break; }case LsAsm::div_int: { CODEGET(OFFSET_T, R1);CODEGET(OFFSET_T, R2);*REGISTER(int, CODE(R1)) = *REGISTER(int, CODE(R1)) / *REGISTER(int, CODE(R2)); break; }
 case LsAsm::more_int: { CODEGET(OFFSET_T, R1);CODEGET(OFFSET_T, R2);*REGISTER(int, CODE(R1)) = *REGISTER(int, CODE(R1)) > *REGISTER(int, CODE(R2)); break; }case LsAsm::less_int: { CODEGET(OFFSET_T, R1);CODEGET(OFFSET_T, R2);*REGISTER(int, CODE(R1)) = *REGISTER(int, CODE(R1)) < *REGISTER(int, CODE(R2)); break; }case LsAsm::more_eq_int: { CODEGET(OFFSET_T, R1);CODEGET(OFFSET_T, R2);*REGISTER(int, CODE(R1)) = *REGISTER(int, CODE(R1)) >= *REGISTER(int, CODE(R2)); break; }case LsAsm::less_eq_int: { CODEGET(OFFSET_T, R1);CODEGET(OFFSET_T, R2);*REGISTER(int, CODE(R1)) = *REGISTER(int, CODE(R1)) <= *REGISTER(int, CODE(R2)); break; }case LsAsm::eq_int: { CODEGET(OFFSET_T, R1);CODEGET(OFFSET_T, R2);*REGISTER(int, CODE(R1)) = *REGISTER(int, CODE(R1)) == *REGISTER(int, CODE(R2)); break; }case LsAsm::not_eq_int: { CODEGET(OFFSET_T, R1);CODEGET(OFFSET_T, R2);*REGISTER(int, CODE(R1)) = *REGISTER(int, CODE(R1)) != *REGISTER(int, CODE(R2)); break; }
 
@@ -118,7 +133,10 @@ case LsAsm::jt: { CODEGET(OFFSET_T, R1); CODEGET(LsInternalAddr, P_ADDRESS); if 
 case LsAsm::jf: { CODEGET(OFFSET_T, R1); CODEGET(LsInternalAddr, P_ADDRESS); if (*REGISTER(int, CODE(R1)) == 0) JMP(CODE(P_ADDRESS)); break; };
 
 case LsAsm::wait: { crossplatform_pause(); break; };
-case LsAsm::out_int: { CODEGET(OFFSET_T, R1); std::cout << *REGISTER(int, CODE(R1)) << std::endl; break; };
-case LsAsm::out_float: { CODEGET(OFFSET_T, R1); std::cout << *REGISTER(float, CODE(R1)) << std::endl; break; };
-case LsAsm::out_int64: { CODEGET(OFFSET_T, R1); std::cout << *REGISTER(int64, CODE(R1)) << std::endl; break; };
+case LsAsm::out_int: { CODEGET(OFFSET_T, R1); std::cout << *REGISTER(int, CODE(R1)) << std::endl; break; }
+case LsAsm::out_float: { CODEGET(OFFSET_T, R1); std::cout << *REGISTER(float, CODE(R1)) << std::endl; break; }
+case LsAsm::out_int64: { CODEGET(OFFSET_T, R1); std::cout << *REGISTER(int64, CODE(R1)) << std::endl; break; }
+case LsAsm::out_stdstring: { CODEGET(OFFSET_T, R1); std::cout << **REGISTER(stdstring*, CODE(R1)) << std::endl; break; };
+
+
 case LsAsm::ret: { goto end; break; };

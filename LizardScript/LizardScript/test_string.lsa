@@ -1,0 +1,5 @@
+wait
+pushstr_stdstring 0, 53,53,53,53,0 
+out_stdstring 0
+wait
+ret

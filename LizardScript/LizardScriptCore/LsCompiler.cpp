@@ -4,7 +4,6 @@
 #include "i_parser.h"
 
 #include "Opcodes.hxx"
-#include "OpcodesText.h"
 #include "NonTypedStack2.h"
 #include "Runtime.h"
 
@@ -12,29 +11,29 @@ using namespace LizardScript;
 
 char operator_name[512];
 
-class OperatorsForType
+//!\warning requires opcodes_initialized
+OpcodesMap Operators::forType(OperatorsMap& st_operators, const char* type1, const char* type2)
 {
-	static std::map<const char*, const char*, cmp_str> st_operators;
+	OpcodesMap retMap;
 
-public:
+	size_t len1 = strlen(type1);
+	size_t len2 = type2 ? strlen(type2) : 0;
 
-	std::map<const char*, LsCode, cmp_str> operators;
+	size_t t_count = (type2 ? 2 : 1);
 
-	//!requires opcodes_initialized
-	OperatorsForType(const char* type1, const char* type2 = nullptr)
+	for (auto& pair : st_operators)
 	{
-		size_t len1 = strlen(type1);
-		size_t len2 = type2 ? strlen(type2) : 0;
+		const char* mnem = pair.second;
+		size_t len0 = strlen(mnem);
 
-		size_t t_count = (type2 ? 2 : 1);
-
-		for (auto& pair : st_operators)
+		if (mnem[len0-1] == '\n')
 		{
-			const char* mnem = pair.second;
-			size_t len0 = strlen(mnem);
-
+			memcpy(operator_name, mnem, len0);
+			operator_name[len0 - 1] = '\0';
+		}
+		else
+		{
 			//char* operator_name = new char[len0 + len1 + len2 + t_count + 1];
-
 			memcpy(operator_name, mnem, len0);
 			operator_name[len0] = '_';
 			memcpy(operator_name + len0 + 1, type1, len1);
@@ -44,26 +43,14 @@ public:
 				memcpy(operator_name + len0 + len1 + 2, type2, len2);
 
 			operator_name[len0 + len1 + len2 + t_count] = '\0';
-
-			//std::cout << operator_name << std::endl;
-
-			if (textToOpcode[operator_name] != 0)
-			operators.insert(std::make_pair(pair.first, (LsCode)textToOpcode[operator_name]));
-		
-			//delete[] operator_name;
 		}
+
+		if (textToOpcode[operator_name] != 0)
+			retMap.insert(std::make_pair(pair.first, (LsCode)textToOpcode[operator_name]));
 	}
+}
 
-	//~OperatorsForType()
-	//{
-	//	for (auto& pair : operators)
-	//	{
-	//		delete[] pair.first;
-	//	}
-	//}
-};
-
-std::map<const char*, const char*, cmp_str> OperatorsForType::st_operators =
+OperatorsMap s_map_int64_binary =
 {
 	{ "+", "add" },
 	{ "-", "sub" },
@@ -78,17 +65,33 @@ std::map<const char*, const char*, cmp_str> OperatorsForType::st_operators =
 	{ "=", "mov" },
 };
 
+OperatorsMap s_map_tchar_binary =
+{
+	{ ".", "test_operator\n" },
+};
+
+
 struct FunctionCall
 {
 	const TCHAR* name;
 };
 
-LsFunction LsCompiler::compile(const TCHAR* text, size_t length)
+void LsCompiler::addBinaryMap(OperatorsMap& m, const TCHAR* text1, TypeInfo info1)
+{
+	auto newMap = Operators::forType(m, text1);
+	map_binary.insert(std::make_pair(info1, newMap));
+}
+
+LsCompiler::LsCompiler(SyntaxCore& core) : core(core)
 {
 	fillOpcodeToText();
 
-	OperatorsForType operators_int64("int64");
+	addBinaryMap(s_map_int64_binary, "int64", typeInfo<int64>());
+	addBinaryMap(s_map_tchar_binary, "string", typeInfo<std::string>());
+}
 
+LsFunction LsCompiler::compile(const TCHAR* text, size_t length)
+{
 	LsFunction f;
 
 	Runtime runtime;
@@ -104,7 +107,7 @@ LsFunction LsCompiler::compile(const TCHAR* text, size_t length)
 
 	NonTypedStack2 tempStack;
 
-	std::stack<FunctionCall> bracketsActions;
+	std::stack<size_t> bracketsActions;
 
 	for (size_t i = 0; i < lexerData.tokens->size(); i++)
 	{
@@ -117,45 +120,58 @@ LsFunction LsCompiler::compile(const TCHAR* text, size_t length)
 				OperatorToken* operatorToken = OperatorToken::asOperator(kwtoken);
 
 				if (operatorToken->compilerFlags != CompilerFlags::None)
+				{ 
 					if (operatorToken->compilerFlags == CompilerFlags::Call)
 					{
 						//bracketsActions.pop();
 						//bracketsActions.push(true);
 					}
+					else throw Exception("Unknown compiler flags of operator ", operatorToken->value);
+				}
 				else if (operatorToken->type == KeywordTokenType::Binary)
 				{
-					if (operators_int64.operators.find(operatorToken->value) != operators_int64.operators.end())
+					TempValue val1 = tempStack.pop();
+					TempValue val2 = tempStack.pop();
+
+					if (val1.d.type == val2.d.type)
 					{
-						LsCode opcode = operators_int64.operators[operatorToken->value];
-						
-						TempValue val1 = tempStack.pop();
-						TempValue val2 = tempStack.pop();
+						auto& operators = map_binary[val1.d.type];
 
-						//compile-teme evaluate
-						if (val1.compileTime && val2.compileTime)
+						if (operators.find(operatorToken->value) != operators.end())
 						{
-							//HARDCODED FOR INT64!!!
-							runtime.setLocal<int64>(0, val1.d.value);
-							runtime.setLocal<int64>(8, val2.d.value);
+							LsCode opcode = operators[operatorToken->value];
 
-							fTemp.code.push_back(opcode);
-							fTemp.push_back((OFFSET_T)0);
-							fTemp.push_back((OFFSET_T)8);
-							fTemp.code.push_back(LsAsm::ret);
+							//compile-teme evaluate
+							if (val1.compileTime && val2.compileTime)
+							{
+								//HARDCODED FOR INT64!!!
+								runtime.setLocal<int64>(0, val1.d.value);
+								runtime.setLocal<int64>(8, val2.d.value);
+
+								fTemp.code.push_back(opcode);
+								fTemp.push_back((OFFSET_T)0);
+								fTemp.push_back((OFFSET_T)8);
+								fTemp.code.push_back(LsAsm::ret);
 
 
-							runtime.run(fTemp);
-							fTemp.code.clear();
+								runtime.run(fTemp);
+								fTemp.code.clear();
 
-							TempValue retVal = val1;
-							retVal.d.value = runtime.getLocal<int64>(0);
+								TempValue retVal = val1;
+								retVal.d.value = runtime.getLocal<int64>(0);
 
-							tempStack.push(retVal.d.value);
+								tempStack.push(retVal.d.value);
+							}
+
+							//f.code.push_back(opcode);
 						}
+						else throw Exception("Cannot find operator ", operatorToken->value, " for ", "int64");
 
-						//f.code.push_back(opcode);
 					}
-					else throw Exception("Cannot find operator ", operatorToken->value, " for ", "int64");
+					else
+					{
+						throw Exception("cast operators aren't implemented");
+					}
 
 				}
 				else if (operatorToken->type == KeywordTokenType::PrefixUnary ||
@@ -166,7 +182,7 @@ LsFunction LsCompiler::compile(const TCHAR* text, size_t length)
 			}
 			else if (kwtoken->type == KeywordTokenType::LeftBracket)
 			{
-				//bracketsActions.push(false);
+				bracketsActions.push(tempStack.size());
 			}
 			else if (kwtoken->type == KeywordTokenType::RightBracket)
 			{
@@ -174,7 +190,7 @@ LsFunction LsCompiler::compile(const TCHAR* text, size_t length)
 				//if (br)
 				//{
 					//CALL FUNCTION
-					
+				int k = 1;
 				//}
 			}
 		}
@@ -194,6 +210,7 @@ LsFunction LsCompiler::compile(const TCHAR* text, size_t length)
 				else
 				{
 					//не удалось распарсить
+					tempStack.push(new std::string(t));
 				}
 
 			}

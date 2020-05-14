@@ -32,6 +32,7 @@ void Runtime::run(const LsFunction& f)
 	
 	//r == 0 ? *(type*)((char*)stackbase + CODEGET(short)) : *(type*)&(registers[r])
 #define CODEGET(type, name) type& name = *(type*)(&f.code[(eip += sizeof(type)) - sizeof(type)])
+#define CODEGETSTR(name) char* name = (char*)(&f.code[eip]); eip += strlen(name);
 #define CODE(name) name
 
 #define JMP(new_eip) eip = new_eip;

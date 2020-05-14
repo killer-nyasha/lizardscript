@@ -7,6 +7,7 @@
 */
 #pragma once
 #include "crossplatform_tchar.h"
+#include "Exception.h"
 
 namespace LizardScript
 {
@@ -89,7 +90,7 @@ namespace LizardScript
 	public:
 
 		//!text representation of a keyword
-		TCHAR value[16];
+		TCHAR value[24];
 
 		KeywordTokenType type = KeywordTokenType::Simple;
 		ParserFlags parserFlags = ParserFlags::None;
@@ -101,6 +102,11 @@ namespace LizardScript
 		{
 			static_assert(offsetof(KeywordToken, signature) == 0, "pizdec");
 			_tcsncpy(value, cvalue, sizeof(value)/sizeof(TCHAR));
+
+#if _DEBUG
+			if (_tcslen(cvalue) > sizeof(value) / sizeof(TCHAR))
+				throw Exception("Keyword name is too long. Max length: ", sizeof(value) / sizeof(TCHAR));
+#endif
 		}
 
 		KeywordToken(const TCHAR* cvalue, KeywordTokenType type, CompilerFlags compilerFlags = CompilerFlags::None) : KeywordToken(cvalue)

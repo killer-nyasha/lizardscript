@@ -12,6 +12,8 @@
 #include "TypeInfo.h"
 #include "LsTypedefs.h"
 
+#include "Pools.h"
+
 //!All genius is simple ^_^
 struct Dynamic
 {
@@ -52,19 +54,24 @@ struct LocalVariable
 class NonTypedStack2
 {
 private:
-	std::stack<TempValue> data;
+	PoolPointer<std::stack<TempValue>> data;
 
 public:
 	template <typename T>
 	void push(const T& value)
 	{
-		data.push(TempValue(makeDynamic(value)));
+		data->push(TempValue(makeDynamic(value)));
 	}
 
 	TempValue pop()
 	{
-		TempValue t = data.top();
-		data.pop();
+		TempValue t = data->top();
+		data->pop();
 		return t;
+	}
+
+	size_t size() const
+	{
+		return data->size();
 	}
 };

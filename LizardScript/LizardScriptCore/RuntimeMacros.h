@@ -29,6 +29,11 @@ CODEGET(OFFSET_T, R1);\
 CODEGET(T, P_VALUE);\
 *REGISTER(T, CODE(R1)) = CODE(P_VALUE);
 
+#define OPCODE_PUSHSTR(T)\
+CODEGET(OFFSET_T, R1);\
+CODEGETSTR(P_VALUE);\
+*REGISTER(T*, CODE(R1)) = new T(CODE(P_VALUE));
+
 //int = float
 #define OPCODE_CAST(T1, T2)\
 CODEGET(OFFSET_T, R1);\
@@ -73,7 +78,13 @@ case LsAsm::cast_##T1##_##T2: { OPCODE_CAST(T1, T2); break; }
 #define CASE_PUSH(T)\
 case LsAsm::push_##T: { OPCODE_PUSH(T); break; }
 
+#define CASE_PUSHSTR(T)\
+case LsAsm::pushstr_##T: { OPCODE_PUSHSTR(T); break; }
+
 #define CASE_CUSTOM(name, ...)\
 case LsAsm::name: { __VA_ARGS__; break; };
 
 #define CASE_ALIAS(name) case LsAsm::name:
+
+#define CASE_OUT(T)\
+case LsAsm::out_##T: { CODEGET(OFFSET_T, R1); std::cout << *REGISTER(T, CODE(R1)) << std::endl; break; }
