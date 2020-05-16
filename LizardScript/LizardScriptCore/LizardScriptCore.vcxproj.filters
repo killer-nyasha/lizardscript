@@ -54,6 +54,9 @@
     <Filter Include="scripts">
       <UniqueIdentifier>{a0fff0b6-edc2-482d-afa2-ea4bfdf35d3d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="library">
+      <UniqueIdentifier>{936b8b05-ed80-4e09-b1c9-5bbeadfe8903}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LizardScript.h">
@@ -179,6 +182,9 @@
     <ClInclude Include="NonTypedStack2.h">
       <Filter>system\containers</Filter>
     </ClInclude>
+    <ClInclude Include="Lsl.h">
+      <Filter>library</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -226,6 +232,9 @@
     <ClCompile Include="LsCompiler.cpp">
       <Filter>compiler</Filter>
     </ClCompile>
+    <ClCompile Include="metagen.cpp">
+      <Filter>metagen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="RuntimeCases.i">
@@ -235,6 +244,9 @@
       <Filter>scripts</Filter>
     </None>
     <None Include="opcodes_from_switch.py">
+      <Filter>scripts</Filter>
+    </None>
+    <None Include="make_metadata.py">
       <Filter>scripts</Filter>
     </None>
   </ItemGroup>

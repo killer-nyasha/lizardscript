@@ -7,12 +7,12 @@ from pathlib import Path
 import os
 import sys
 import regex
-from lines_counter_beta import getIgnore, in_directory
+from lines_counter import getIgnore, in_directory
 
 # эти названия можно сменить на нужные тебе
 endswith = ['.h', '.cpp']
 out_file = 'meta.hxx'
-lsclass = r'lsclass'
+lsclass = r'LSCLASS'
 # -----------------------------------------
 currentClass = ''
 bracketCounter = 0

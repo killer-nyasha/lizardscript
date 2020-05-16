@@ -41,6 +41,20 @@ struct Dynamic
 	{
 		return type.size() > sizeof(value);
 	}
+
+	template <typename T>
+	T& get()
+	{
+		if (sizeof(T) <= sizeof(value))
+			return *reinterpret_cast<T*>(value);
+		else return **reinterpret_cast<T**>(value);
+	}
+
+	template <typename T>
+	T*& pget()
+	{
+		return *reinterpret_cast<T**>(value);
+	}
 };
 
 
@@ -49,6 +63,8 @@ struct TempValue
 {
 	Dynamic d;
 	bool compileTime;
+
+	TempValue() { }
 
 	TempValue(const Dynamic& d, bool compileTime = true) 
 		: d(d), compileTime(compileTime)
@@ -66,24 +82,34 @@ struct LocalVariable
 class NonTypedStack2
 {
 private:
-	PoolPointer<std::stack<TempValue>> data;
+	PoolPointer<std::vector<TempValue>> data;
 
 public:
 	template <typename T>
 	void push(const T& value)
 	{
-		data->push(TempValue(value));
+		data->push_back(TempValue(value));
 	}
 
 	TempValue pop()
 	{
-		TempValue t = data->top();
-		data->pop();
+		TempValue t = data->back();
+		data->pop_back();
 		return t;
 	}
 
 	size_t size() const
 	{
 		return data->size();
+	}
+
+	TempValue& operator[](size_t i)
+	{
+		return (*data)[i];
+	}
+
+	void resize(size_t sz)
+	{
+		data->resize(sz);
 	}
 };

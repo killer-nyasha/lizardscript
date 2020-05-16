@@ -100,7 +100,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>cd $(ProjectDir) &amp;&amp; cl /P /C RuntimeCases.h &amp;&amp; python.exe opcodes_from_switch.py &amp; python.exe new_meta.py</Command>
+      <Command>cd $(ProjectDir) &amp;&amp; python.exe make_metadata.py &amp;&amp; cl /P /C RuntimeCases.h &amp;&amp; python.exe opcodes_from_switch.py &amp;&amp; python.exe new_meta.py</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -117,7 +117,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>cd $(ProjectDir) &amp;&amp; cl /P /C RuntimeCases.h &amp;&amp; python.exe opcodes_from_switch.py &amp; python.exe new_meta.py</Command>
+      <Command>cd $(ProjectDir) &amp;&amp; python.exe make_metadata.py &amp;&amp; cl /P /C RuntimeCases.h &amp;&amp; python.exe opcodes_from_switch.py &amp;&amp; python.exe new_meta.py</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -138,7 +138,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>cd $(ProjectDir) &amp;&amp; cl /P /C RuntimeCases.h &amp;&amp; python.exe opcodes_from_switch.py &amp; python.exe new_meta.py</Command>
+      <Command>cd $(ProjectDir) &amp;&amp; python.exe make_metadata.py &amp;&amp; cl /P /C RuntimeCases.h &amp;&amp; python.exe opcodes_from_switch.py &amp;&amp; python.exe new_meta.py</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -159,7 +159,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>cd $(ProjectDir) &amp;&amp; cl /P /C RuntimeCases.h &amp;&amp; python.exe opcodes_from_switch.py &amp; python.exe new_meta.py</Command>
+      <Command>cd $(ProjectDir) &amp;&amp; python.exe make_metadata.py &amp;&amp; cl /P /C RuntimeCases.h &amp;&amp; python.exe opcodes_from_switch.py &amp;&amp; python.exe new_meta.py</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -183,6 +183,7 @@
     <ClInclude Include="LsCppExternal.h" />
     <ClInclude Include="LsDisasm.h" />
     <ClInclude Include="LsFunction.h" />
+    <ClInclude Include="Lsl.h" />
     <ClInclude Include="LsTypedefs.h" />
     <ClInclude Include="metagen_init.h" />
     <ClInclude Include="metagen_system.h" />
@@ -192,6 +193,7 @@
     <ClInclude Include="Opcodes.hxx" />
     <ClCompile Include="LsAsm.cpp" />
     <ClCompile Include="LsCompiler.cpp" />
+    <ClCompile Include="metagen.cpp" />
     <ClCompile Include="OpcodesText.cxx" />
     <ClInclude Include="OpcodesText.h" />
     <ClInclude Include="Parser.h" />
@@ -228,6 +230,7 @@
     <ClCompile Include="SyntaxCore.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="make_metadata.py" />
     <None Include="new_meta.py" />
     <None Include="opcodes_from_switch.py" />
     <None Include="RuntimeCases.i" />

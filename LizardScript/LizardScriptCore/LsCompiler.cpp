@@ -7,6 +7,10 @@
 #include "NonTypedStack2.h"
 #include "Runtime.h"
 
+#include "Lsl.h"
+
+#include "metagen_system.h"
+
 using namespace LizardScript;
 
 char operator_name[512];
@@ -75,7 +79,7 @@ OperatorsMap s_map_tchar_binary =
 
 OperatorsMap s_map_tchar_prefix =
 {
-	{ "print", "out" },
+	//{ "print", "out" },
 };
 
 struct FunctionCall
@@ -130,6 +134,7 @@ LsFunction LsCompiler::compile(const TCHAR* text, size_t length)
 	NonTypedStack2 tempStack;
 
 	std::stack<size_t> bracketsActions;
+	size_t currentBracketAction = SIZE_MAX;
 
 	for (size_t i = 0; i < lexerData.tokens->size(); i++)
 	{
@@ -145,6 +150,28 @@ LsFunction LsCompiler::compile(const TCHAR* text, size_t length)
 				{ 
 					if (operatorToken->compilerFlags == CompilerFlags::Call)
 					{
+						//function name
+						auto& fName = tempStack[currentBracketAction - 1];
+
+						std::string& fn = fName.d.get<std::string>();
+
+						if (globalMetadataTable.find(typeInfo<Lsl>()) == globalMetadataTable.end())
+							throw Exception("Cannot find Lsl metadata");
+
+						auto& lslFunctions = globalMetadataTable[typeInfo<Lsl>()].members.get<FunctionInfo>();
+
+						for (auto& f : lslFunctions)
+						{
+							if (f.name != fn)
+								continue;
+
+							//push arguments
+							for (size_t i = currentBracketAction; i < tempStack.size(); i++)
+							{
+
+							}
+						}
+
 						//bracketsActions.pop();
 						//bracketsActions.push(true);
 					}
@@ -210,6 +237,8 @@ LsFunction LsCompiler::compile(const TCHAR* text, size_t length)
 			}
 			else if (kwtoken->type == KeywordTokenType::RightBracket)
 			{
+				currentBracketAction = bracketsActions.top();
+				bracketsActions.pop();
 				//auto br = bracketsActions.top();
 				//if (br)
 				//{
@@ -241,4 +270,6 @@ LsFunction LsCompiler::compile(const TCHAR* text, size_t length)
 			else throw Exception();
 		}
 	}
+
+	return f;
 }
